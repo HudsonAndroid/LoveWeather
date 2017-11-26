@@ -34,7 +34,7 @@ public class Printer {
     private String mTag = null;
 
     static class PrinterHelper{
-        static Printer sPrinter = new Printer();
+        static final Printer sPrinter = new Printer();
     }
 
     public static Printer getInstance(){
@@ -149,6 +149,9 @@ public class Printer {
                 String msg = jsonArray.toString(indent);
 //                d(msg);
                 printLog(sLogConfig.getLogLevel(),msg);
+            } else {
+                e(new StringBuilder("the string is not a standard json format," +
+                        "automatic print the string :\n").append(json));
             }
         } catch (JSONException e) {
             e(e.toString() + "\n\njson = " + json);

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hudson.loveweather.utils.LogUtils.parser.Parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class LogConfig {
     }
 
     static class ConfigHelper{
-        static LogConfig sLogConfig = new LogConfig();
+        static final LogConfig sLogConfig = new LogConfig();
     }
 
      static LogConfig getInstance(){
@@ -49,6 +50,9 @@ public class LogConfig {
     }
 
     public LogConfig configParserClass(Class<? extends Parser>... classes) {
+        if(mParseList == null){
+            mParseList = new ArrayList<>();
+        }
         for (Class<? extends Parser> cla : classes) {
             try {
                 mParseList.add(0, cla.newInstance());
