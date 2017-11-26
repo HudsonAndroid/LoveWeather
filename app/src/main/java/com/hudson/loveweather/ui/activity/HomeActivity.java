@@ -1,5 +1,6 @@
 package com.hudson.loveweather.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -15,7 +16,10 @@ import android.view.View;
 
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.global.LoveWeatherApplication;
+import com.hudson.loveweather.utils.LogUtils.Constants;
 import com.hudson.loveweather.utils.LogUtils.LogUtils;
+
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,9 +31,24 @@ public class HomeActivity extends AppCompatActivity
         LoveWeatherApplication.addActivity(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        LogUtils.getConfig().configEnable(true);
-        LogUtils.setTag(HomeActivity.class);
-        LogUtils.e("你好，hudson","呵呵好");
+        LogUtils.getConfig().configEnable(true).configLogLevel(Constants.TYPE_VERBOSE);
+        LogUtils.setTag("hudson");
+        Intent a = new Intent(this,HomeActivity.class);
+        a.setAction("hudson");
+        a.addCategory("donglingmusic");
+        a.setComponent(getComponentName());
+        LogUtils.log("你好，hudson","呵呵好");
+        LogUtils.log(a);
+        ArrayList<City> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            City e = new City();
+            e.setCityCode(i);
+            e.setCityName("宜春"+i);
+            list.add(e);
+        }
+        LogUtils.log(list);
+        String json = "{'a':'b','c':{'aa':234,'dd':{'az':12}}}";
+        LogUtils.json(json);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

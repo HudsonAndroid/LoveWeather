@@ -15,7 +15,7 @@ public class LogUtils {
     }
 
     /**
-     * 以使用处的类作为tag，如果没有设置使用appName
+     * 以使用处的类作为tag，最终tag是appName+类名；如果没有设置使用appName
      * @param cls
      */
     public static void setTag(Class<?> cls){
@@ -32,9 +32,19 @@ public class LogUtils {
     }
 
     /**
+     * 自定义tag
+     * @param customTag tag
+     */
+    public static void setTag(String customTag){
+        if(!TextUtils.isEmpty(customTag)){
+            sPrinter.setTag(customTag);
+        }
+    }
+
+    /**
      * 打印json
-     *
-     * @param json
+     * 日志级别是您配置的日志级别，如果没有配置，那么就是默认的日志级别
+     * @param json json字符串
      */
     public static void json(String json) {
         sPrinter.json(json);
@@ -42,7 +52,8 @@ public class LogUtils {
 
     /**
      * 输出xml
-     * @param xml
+     * 日志级别是您配置的日志级别，如果没有配置，那么就是默认的日志级别
+     * @param xml xml字符串
      */
     public static void xml(String xml) {
         sPrinter.xml(xml);
