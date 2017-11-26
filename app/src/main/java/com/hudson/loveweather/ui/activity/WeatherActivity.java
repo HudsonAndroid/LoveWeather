@@ -3,28 +3,49 @@ package com.hudson.loveweather.ui.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.TextView;
 
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.global.LoveWeatherApplication;
 import com.hudson.loveweather.service.DataInitializeService;
+import com.hudson.loveweather.utils.BitmapUtils;
 import com.hudson.loveweather.utils.LogUtils.LogUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
+import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.ToastUtils;
 
-public class WeatherActivity extends BaseActivity {
+public class WeatherActivity extends BaseActivity implements View.OnClickListener {
+    private TextView mTextView;
+    private TextView mCalendar;
+    private View mRoot;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void setContentViewAndInit() {
         setContentView(R.layout.activity_weather);
         requestPermission();
+    }
+
+    @Override
+    public void initView() {
+        mRoot = findViewById(R.id.ll_weather);
+        mTextView = (TextView) this.findViewById(R.id.tv_city);
+        mTextView.setOnClickListener(this);
+        findViewById(R.id.rl_calendar).setOnClickListener(this);
+        mCalendar = (TextView) this.findViewById(R.id.tv_calendar);
+        mCalendar.setText(TimeUtils.getDayNumberOfDate());
+    }
+
+    @Override
+    public void recycle() {
+        LoveWeatherApplication.exitApp();
     }
 
     private void initializeDatabase() {
@@ -91,8 +112,22 @@ public class WeatherActivity extends BaseActivity {
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LoveWeatherApplication.exitApp();
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_city:
+//                ToastUtils.showToast("切换城市了");
+//                BitmapUtils.backgroundAnimation(mRoot);
+                BitmapUtils.backgroundBitmapTrasition(mRoot,
+                        BitmapFactory.decodeResource(getResources(),R.drawable.timg));
+                break;
+            case R.id.rl_calendar:
+                ToastUtils.showToast("显示每日一句");
+                break;
+//            case :
+//
+//                break;
+            default:
+                break;
+        }
     }
 }

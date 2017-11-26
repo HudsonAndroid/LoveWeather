@@ -10,17 +10,27 @@ import com.hudson.loveweather.global.LoveWeatherApplication;
  * Created by Hudson on 2017/11/26.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentViewAndInit();
         LoveWeatherApplication.addActivity(this);
+        initView();
     }
+
+    //保证initView必须在setContentView之后执行
+    public abstract void setContentViewAndInit();
+
+    public abstract void initView();
+
+    public abstract void recycle();
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         LoveWeatherApplication.finishActivity(this);
+        recycle();
     }
 }

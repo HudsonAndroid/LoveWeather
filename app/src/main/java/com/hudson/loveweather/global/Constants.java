@@ -12,5 +12,6 @@ public class Constants {
     public static final int EVENT_EXIT_APP = 0;
 
     public static final int PERMISSION_INTERNET_CODE = 1;
+    public static final int DEFAULT_BACKGROUND_TRANSITION_DURATION = 1000;
 
 }

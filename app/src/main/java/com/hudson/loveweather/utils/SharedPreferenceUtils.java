@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.hudson.loveweather.global.Constants;
+import com.hudson.loveweather.service.ScheduledTaskService;
 
 /**
  * Created by Hudson on 2017/11/26.
@@ -35,6 +36,26 @@ public class SharedPreferenceUtils {
 
     public boolean isLocalDatabaseLoaded(){
         return mSp.getBoolean("loaded",false);
+    }
+
+    public void saveUpdateWeatherTriggerTime(int triggerTime){
+        mEditor.putInt("weather_update_trigger_time",triggerTime);
+        mEditor.commit();
+    }
+
+    public int getUpdateWeatherTriggerTime(){
+        return mSp.getInt("weather_update_trigger_time",
+                ScheduledTaskService.DEFAULT_WEATHER_TRIGGER_TIME);
+    }
+
+    public void saveUpdateBackgroundPicTriggerTime(int triggerTime){
+        mEditor.putInt("pic_update_trigger_time",triggerTime);
+        mEditor.commit();
+    }
+
+    public int getUpdateBackgroundPicTriggerTime(){
+        return mSp.getInt("pic_update_trigger_time",
+                ScheduledTaskService.DEFAULT_BACKGROUND_PIC_TRIG_TIME);
     }
 
 }
