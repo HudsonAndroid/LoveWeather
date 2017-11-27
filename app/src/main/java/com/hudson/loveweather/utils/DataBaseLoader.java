@@ -4,10 +4,10 @@ import com.hudson.loveweather.db.City;
 import com.hudson.loveweather.db.Country;
 import com.hudson.loveweather.db.Province;
 import com.hudson.loveweather.global.Constants;
-import com.hudson.loveweather.utils.JsonParser.CityJsonParser;
-import com.hudson.loveweather.utils.JsonParser.CountryJsonParser;
-import com.hudson.loveweather.utils.JsonParser.ProvinceJsonParser;
-import com.hudson.loveweather.utils.LogUtils.LogUtils;
+import com.hudson.loveweather.utils.jsonparser.CityJsonParser;
+import com.hudson.loveweather.utils.jsonparser.CountryJsonParser;
+import com.hudson.loveweather.utils.jsonparser.ProvinceJsonParser;
+import com.hudson.loveweather.utils.log.LogUtils;
 
 import org.litepal.crud.DataSupport;
 

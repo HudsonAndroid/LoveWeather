@@ -13,7 +13,7 @@ import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 
-import com.hudson.loveweather.utils.LogUtils.LogUtils;
+import com.hudson.loveweather.utils.log.LogUtils;
 
 import static com.hudson.loveweather.utils.BitmapUtils.BitmapUtilsHelper.renderScript;
 

@@ -1,7 +1,7 @@
-package com.hudson.loveweather.utils.LogUtils.parser;
+package com.hudson.loveweather.utils.log.parser;
 
 
-import com.hudson.loveweather.utils.LogUtils.ObjectUtil;
+import com.hudson.loveweather.utils.log.ObjectUtil;
 
 import java.lang.ref.Reference;
 

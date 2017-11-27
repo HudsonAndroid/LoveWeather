@@ -1,4 +1,4 @@
-package com.hudson.loveweather.utils.JsonParser;
+package com.hudson.loveweather.utils.jsonparser;
 
 import com.hudson.loveweather.db.Province;
 

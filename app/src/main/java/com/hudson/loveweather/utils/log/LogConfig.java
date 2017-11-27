@@ -1,8 +1,8 @@
-package com.hudson.loveweather.utils.LogUtils;
+package com.hudson.loveweather.utils.log;
 
 import android.text.TextUtils;
 
-import com.hudson.loveweather.utils.LogUtils.parser.Parser;
+import com.hudson.loveweather.utils.log.parser.Parser;
 
 import java.util.ArrayList;
 import java.util.List;

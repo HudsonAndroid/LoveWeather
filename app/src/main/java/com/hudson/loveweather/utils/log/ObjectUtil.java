@@ -1,13 +1,13 @@
-package com.hudson.loveweather.utils.LogUtils;
+package com.hudson.loveweather.utils.log;
 
 
-import com.hudson.loveweather.utils.LogUtils.parser.Parser;
+import com.hudson.loveweather.utils.log.parser.Parser;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-import static com.hudson.loveweather.utils.LogUtils.Constants.BR;
+import static com.hudson.loveweather.utils.log.Constants.BR;
 
 /**
  * 对象string化

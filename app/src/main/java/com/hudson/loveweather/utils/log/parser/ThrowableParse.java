@@ -1,4 +1,4 @@
-package com.hudson.loveweather.utils.LogUtils.parser;
+package com.hudson.loveweather.utils.log.parser;
 
 import android.util.Log;
 

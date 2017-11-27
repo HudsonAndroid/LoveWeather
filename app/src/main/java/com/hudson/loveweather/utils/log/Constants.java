@@ -1,14 +1,14 @@
-package com.hudson.loveweather.utils.LogUtils;
+package com.hudson.loveweather.utils.log;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.utils.LogUtils.parser.BundleParse;
-import com.hudson.loveweather.utils.LogUtils.parser.CollectionParse;
-import com.hudson.loveweather.utils.LogUtils.parser.IntentParse;
-import com.hudson.loveweather.utils.LogUtils.parser.MapParse;
-import com.hudson.loveweather.utils.LogUtils.parser.MessageParse;
-import com.hudson.loveweather.utils.LogUtils.parser.Parser;
-import com.hudson.loveweather.utils.LogUtils.parser.ReferenceParse;
-import com.hudson.loveweather.utils.LogUtils.parser.ThrowableParse;
+import com.hudson.loveweather.utils.log.parser.BundleParse;
+import com.hudson.loveweather.utils.log.parser.CollectionParse;
+import com.hudson.loveweather.utils.log.parser.IntentParse;
+import com.hudson.loveweather.utils.log.parser.MapParse;
+import com.hudson.loveweather.utils.log.parser.MessageParse;
+import com.hudson.loveweather.utils.log.parser.Parser;
+import com.hudson.loveweather.utils.log.parser.ReferenceParse;
+import com.hudson.loveweather.utils.log.parser.ThrowableParse;
 import com.hudson.loveweather.utils.UIUtils;
 
 /**

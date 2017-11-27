@@ -1,6 +1,6 @@
-package com.hudson.loveweather.utils.LogUtils.parser;
+package com.hudson.loveweather.utils.log.parser;
 
-import com.hudson.loveweather.utils.LogUtils.Constants;
+import com.hudson.loveweather.utils.log.Constants;
 
 /**
  * 格式化对象

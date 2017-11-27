@@ -1,4 +1,4 @@
-package com.hudson.loveweather.utils.LogUtils;
+package com.hudson.loveweather.utils.log;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,11 +18,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import static com.hudson.loveweather.utils.LogUtils.Constants.TYPE_DEBUG;
-import static com.hudson.loveweather.utils.LogUtils.Constants.TYPE_ERROR;
-import static com.hudson.loveweather.utils.LogUtils.Constants.TYPE_INFO;
-import static com.hudson.loveweather.utils.LogUtils.Constants.TYPE_VERBOSE;
-import static com.hudson.loveweather.utils.LogUtils.Constants.TYPE_WARN;
+import static com.hudson.loveweather.utils.log.Constants.TYPE_DEBUG;
+import static com.hudson.loveweather.utils.log.Constants.TYPE_ERROR;
+import static com.hudson.loveweather.utils.log.Constants.TYPE_INFO;
+import static com.hudson.loveweather.utils.log.Constants.TYPE_VERBOSE;
+import static com.hudson.loveweather.utils.log.Constants.TYPE_WARN;
 
 /**
  * Created by Hudson on 2017/11/25.

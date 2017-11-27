@@ -17,7 +17,7 @@ import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.global.LoveWeatherApplication;
 import com.hudson.loveweather.service.DataInitializeService;
 import com.hudson.loveweather.utils.BitmapUtils;
-import com.hudson.loveweather.utils.LogUtils.LogUtils;
+import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.ToastUtils;

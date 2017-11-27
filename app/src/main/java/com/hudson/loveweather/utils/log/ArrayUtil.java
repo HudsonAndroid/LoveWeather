@@ -1,4 +1,4 @@
-package com.hudson.loveweather.utils.LogUtils;
+package com.hudson.loveweather.utils.log;
 
 import java.util.Arrays;
 
