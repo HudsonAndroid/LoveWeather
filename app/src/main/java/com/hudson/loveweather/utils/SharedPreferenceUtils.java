@@ -58,4 +58,13 @@ public class SharedPreferenceUtils {
                 ScheduledTaskService.DEFAULT_BACKGROUND_PIC_TRIG_TIME);
     }
 
+    public void saveBackgroundPicCategory(String category){
+        mEditor.putString("pic_category",category);
+        mEditor.commit();
+    }
+
+    public String getBackgroundPicCategory(){
+        return mSp.getString("pic_category",Constants.PIC_CATEGORY[1]);
+    }
+
 }

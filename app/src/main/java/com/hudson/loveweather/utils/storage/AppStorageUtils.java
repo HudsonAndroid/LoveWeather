@@ -1,5 +1,7 @@
 package com.hudson.loveweather.utils.storage;
 
+import java.io.InputStream;
+
 /**
  * Created by Hudson on 2017/11/27.
  * 开放给用户使用的类
@@ -54,6 +56,10 @@ public class AppStorageUtils  {
 
     public static boolean writeFile(String path,String data){
         return sAppStorage.writeFile(path,data);
+    }
+
+    public static boolean writeFile(String path, InputStream inputStream){
+        return sAppStorage.writeFile(path,inputStream);
     }
 
     public static String readSd(String path){

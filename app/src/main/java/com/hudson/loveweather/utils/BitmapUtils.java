@@ -23,13 +23,14 @@ import static com.hudson.loveweather.utils.BitmapUtils.BitmapUtilsHelper.renderS
  */
 
 public class BitmapUtils {
-    static class BitmapUtilsHelper{
+    static class BitmapUtilsHelper {
         static final RenderScript renderScript = RenderScript.create(UIUtils.getContext());
     }
 
     /**
      * 对original图片进行模糊，模糊结果直接在original上
-     * @param radius 模糊半径
+     *
+     * @param radius   模糊半径
      * @param original 被模糊的图片
      * @return
      */
@@ -46,45 +47,41 @@ public class BitmapUtils {
 
     /**
      * 背景动画切换
-     * @param view 设置了bitmap背景的view
+     *
+     * @param view       设置了bitmap背景的view
      * @param nextBitmap 需要切换的目标
-     * @param duration 时长
-     * @return
+     * @param duration   时长
      */
-    public static boolean backgroundBitmapTrasition(final View view,Bitmap nextBitmap,int duration){
-        final Drawable background = view.getBackground();
-        if(background instanceof BitmapDrawable) {
-            Bitmap original = ((BitmapDrawable) background).getBitmap();
-            TransitionDrawable drawable = new TransitionDrawable(
-                    new Drawable[]{new BitmapDrawable(original),new BitmapDrawable(nextBitmap)});
-            view.setBackground(drawable);
-            drawable.startTransition(duration);
-        }
-        return false;
+    public static void backgroundBitmapTransition(final View view, Bitmap nextBitmap, int duration) {
+        Drawable background = view.getBackground();
+        TransitionDrawable drawable = new TransitionDrawable(
+                new Drawable[]{background, new BitmapDrawable(nextBitmap)});
+        view.setBackground(drawable);
+        drawable.startTransition(duration);
     }
 
     /**
      * 背景动画切换
-     * @param view 设置了bitmap背景的view
+     *
+     * @param view       设置了bitmap背景的view
      * @param nextBitmap 需要切换的目标
-     * @return
      */
-    public static boolean backgroundBitmapTrasition(final View view,Bitmap nextBitmap){
-        return backgroundBitmapTrasition(view,nextBitmap,
+    public static void backgroundBitmapTransition(final View view, Bitmap nextBitmap) {
+        backgroundBitmapTransition(view, nextBitmap,
                 com.hudson.loveweather.global.Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
     }
 
 
-    public static void backgroundAnimation(final View view){
+    public static void backgroundAnimation(final View view) {
         final Drawable background = view.getBackground();
-        if(background instanceof BitmapDrawable){
+        if (background instanceof BitmapDrawable) {
             final Bitmap original = ((BitmapDrawable) background).getBitmap();
-            ValueAnimator animator = ValueAnimator.ofInt(1,20,1);
+            ValueAnimator animator = ValueAnimator.ofInt(1, 20, 1);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    LogUtils.e("当前的值"+animation.getAnimatedValue());
-                    view.setBackground(new BitmapDrawable(gaussianBlur((int)animation.getAnimatedValue(),original)));
+                    LogUtils.e("当前的值" + animation.getAnimatedValue());
+                    view.setBackground(new BitmapDrawable(gaussianBlur((int) animation.getAnimatedValue(), original)));
                 }
             });
             animator.setDuration(2000);
@@ -98,10 +95,8 @@ public class BitmapUtils {
      * @param drawable
      * @return
      */
-    private Bitmap drawableToBitmap(Drawable drawable)
-    {
-        if (drawable instanceof BitmapDrawable)
-        {
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bd = (BitmapDrawable) drawable;
             return bd.getBitmap();
         }

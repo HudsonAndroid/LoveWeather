@@ -12,7 +12,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * Created by Hudson on 2017/11/27.
@@ -63,11 +65,46 @@ public abstract class StorageImpl implements Storage {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
+    /**
+     * 将流数据写入文件（由于可能数据并不是string格式，所以重载）
+     * @param path
+     * @param inputStream
+     * @return
+     */
+    public synchronized boolean writeFile(String path, InputStream inputStream){
+        int byteCount;
+        OutputStream outputStream = null;
+        try {
+            File file = new File(path);
+            if(file.exists()){
+                file.delete();
+            }
+            outputStream = new FileOutputStream(file);
+            byte[] bytes = new byte[1024];
+            while ((byteCount = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, byteCount);
+            }
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            IOUtils.close(outputStream);
+            IOUtils.close(inputStream);
+        }
+        return false;
+    }
+
 
     public synchronized boolean writeFile(String path,String data){
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(new File(path));
+            File file = new File(path);
+            if(file.exists()){
+                file.delete();
+            }
+            fos = new FileOutputStream(file);
             fos.write(data.getBytes());
             return true;
         } catch (FileNotFoundException e) {

@@ -3,6 +3,8 @@
           package="com.hudson.loveweather">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".global.LoveWeatherApplication"
@@ -23,6 +25,7 @@
         </activity>
 
         <service android:name=".service.DataInitializeService"/>
+        <service android:name=".service.ScheduledTaskService"/>
     </application>
 
 </manifest>
