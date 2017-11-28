@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,7 +28,6 @@ import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.ToastUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
-import com.hudson.loveweather.utils.storage.AppStorageUtils;
 
 import java.util.ArrayList;
 
@@ -53,6 +55,17 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.rl_calendar).setOnClickListener(this);
         mCalendar = (TextView) this.findViewById(R.id.tv_calendar);
         mCalendar.setText(TimeUtils.getDayNumberOfDate());
+        initializeBackgroundFromCache();
+    }
+
+    /**
+     * 从缓存中读取图片
+     */
+    private void initializeBackgroundFromCache() {
+        Bitmap showPic = BitmapUtils.getShowPic();
+        if(showPic!=null){
+            mRoot.setBackground(new BitmapDrawable(showPic));
+        }
     }
 
     @Override
@@ -84,6 +97,10 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+                != PackageManager.PERMISSION_GRANTED){
+            permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
         }
         String[] tmp = new String [permissions.size()];
         permissions.toArray(tmp);
@@ -138,10 +155,10 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_city:
 //                ToastUtils.showToast("切换城市了");
 //                BitmapUtils.backgroundAnimation(mRoot);
-                toggleBackgroundPic();
                 break;
             case R.id.rl_calendar:
-                ToastUtils.showToast("显示每日一句");
+                startActivity(new Intent(this,DailyWordActivity.class));
+                overridePendingTransition(-1,-1);
                 break;
 //            case :
 //
@@ -151,16 +168,32 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private void toggleBackgroundPic(){
+    private void toggleBackgroundPic(String localPath){
         try{
             BitmapUtils.backgroundBitmapTransition(mRoot,
-                    BitmapFactory.decodeFile(AppStorageUtils.getCachePath()+"/"
-                            +Constants.PIC_CACHE_NAME));
+                    BitmapFactory.decodeFile(localPath));
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    @Override
+    protected void onStop() {
+        //在页面不可见的情况下，不需要自动更新背景
+        SharedPreferenceUtils.getInstance().saveShouldUpdatePic(false);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        SharedPreferenceUtils.getInstance().saveShouldUpdatePic(true);
+        super.onStart();
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+    }
 
     class WeatherBroadCastReceiver extends BroadcastReceiver{
 
@@ -169,7 +202,10 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
             String action = intent.getAction();
             if (action.equals(Constants.BROADCAST_UPDATE_PIC)){
                 LogUtils.e("收到广播，开始更新图片");
-                toggleBackgroundPic();
+                String path = intent.getStringExtra("path");
+                if(!TextUtils.isEmpty(path)){
+                    toggleBackgroundPic(path);
+                }
             }
         }
     }

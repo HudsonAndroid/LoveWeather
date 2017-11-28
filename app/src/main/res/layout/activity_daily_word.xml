@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rl_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/default_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hudson.loveweather.ui.activity.DailyWordActivity">
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:orientation="vertical"
+        android:elevation="@dimen/elevation"
+        android:layout_marginLeft="@dimen/daily_content_horizontal_margin"
+        android:layout_marginRight="@dimen/daily_content_horizontal_margin"
+        android:layout_marginTop="@dimen/daily_content_vertical_margin"
+        android:layout_marginBottom="@dimen/daily_content_vertical_margin"
+        android:background="@drawable/shape_daily_word"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_img"
+            android:layout_weight="2.0"
+            android:layout_width="match_parent"
+            android:background="@drawable/default_bg"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/text_content_vertical_margin"
+                android:layout_marginLeft="@dimen/daily_text_content_horizontal_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_gravity="center"
+                    android:text="28"
+                    android:textSize="35sp"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:layout_marginLeft="@dimen/small_margin"
+                    android:background="@android:color/white"
+                    android:layout_width="1dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/small_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tv_month"
+                        android:layout_weight="1"
+                        android:text="Nov."
+                        android:gravity="center_vertical"
+                        android:textColor="@android:color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_day"
+                        android:layout_weight="1"
+                        android:text="Tuesday"
+                        android:gravity="center_vertical"
+                        android:textColor="@android:color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <TextView
+                android:id="@+id/tv_daily_word"
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:layout_marginLeft="@dimen/daily_text_content_horizontal_margin"
+                android:layout_marginRight="@dimen/daily_text_content_horizontal_margin"
+                android:textColor="@color/darkBlack"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/text_content_vertical_margin"
+                android:text="先学会如何用脑，在学会如何用剑"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/iv_share"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/image_bottom_margin"
+                android:src="@drawable/share"
+                android:padding="9dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_alignLeft="@id/ll_content"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:layout_marginTop="@dimen/daily_close_vertical_margin"
+        android:src="@drawable/close"
+        android:padding="5dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"/>
+
+</RelativeLayout>

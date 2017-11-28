@@ -8,15 +8,16 @@ import java.io.File;
 
 /**
  * Created by Hudson on 2017/11/27.
- * @hide
+ *
  */
-public class AppStorage extends StorageImpl{
+ class AppStorage extends StorageImpl{
 
-    static class StorageHelper{
+    private static class StorageHelper{
         static final AppStorage sInstance = new AppStorage();
     }
 
-    public static AppStorage getInstance(){
+    //外界只能使用AppStorage类
+    static AppStorage getInstance(){
         return StorageHelper.sInstance;
     }
 
@@ -25,7 +26,7 @@ public class AppStorage extends StorageImpl{
         return mkDirs(getSdAbsolutePath() + "/" + UIUtils.getString(R.string.app_english_name));
     }
 
-    public String mkDirs(String path){
+    private String mkDirs(String path){
         File file = new File(path);
         if(!file.exists()){
             if(!file.mkdirs()){
@@ -36,6 +37,15 @@ public class AppStorage extends StorageImpl{
     }
 
     /**
+     * 获取一个自定义路径，如果路径没有创建，那么创建再返回
+     * @param sourcePath
+     * @return
+     */
+    protected String getCustomPath(String sourcePath){
+        return mkDirs(sourcePath);
+    }
+
+    /**
      * 有三种选择：
      * 1）外部存储系统默认缓存路径
      * 2）外部存储，在appRootPath中自定义缓存目录（系统清理缓存时不会被清除）
@@ -43,11 +53,11 @@ public class AppStorage extends StorageImpl{
      * 这里选择方案二
      * @return
      */
-    public String getCacheAbsolutePath(){
+     String getCacheAbsolutePath(){
         return mkDirs(getExternalAppRootPath() + "/" + ".cache");
     }
 
-    public String getPicDownloadAbsolutePath(){
-        return mkDirs(getExternalAppRootPath() + "/" + "pic");
+     String getPicDownloadAbsolutePath(){
+        return mkDirs(getExternalAppRootPath() + "/" + "picture");
     }
 }

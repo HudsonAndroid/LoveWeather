@@ -5,21 +5,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.DeviceUtils;
-import com.hudson.loveweather.utils.HttpUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
-import com.hudson.loveweather.utils.storage.AppStorageUtils;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import com.hudson.loveweather.utils.update.UpdateUtils;
 
 /**
  * Created by Hudson on 2017/11/26.
@@ -28,13 +20,14 @@ import okhttp3.Response;
 
 public class ScheduledTaskService extends Service {
     public static final int DEFAULT_WEATHER_TRIGGER_TIME = 1*60*60*1000;//一个小时更新天气
-    public static final int DEFAULT_BACKGROUND_PIC_TRIG_TIME = 1*60*1000;//10分钟更新背景
+    public static final int DEFAULT_BACKGROUND_PIC_TRIG_TIME = 5*60*1000;//5分钟更新背景
     private SharedPreferenceUtils mSharedPreferenceUtils;
     public static final int TYPE_UPDATE_WEATHER = 0;
     public static final int TYPE_UPDATE_PIC = 1;
     private int mPicIndex = -1;//请求图片的index
     private String mPicCategory;
     private String mPicUrl;
+    private UpdateUtils mUpdateUtils;
 
     @Override
     public void onCreate() {
@@ -46,6 +39,7 @@ public class ScheduledTaskService extends Service {
         mPicUrl = new StringBuilder(Constants.NET_PIC_URL).append("/")
                 .append(pixels[0]).append("/").append(pixels[1]).append("/")
                 .append(mPicCategory).append("/").toString();
+        mUpdateUtils = UpdateUtils.getInstance();
         super.onCreate();
     }
 
@@ -66,7 +60,7 @@ public class ScheduledTaskService extends Service {
             scheduleUpdatePic();
         }else{
             updateWeather();
-            updateBackgroundPic();
+//            updateBackgroundPic();
             scheduleUpdateWeather();
             scheduleUpdatePic();
         }
@@ -75,20 +69,24 @@ public class ScheduledTaskService extends Service {
 
     private void scheduleUpdateWeather(){
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long triggerAtTime = SystemClock.elapsedRealtime() +
+        long triggerAtTime = System.currentTimeMillis() +
                 mSharedPreferenceUtils.getUpdateWeatherTriggerTime();
         Intent updateWeatherIntent = new Intent(this,ScheduledTaskService.class);
         updateWeatherIntent.putExtra("type",TYPE_UPDATE_WEATHER);
         PendingIntent pendingIntent = PendingIntent.getService(this,0,updateWeatherIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.cancel(pendingIntent);
-        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pendingIntent);
+        manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
     }
 
     private void scheduleUpdatePic(){
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long triggerAtTime = System.currentTimeMillis() +
-                mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime();
+        int timeOffset = mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime();
+        if(!mSharedPreferenceUtils.getShouldUpdatePic()){
+            //如果页面不可见，那么更新是无意义的，将时间间隔扩大为原来的2倍
+            LogUtils.e("页面不可见，更新周期扩大");
+            timeOffset *= 2;
+        }
+        long triggerAtTime = System.currentTimeMillis() + timeOffset;
         Intent updatePicIntent = new Intent(this,ScheduledTaskService.class);
         updatePicIntent.putExtra("type",TYPE_UPDATE_PIC);
         PendingIntent pendingIntent = PendingIntent.getService(this,0,updatePicIntent,
@@ -97,7 +95,7 @@ public class ScheduledTaskService extends Service {
     }
 
     private void updateWeather(){
-
+        mUpdateUtils.updateWeather("");
     }
 
     /**
@@ -107,21 +105,8 @@ public class ScheduledTaskService extends Service {
     private void updateBackgroundPic(){
         mPicUrl += (++ mPicIndex);
         LogUtils.e("更新图片了"+mPicIndex);
-        HttpUtils.requestNetData(mPicUrl, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                AppStorageUtils.writeFile(AppStorageUtils.getCachePath()+"/"
-                        +Constants.PIC_CACHE_NAME,
-                        response.body().byteStream());
-                LogUtils.e("文件写入成功");
-                sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_PIC));
-            }
-        });
+        mUpdateUtils.updateBackgroundPic(mPicUrl,mPicIndex);
     }
+
 
 }

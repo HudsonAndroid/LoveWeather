@@ -27,6 +27,14 @@ public class AppStorageUtils  {
     }
 
     /**
+     * 获取图片缓存目录
+     * @return
+     */
+    public static String getPicCachePath(){
+        return sAppStorage.getCustomPath(getCachePath() + "/pictures");
+    }
+
+    /**
      * 获取应用图片路径
      * @return
      */

@@ -2,6 +2,7 @@ package com.hudson.loveweather.utils;
 
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,7 +14,9 @@ import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 
+import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.log.LogUtils;
+import com.hudson.loveweather.utils.storage.AppStorageUtils;
 
 import static com.hudson.loveweather.utils.BitmapUtils.BitmapUtilsHelper.renderScript;
 
@@ -41,8 +44,10 @@ public class BitmapUtils {
         scriptIntrinsicBlur.setRadius(radius);
         scriptIntrinsicBlur.setInput(input);
         scriptIntrinsicBlur.forEach(output);
-        output.copyTo(original);
-        return original;
+        Bitmap bitmap = Bitmap.createBitmap(original.getWidth(),original.getHeight(),
+                Bitmap.Config.ARGB_4444);
+        output.copyTo(bitmap);
+        return bitmap;
     }
 
     /**
@@ -72,11 +77,11 @@ public class BitmapUtils {
     }
 
 
-    public static void backgroundAnimation(final View view) {
+    public static void backgroundAnimation(final View view,long duration) {
         final Drawable background = view.getBackground();
         if (background instanceof BitmapDrawable) {
             final Bitmap original = ((BitmapDrawable) background).getBitmap();
-            ValueAnimator animator = ValueAnimator.ofInt(1, 20, 1);
+            ValueAnimator animator = ValueAnimator.ofInt(1, 25);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -84,7 +89,7 @@ public class BitmapUtils {
                     view.setBackground(new BitmapDrawable(gaussianBlur((int) animation.getAnimatedValue(), original)));
                 }
             });
-            animator.setDuration(2000);
+            animator.setDuration(duration);
             animator.start();
         }
     }
@@ -107,5 +112,31 @@ public class BitmapUtils {
         drawable.setBounds(0, 0, w, h);
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    /**
+     * 从缓存的图片中拿第一张
+     * @return
+     */
+    public static Bitmap getShowPic() {
+        return BitmapFactory.decodeFile(new StringBuilder(AppStorageUtils.getPicCachePath())
+                .append("/").append(Constants.PIC_CACHE_NAME)
+                .append("0").append(".jpg").toString());
+    }
+
+    /**
+     * 提取图片中央块
+     * @param source
+     * @param destWidth
+     * @param destHeight
+     * @return
+     */
+    public static Bitmap clipBitmap(Bitmap source,int destWidth,int destHeight){
+        if(source != null){
+            int xOffset = (source.getWidth() - destWidth)>>2;
+            int yOffset = (source.getHeight() - destHeight)>>2;
+            return Bitmap.createBitmap(source,xOffset,yOffset,destWidth,destHeight);
+        }
+        return null;
     }
 }

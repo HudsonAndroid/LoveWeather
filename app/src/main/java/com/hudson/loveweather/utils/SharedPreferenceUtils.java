@@ -64,7 +64,26 @@ public class SharedPreferenceUtils {
     }
 
     public String getBackgroundPicCategory(){
-        return mSp.getString("pic_category",Constants.PIC_CATEGORY[1]);
+        return mSp.getString("pic_category",Constants.PIC_CATEGORY[0]);
     }
+
+    public void saveShouldUpdatePic(boolean flag){
+        mEditor.putBoolean("should_update_pic",flag);
+        mEditor.commit();
+    }
+
+    public boolean getShouldUpdatePic(){
+        return mSp.getBoolean("should_update_pic",true);
+    }
+
+    public void saveOnlyWifiAccessNetUpdatePic(boolean flag){
+        mEditor.putBoolean("only_wifi_update_network_pic",flag);
+        mEditor.commit();
+    }
+
+    public boolean getOnlyWifiAccessNetUpdatePic(){
+        return mSp.getBoolean("only_wifi_update_network_pic",false);
+    }
+
 
 }
