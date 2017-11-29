@@ -116,7 +116,7 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
             });
         }
         AnimatorSet set = new AnimatorSet();
-        set.setDuration(1000);
+        set.setDuration(Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
         set.playTogether(translateY,alpha,rootAlpha,backgroundAnimator);
         set.start();
         set.addListener(new Animator.AnimatorListener() {
@@ -142,18 +142,24 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
+    //避免快速点击导致重复回调动画
+    private boolean mIsAnimationStarted = false;
+
     private void startOutAnimation(){
+        if(mIsAnimationStarted){
+            return ;
+        }
         ObjectAnimator translateY = ObjectAnimator.ofFloat(mContent,"translationY",0.0f,200.0f);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(mContent,"alpha",1f,0f);
         ObjectAnimator rootAlpha = ObjectAnimator.ofFloat(mRootView,"alpha",1f,0f);
         AnimatorSet set = new AnimatorSet();
-        set.setDuration(1000);
+        set.setDuration(Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
         set.playTogether(translateY,alpha,rootAlpha);
         set.start();
         set.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                mIsAnimationStarted = true;
             }
 
             @Override

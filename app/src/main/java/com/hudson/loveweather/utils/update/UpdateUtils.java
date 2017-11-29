@@ -23,9 +23,30 @@ public class UpdateUtils {
         return UpdateUtilsHelper.sInstance;
     }
 
+    /**
+     * @param url
+     * @param objects
+     */
     public void updateWeather(String url,Object... objects){
         mWeatherDataUpdater.update(url,objects);
     }
+
+    public void registerWeatherObserver(WeatherObserver observer){
+        mWeatherDataUpdater.registerObserver(observer);
+    }
+
+    public void unRegisterWeatherObserver(WeatherObserver observer){
+        mWeatherDataUpdater.unRegisterObserver(observer);
+    }
+
+//    /**
+//     * use in activity
+//     * @param url
+//     * @param callback
+//     */
+//    public void updateWeather(String url, Callback callback){
+//        mWeatherDataUpdater.updateWeather(url,callback);
+//    }
 
     public void updateBackgroundPic(String url,Object... objects){
         mBackgroundPicUpdater.update(url,objects);

@@ -96,7 +96,7 @@
                 android:textColor="@color/darkBlack"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/text_content_vertical_margin"
-                android:text="先学会如何用脑，在学会如何用剑"
+                android:text="先学会如何用脑，再学会如何用剑"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

@@ -9,33 +9,55 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
+import com.hudson.loveweather.bean.Weather;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.global.LoveWeatherApplication;
 import com.hudson.loveweather.service.DataInitializeService;
 import com.hudson.loveweather.service.ScheduledTaskService;
+import com.hudson.loveweather.ui.view.weatherpage.FirstPageViewHelper;
 import com.hudson.loveweather.utils.BitmapUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.ToastUtils;
+import com.hudson.loveweather.utils.UIUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
+import com.hudson.loveweather.utils.update.UpdateUtils;
+import com.hudson.loveweather.utils.update.WeatherObserver;
 
 import java.util.ArrayList;
 
-public class WeatherActivity extends BaseActivity implements View.OnClickListener {
+public class WeatherActivity extends BaseActivity implements View.OnClickListener, WeatherObserver {
     private TextView mTextView;
     private TextView mCalendar;
     private View mRoot;
     private WeatherBroadCastReceiver mReceiver;
+    private LinearLayout mWeatherContainer;
+    private View mActionBar;
+    private FirstPageViewHelper mFirstViewHelper;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState == null){
+            //如果不为空，说明activity是被异常回收导致，并不是正常退出，所以才会有数据
+            //只有在第一次启动了（或者正常启动）才去启动服务
+            ToastUtils.showToast("上次没有异常退出！");
+            startService(new Intent(this, ScheduledTaskService.class));
+        }
+    }
 
     @Override
     public void setContentViewAndInit() {
@@ -44,19 +66,32 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         mReceiver = new WeatherBroadCastReceiver();
         IntentFilter filter = new IntentFilter(Constants.BROADCAST_UPDATE_PIC);
         registerReceiver(mReceiver,filter);
-        startService(new Intent(this, ScheduledTaskService.class));
+        UpdateUtils.getInstance().registerWeatherObserver(this);
     }
 
     @Override
     public void initView() {
         mRoot = findViewById(R.id.ll_weather);
+        mActionBar = this.findViewById(R.id.rl_actionbar);
         mTextView = (TextView) this.findViewById(R.id.tv_city);
         mTextView.setOnClickListener(this);
+        findViewById(R.id.iv_settings).setOnClickListener(this);
         findViewById(R.id.rl_calendar).setOnClickListener(this);
+        mWeatherContainer = (LinearLayout) this.findViewById(R.id.ll_weather_container);
+        mFirstViewHelper = new FirstPageViewHelper();
+        mWeatherContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                //第三个参数是actionbar高度
+                mFirstViewHelper.inflateView(WeatherActivity.this
+                        ,mWeatherContainer,mActionBar.getHeight());
+            }
+        });
         mCalendar = (TextView) this.findViewById(R.id.tv_calendar);
         mCalendar.setText(TimeUtils.getDayNumberOfDate());
         initializeBackgroundFromCache();
     }
+
 
     /**
      * 从缓存中读取图片
@@ -71,6 +106,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void recycle() {
         unregisterReceiver(mReceiver);
+        UpdateUtils.getInstance().unRegisterWeatherObserver(this);
         LoveWeatherApplication.exitApp();
     }
 
@@ -136,8 +172,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 case Constants.EVENT_EXIT_APP:
                     LoveWeatherApplication.exitApp();
                     break;
-//                case :
-//
+//                case 1:
 //                    break;
 //                case :
 //
@@ -160,9 +195,9 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 startActivity(new Intent(this,DailyWordActivity.class));
                 overridePendingTransition(-1,-1);
                 break;
-//            case :
-//
-//                break;
+            case R.id.iv_settings:
+                ToastUtils.showToast("设置页面");
+                break;
             default:
                 break;
         }
@@ -176,6 +211,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
             e.printStackTrace();
         }
     }
+
 
     @Override
     protected void onStop() {
@@ -195,6 +231,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         moveTaskToBack(false);
     }
 
+
     class WeatherBroadCastReceiver extends BroadcastReceiver{
 
         @Override
@@ -208,5 +245,26 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         }
+    }
+
+    @Override
+    public void onWeatherUpdateSuccess(final Weather weather) {
+        UIUtils.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                mFirstViewHelper.refreshView(weather);
+                ToastUtils.showToast("天气更新成功");
+            }
+        });
+    }
+
+    @Override
+    public void onWeatherUpdateFailed(Exception e) {
+        UIUtils.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtils.showToast("天气更新失败");
+            }
+        });
     }
 }

@@ -19,7 +19,7 @@ import com.hudson.loveweather.utils.update.UpdateUtils;
  */
 
 public class ScheduledTaskService extends Service {
-    public static final int DEFAULT_WEATHER_TRIGGER_TIME = 1*60*60*1000;//一个小时更新天气
+    public static final int DEFAULT_WEATHER_TRIGGER_TIME = 5*60*60*1000;//5个小时更新一次天气
     public static final int DEFAULT_BACKGROUND_PIC_TRIG_TIME = 5*60*1000;//5分钟更新背景
     private SharedPreferenceUtils mSharedPreferenceUtils;
     public static final int TYPE_UPDATE_WEATHER = 0;
@@ -60,7 +60,6 @@ public class ScheduledTaskService extends Service {
             scheduleUpdatePic();
         }else{
             updateWeather();
-//            updateBackgroundPic();
             scheduleUpdateWeather();
             scheduleUpdatePic();
         }
@@ -80,13 +79,8 @@ public class ScheduledTaskService extends Service {
 
     private void scheduleUpdatePic(){
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int timeOffset = mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime();
-        if(!mSharedPreferenceUtils.getShouldUpdatePic()){
-            //如果页面不可见，那么更新是无意义的，将时间间隔扩大为原来的2倍
-            LogUtils.e("页面不可见，更新周期扩大");
-            timeOffset *= 2;
-        }
-        long triggerAtTime = System.currentTimeMillis() + timeOffset;
+        long triggerAtTime = System.currentTimeMillis()
+                + mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime();
         Intent updatePicIntent = new Intent(this,ScheduledTaskService.class);
         updatePicIntent.putExtra("type",TYPE_UPDATE_PIC);
         PendingIntent pendingIntent = PendingIntent.getService(this,0,updatePicIntent,
@@ -95,7 +89,8 @@ public class ScheduledTaskService extends Service {
     }
 
     private void updateWeather(){
-        mUpdateUtils.updateWeather("");
+        mUpdateUtils.updateWeather(Constants.HE_WEATHER_BASE_URL
+                + "CN101190401" + Constants.APP_KEY);
     }
 
     /**

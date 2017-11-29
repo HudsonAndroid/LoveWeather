@@ -22,16 +22,21 @@ public class Constants {
 
     public static final String DAILY_WORD_URL = "https://api.xiaolin.in/hitokoto";//每日一句api
 
+    public static final String HE_WEATHER_BASE_URL = "http://guolin.tech/api/weather?cityid=";
+    public static final String APP_KEY = "&key=e4927826553043d09e216e1d38c910a5";
+
 
     public static final String SHAREDPREFERENCE_NAME = "love_weather";
 
     public static final int EVENT_EXIT_APP = 0;
 
     public static final int PERMISSION_REQUEST_CODE = 1;
-    public static final int DEFAULT_BACKGROUND_TRANSITION_DURATION = 1000;
-
+    public static final int DEFAULT_BACKGROUND_TRANSITION_DURATION = 600;
+//    public static final int WEATHER_NETWORK_UPDATE_SUCCESS = 1;//天气信息网络获取成功
+//    public static final int WEATHER_NETWORK_UPDATE_FAILED = 2;//天气信息网络获取失败
 
 
     public static final String BROADCAST_UPDATE_PIC = "com.hudson.loveweather.update_pic";
+//    public static final String BROADCAST_UPDATE_WEATHER = "com.hudson.loveweather.update_weather";
 
 }

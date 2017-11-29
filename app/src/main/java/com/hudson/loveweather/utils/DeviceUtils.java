@@ -1,5 +1,6 @@
 package com.hudson.loveweather.utils;
 
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 /**
@@ -12,5 +13,14 @@ public class DeviceUtils {
         DisplayMetrics dm = UIUtils.getContext().getResources().getDisplayMetrics();
         pixels[0] = dm.widthPixels;
         pixels[1] = dm.heightPixels;
+    }
+
+    /**
+     * 获取通知栏高度
+     * @return
+     */
+    public static int getStatusBarHeight() {
+        return Resources.getSystem().getDimensionPixelSize(
+                Resources.getSystem().getIdentifier("status_bar_height", "dimen", "android"));
     }
 }
