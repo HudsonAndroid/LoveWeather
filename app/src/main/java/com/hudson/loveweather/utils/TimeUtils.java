@@ -1,5 +1,7 @@
 package com.hudson.loveweather.utils;
 
+import android.text.TextUtils;
+
 import java.util.Calendar;
 
 /**
@@ -14,6 +16,14 @@ public class TimeUtils {
      */
     public static String getDayNumberOfDate(){
         return String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+    }
+
+    public static int getHourOfDay(){
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+    }
+
+    public static int getMinuteOfHour(){
+        return Calendar.getInstance().get(Calendar.MINUTE);
     }
 
     public static String getDayWeekOfDate(){
@@ -68,5 +78,33 @@ public class TimeUtils {
                 return "Dec.";
         }
         return "Jan.";
+    }
+
+    /**
+     * 从字符串中提取时间的分钟数
+     * 例如 20:51 表示20*60+51分钟
+     * @param time 包含时间的字符串
+     * @param startIndex 起始下标
+     * @return 分钟数,-1表示格式不正确
+     */
+    public static int parseMinuteTime(String time, int startIndex){
+        if(!TextUtils.isEmpty(time)){
+            int index = time.indexOf(":",startIndex);
+            if(index != -1){
+                try{
+                    int hour = Integer.valueOf(time.substring(index-2,index));
+                    int minute = Integer.valueOf(time.substring(index +1,index+3));
+                    return hour*60 + minute;
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return parseMinuteTime(time,index);
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static int parseCurrentMinuteTime(){
+        return getHourOfDay()*60 + getMinuteOfHour();
     }
 }

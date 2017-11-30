@@ -85,5 +85,51 @@ public class SharedPreferenceUtils {
         return mSp.getBoolean("only_wifi_update_network_pic",false);
     }
 
+    public void saveLastLocationWeatherId(String weatherId){
+        mEditor.putString("default_weather_id",weatherId);
+        mEditor.commit();
+    }
+
+    public String getLastLocationWeatherId(){
+        return mSp.getString("default_weather_id",null);
+    }
+
+    public void saveLastLocationInfo(String locationInfo){
+        mEditor.putString("default_location_info",locationInfo);
+        mEditor.commit();
+    }
+
+    public String getLastLocationInfo(){
+        return mSp.getString("default_location_info",null);
+    }
+
+
+    /**
+     *
+     * @param weather 天气的json格式字符串
+     */
+    public void saveWeatherInfo(String key,String weather){
+        mEditor.putString(key,weather);
+        mEditor.commit();
+    }
+
+    /**
+     * 获取缓存
+     * @param key
+     * @return
+     */
+    public String getWeatherInfo(String key){
+        return mSp.getString(key,null);
+    }
+
+    /**
+     * 移除缓存
+     * @param key
+     */
+    public void removeWeatherInfo(String key){
+        mEditor.remove(key);
+        mEditor.commit();
+    }
+
 
 }

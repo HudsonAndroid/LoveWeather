@@ -24,7 +24,7 @@ import okhttp3.Response;
  */
 
 public class DataBaseLoader {
-    public static boolean loadStatus = false;
+    public volatile static boolean loadStatus = false;
 
     /**
      * 加载数据到本地数据库
@@ -32,6 +32,7 @@ public class DataBaseLoader {
      */
     public static void loadDatabaseToLocal(){
         if(!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()){
+            loadStatus = true;
             loadProvinceData();
         }
     }
@@ -47,9 +48,8 @@ public class DataBaseLoader {
             public void onResponse(Call call, Response response) throws IOException {
                 ProvinceJsonParser provinceJsonParser = new ProvinceJsonParser();
                 ArrayList<Province> dest = new ArrayList<>();
-                loadStatus = provinceJsonParser.parseJson(response.body().string(), dest, new Object[]{});
+                loadStatus = loadStatus&&provinceJsonParser.parseJson(response.body().string(), dest, new Object[]{});
                 if(loadStatus){
-                    DataSupport.saveAll(dest);
                     //继续加载city
                     Province province;
                     for (int i = 0; i < dest.size(); i++) {
@@ -76,9 +76,8 @@ public class DataBaseLoader {
             public void onResponse(Call call, Response response) throws IOException {
                 CityJsonParser parser = new CityJsonParser();
                 ArrayList<City> dest = new ArrayList<>();
-                loadStatus = parser.parseJson(response.body().string(), dest, provinceName);
+                loadStatus = loadStatus&&parser.parseJson(response.body().string(), dest, provinceName);
                 if(loadStatus){
-                    DataSupport.saveAll(dest);
                     //继续加载country数据，这是我们最终需要保存的数据库
                     City city;
                     for (int i = 0; i < dest.size(); i++) {
@@ -101,7 +100,7 @@ public class DataBaseLoader {
             public void onResponse(Call call, Response response) throws IOException {
                 CountryJsonParser parser = new CountryJsonParser();
                 ArrayList<Country> dest = new ArrayList<>();
-                loadStatus = parser.parseJson(response.body().string(), dest, provinceName, cityName);
+                loadStatus = loadStatus&&parser.parseJson(response.body().string(), dest, provinceName, cityName);
                 if(loadStatus){
                     DataSupport.saveAll(dest);
                 }

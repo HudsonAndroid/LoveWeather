@@ -1,13 +1,11 @@
 package com.hudson.loveweather.db;
 
-import org.litepal.crud.DataSupport;
-
 /**
  * Created by Hudson on 2017/11/24.
  * 城市
  */
 
-public class City extends DataSupport{
+public class City{
     private int id;
     private int cityCode;
     private String provinceName;

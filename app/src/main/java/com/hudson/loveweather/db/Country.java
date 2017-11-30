@@ -53,4 +53,15 @@ public class Country extends DataSupport {
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
+
+    @Override
+    public String toString() {
+        return "Country{" +
+                "id=" + id +
+                ", weatherId='" + weatherId + '\'' +
+                ", provinceName='" + provinceName + '\'' +
+                ", cityName='" + cityName + '\'' +
+                ", countryName='" + countryName + '\'' +
+                '}';
+    }
 }

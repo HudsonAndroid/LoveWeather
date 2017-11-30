@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">爱天气</string>
     <string name="app_english_name">LoveWeather</string>
+    <string name="loading">正在加载</string>
 </resources>

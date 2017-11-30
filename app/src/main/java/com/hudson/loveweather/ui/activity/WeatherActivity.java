@@ -9,13 +9,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -29,6 +28,8 @@ import com.hudson.loveweather.service.DataInitializeService;
 import com.hudson.loveweather.service.ScheduledTaskService;
 import com.hudson.loveweather.ui.view.weatherpage.FirstPageViewHelper;
 import com.hudson.loveweather.utils.BitmapUtils;
+import com.hudson.loveweather.utils.DataBaseLoader;
+import com.hudson.loveweather.utils.HttpUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.ToastUtils;
@@ -37,44 +38,45 @@ import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.update.UpdateUtils;
 import com.hudson.loveweather.utils.update.WeatherObserver;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 
-public class WeatherActivity extends BaseActivity implements View.OnClickListener, WeatherObserver {
-    private TextView mTextView;
+public class WeatherActivity extends BaseActivity implements View.OnClickListener, WeatherObserver, SwipeRefreshLayout.OnRefreshListener {
+    private TextView mCity;
     private TextView mCalendar;
     private View mRoot;
     private WeatherBroadCastReceiver mReceiver;
     private LinearLayout mWeatherContainer;
     private View mActionBar;
     private FirstPageViewHelper mFirstViewHelper;
+    private boolean mIsDatabaseInit = false;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SharedPreferenceUtils mInstance;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(savedInstanceState == null){
-            //如果不为空，说明activity是被异常回收导致，并不是正常退出，所以才会有数据
-            //只有在第一次启动了（或者正常启动）才去启动服务
-            ToastUtils.showToast("上次没有异常退出！");
-            startService(new Intent(this, ScheduledTaskService.class));
-        }
-    }
 
     @Override
     public void setContentViewAndInit() {
         setContentView(R.layout.activity_weather);
+        mInstance = SharedPreferenceUtils.getInstance();
         requestPermission();
         mReceiver = new WeatherBroadCastReceiver();
         IntentFilter filter = new IntentFilter(Constants.BROADCAST_UPDATE_PIC);
         registerReceiver(mReceiver,filter);
         UpdateUtils.getInstance().registerWeatherObserver(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void initView() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) this.findViewById(R.id.srl);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mRoot = findViewById(R.id.ll_weather);
         mActionBar = this.findViewById(R.id.rl_actionbar);
-        mTextView = (TextView) this.findViewById(R.id.tv_city);
-        mTextView.setOnClickListener(this);
+        mCity = (TextView) this.findViewById(R.id.tv_city);
+        mCity.setOnClickListener(this);
         findViewById(R.id.iv_settings).setOnClickListener(this);
         findViewById(R.id.rl_calendar).setOnClickListener(this);
         mWeatherContainer = (LinearLayout) this.findViewById(R.id.ll_weather_container);
@@ -85,6 +87,9 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 //第三个参数是actionbar高度
                 mFirstViewHelper.inflateView(WeatherActivity.this
                         ,mWeatherContainer,mActionBar.getHeight());
+                //读取缓存的天气信息
+                updateWeather(UpdateUtils.getInstance().parseWeatherFromJson(
+                        mInstance.getWeatherInfo(mInstance.getLastLocationWeatherId())));
             }
         });
         mCalendar = (TextView) this.findViewById(R.id.tv_calendar);
@@ -105,17 +110,49 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void recycle() {
+        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         UpdateUtils.getInstance().unRegisterWeatherObserver(this);
         LoveWeatherApplication.exitApp();
     }
 
     private void initializeDatabase() {
-        if(!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()){
-            LogUtils.log("没有初始化过，所以开始启动服务加载");
-            startService(new Intent(this, DataInitializeService.class));
+        if(HttpUtils.isNetworkAvailable()){
+            mIsDatabaseInit = mInstance.isLocalDatabaseLoaded();
+            if(!mIsDatabaseInit){
+                LogUtils.log("没有初始化过，所以开始启动服务加载");
+                startService(new Intent(this, DataInitializeService.class));
+            }else{
+                LogUtils.log("已经初始化过了");
+            }
         }else{
-            LogUtils.log("已经初始化过了");
+            ToastUtils.showToast("网络不可用！");
+        }
+    }
+
+
+    @Override
+    public void onRefresh() {
+        if(HttpUtils.isNetworkAvailable()){
+            if(!DataBaseLoader.loadStatus&&!mInstance.isLocalDatabaseLoaded()){
+                initializeDatabase();
+                startService(new Intent(this, ScheduledTaskService.class));
+            }else{
+                //更新天气
+                String lastLocationWeatherId = mInstance.getLastLocationWeatherId();
+                UpdateUtils.getInstance().updateWeather(Constants.HE_WEATHER_BASE_URL
+                        + lastLocationWeatherId + Constants.APP_KEY,lastLocationWeatherId);
+            }
+        }else{
+            ToastUtils.showToast("网络不可用！");
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void startBackgroundService(){
+        //如果是数据库已经初始化或者没有初始化，但是网络可用
+        if(mIsDatabaseInit||(!mIsDatabaseInit&&HttpUtils.isNetworkAvailable())){
+            startService(new Intent(this, ScheduledTaskService.class));
         }
     }
 
@@ -130,17 +167,33 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         }else{
             initializeDatabase();
         }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED){
+            mLocatePermissionFlag = false;
+            permissions.add(Manifest.permission.READ_PHONE_STATE);
+        }else{
+            mLocatePermissionFlag = true;
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            mLocatePermissionFlag = false;
+            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }else{
+            mLocatePermissionFlag = true;
+        }
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
+            mLocatePermissionFlag = false;
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }else{
+            mLocatePermissionFlag = true;
         }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
-                != PackageManager.PERMISSION_GRANTED){
-            permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
+        if(mLocatePermissionFlag){
+            startBackgroundService();
         }
         String[] tmp = new String [permissions.size()];
         permissions.toArray(tmp);
-        if(tmp!=null&&tmp.length>0){
+        if(tmp.length>0){
             ActivityCompat.requestPermissions(this,tmp, Constants.PERMISSION_REQUEST_CODE);
         }
     }
@@ -149,21 +202,54 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case Constants.PERMISSION_REQUEST_CODE:
-                if(grantResults.length>0){
-                    if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                        initializeDatabase();
-                    }else if(grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                        //文件权限被允许
-                    }
+                for (int i = 0; i < permissions.length; i++) {
+                    permissionResult(permissions[i],grantResults[i]);
+                }
+                if(mLocatePermissionFlag){
+                    startBackgroundService();
                 }else{
-                    ToastUtils.showToast("权限被拒绝，应用无法被正常使用，应用将在2s之后自动退出");
-                    mHandler.sendEmptyMessageDelayed(Constants.EVENT_EXIT_APP,2000);
+                    permissionDeny();
                 }
                 break;
             default:
                 break;
         }
     }
+
+    private boolean mLocatePermissionFlag = false;
+    private void permissionResult(String permission,int resultCode){
+        if(permission.equals(Manifest.permission.INTERNET)){
+            if(resultCode == PackageManager.PERMISSION_GRANTED){
+                initializeDatabase();
+            }else{
+                permissionDeny();
+            }
+        }else if(permission.equals(Manifest.permission.READ_PHONE_STATE)){
+            if(resultCode == PackageManager.PERMISSION_GRANTED){
+                mLocatePermissionFlag = true;
+            }else{
+                mLocatePermissionFlag = false;
+            }
+        }else if(permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)){
+            if(resultCode == PackageManager.PERMISSION_GRANTED){
+                mLocatePermissionFlag = true;
+            }else{
+                mLocatePermissionFlag = false;
+            }
+        }else if(permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            if(resultCode == PackageManager.PERMISSION_GRANTED){
+                mLocatePermissionFlag = true;
+            }else{
+                mLocatePermissionFlag = false;
+            }
+        }
+    }
+
+    private void permissionDeny() {
+        ToastUtils.showToast("权限被拒绝，应用无法被正常使用，应用将在2s之后自动退出");
+        mHandler.sendEmptyMessageDelayed(Constants.EVENT_EXIT_APP,2000);
+    }
+
 
     private Handler mHandler = new Handler(){
         @Override
@@ -216,13 +302,13 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onStop() {
         //在页面不可见的情况下，不需要自动更新背景
-        SharedPreferenceUtils.getInstance().saveShouldUpdatePic(false);
+        mInstance.saveShouldUpdatePic(false);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
-        SharedPreferenceUtils.getInstance().saveShouldUpdatePic(true);
+        mInstance.saveShouldUpdatePic(true);
         super.onStart();
     }
 
@@ -252,10 +338,20 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         UIUtils.runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                mFirstViewHelper.refreshView(weather);
+                updateWeather(weather);
                 ToastUtils.showToast("天气更新成功");
             }
         });
+    }
+
+    private void updateWeather(Weather weather) {
+        if(weather != null){
+            mFirstViewHelper.refreshView(weather);
+            mCity.setText(mInstance.getLastLocationInfo());
+            if(mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }
     }
 
     @Override
@@ -263,8 +359,34 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         UIUtils.runOnUIThread(new Runnable() {
             @Override
             public void run() {
+                if(mSwipeRefreshLayout.isRefreshing()){
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
                 ToastUtils.showToast("天气更新失败");
             }
         });
     }
+
+
+    /**
+     * 新地区天气信息获取失败，可能是 1.定位失败  2.weatherId没找到
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewLocationWeatherFailed(String event){
+        String lastLocationWeatherId = mInstance.getLastLocationWeatherId();
+        if(TextUtils.isEmpty(lastLocationWeatherId)){//首次启动就更新失败
+            String lastLocationInfo = mInstance.getLastLocationInfo();
+            if(TextUtils.isEmpty(lastLocationInfo)){
+                mCity.setText("天气更新失败");
+            }else{
+                mCity.setText(lastLocationInfo);//把定位到的信息加载上面
+            }
+            ToastUtils.showToast(event);
+        }
+        if(mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        LogUtils.e("在主页面收到");
+    }
+
 }

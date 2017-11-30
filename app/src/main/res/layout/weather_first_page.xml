@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/small_margin"
-        android:text="2017/11/28发布"
         android:textColor="@color/gray"/>
 
     <LinearLayout
@@ -32,7 +31,6 @@
             android:id="@+id/tv_air_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="优"
             android:textColor="@android:color/white"/>
 
     </LinearLayout>
@@ -53,13 +51,13 @@
 
             <TextView
                 android:id="@+id/tv_temp"
-                android:text="28"
                 android:textSize="65sp"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <LinearLayout
+                android:layout_marginLeft="2dp"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -76,7 +74,6 @@
                 <TextView
                     android:id="@+id/tv_weather_desc"
                     android:textSize="@dimen/weather_text_size"
-                    android:text="晴转多云"
                     android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
@@ -88,7 +85,6 @@
 
         <TextView
             android:id="@+id/tv_body_temp"
-            android:text="体感温度22℃"
             android:textColor="@android:color/white"
             android:textSize="@dimen/weather_text_size"
             android:layout_width="wrap_content"
@@ -96,7 +92,6 @@
 
         <TextView
             android:id="@+id/tv_hum"
-            android:text="相对湿度78"
             android:textColor="@android:color/white"
             android:textSize="@dimen/weather_text_size"
             android:layout_width="wrap_content"
@@ -104,7 +99,6 @@
 
         <TextView
             android:id="@+id/tv_wind"
-            android:text="微风"
             android:textColor="@android:color/white"
             android:textSize="@dimen/weather_text_size"
             android:layout_width="wrap_content"

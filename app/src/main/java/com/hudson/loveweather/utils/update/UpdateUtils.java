@@ -1,5 +1,7 @@
 package com.hudson.loveweather.utils.update;
 
+import com.hudson.loveweather.bean.Weather;
+
 /**
  * Created by Hudson on 2017/11/27.
  * 不宜使用策略模式，因为策略模式需要外界new一个对象
@@ -29,6 +31,10 @@ public class UpdateUtils {
      */
     public void updateWeather(String url,Object... objects){
         mWeatherDataUpdater.update(url,objects);
+    }
+
+    public Weather parseWeatherFromJson(String json){
+        return mWeatherDataUpdater.parseWeatherFromJson(json);
     }
 
     public void registerWeatherObserver(WeatherObserver observer){

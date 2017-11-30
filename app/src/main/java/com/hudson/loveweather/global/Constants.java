@@ -6,6 +6,8 @@ package com.hudson.loveweather.global;
 
 public class Constants {
 
+    public static final int SERVER_WEATHER_UPDATE_OFFSET = 1*60;//服务器一个小时更新一次
+
     public static final String DB_BASE_URL = "http://guolin.tech/api/china";
     public static final String NET_PIC_URL = "http://placeimg.com/";
     public static final String[] PIC_CATEGORY = new String[]{//背景图分类

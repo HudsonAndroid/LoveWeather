@@ -41,7 +41,7 @@
             android:layout_centerInParent="true"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:text="苏州"
+            android:text="正在定位..."
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
 
@@ -60,6 +60,7 @@
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

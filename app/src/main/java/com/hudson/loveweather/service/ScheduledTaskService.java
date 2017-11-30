@@ -6,12 +6,17 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.DeviceUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
+import com.hudson.loveweather.utils.location.LocationUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.update.UpdateUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Hudson on 2017/11/26.
@@ -24,6 +29,9 @@ public class ScheduledTaskService extends Service {
     private SharedPreferenceUtils mSharedPreferenceUtils;
     public static final int TYPE_UPDATE_WEATHER = 0;
     public static final int TYPE_UPDATE_PIC = 1;
+    public static final int TYPE_ACQUIRE_WEATHER_ID = 2;
+    private int mAcquireCount = 0;
+    private static final int ACQUIRE_MAX_COUNT = 4;//最多请求三次
     private int mPicIndex = -1;//请求图片的index
     private String mPicCategory;
     private String mPicUrl;
@@ -53,18 +61,77 @@ public class ScheduledTaskService extends Service {
     public int onStartCommand(Intent intent,  int flags, int startId) {
         int type = intent.getIntExtra("type",-1);
         if(type == TYPE_UPDATE_WEATHER){
-            updateWeather();
-            scheduleUpdateWeather();
+            String lastLocationWeatherId = mSharedPreferenceUtils.getLastLocationWeatherId();
+            if(!TextUtils.isEmpty(lastLocationWeatherId)){
+                updateWeather(lastLocationWeatherId);
+                scheduleUpdateWeather();
+            }
         }else if(type == TYPE_UPDATE_PIC){
             updateBackgroundPic();
             scheduleUpdatePic();
+        }else if(type == TYPE_ACQUIRE_WEATHER_ID){
+            acquireWeatherIdAndUpdateWeather(intent.getStringExtra("province"),
+                    intent.getStringExtra("city"),intent.getStringExtra("country"));
         }else{
-            updateWeather();
+            startLocation();
             scheduleUpdateWeather();
             scheduleUpdatePic();
         }
         return super.onStartCommand(intent, flags, startId);
     }
+
+    private void startLocation(){
+        new Thread(){
+            @Override
+            public void run(){
+                LogUtils.e("子线程开始搜索数据库");
+                LocationUtils locationUtils = new LocationUtils();
+                locationUtils.startLocation();
+                locationUtils.setLocationInfoGetListener(new LocationUtils.LocationInfoGetListener() {
+                    @Override
+                    public void onLocationGet(boolean success, String addr, String province, String city, String district, String street) {
+                        if(success){
+                            acquireWeatherIdAndUpdateWeather(province, city, district);
+                        }else{
+                            LogUtils.e("百度定位失败");
+                            EventBus.getDefault().post("定位失败，请检查您的设置！");
+                        }
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void acquireWeatherIdAndUpdateWeather(String province, String city, String district) {
+        mAcquireCount ++;
+        LogUtils.e("尝试获取天气id"+mAcquireCount);
+        province = province.replace("省","");
+        city = city.replace("市","");
+        String weatherId = DatabaseUtils.queryWeatherId(province,city,district);
+        LogUtils.e("地址是"+weatherId);
+        if(!TextUtils.isEmpty(weatherId)){
+            mAcquireCount =0;
+            mSharedPreferenceUtils.saveLastLocationWeatherId(weatherId);
+            mSharedPreferenceUtils.saveLastLocationInfo(city+" "+district);
+            updateWeather(weatherId);
+        }else{//可能是本地数据库还没有创建好，尝试过1分钟后再次从数据库中查找，不过请求次数不超过最大值
+            if(mAcquireCount>ACQUIRE_MAX_COUNT){
+                EventBus.getDefault().post("您所在的区域好像无法获取天气信息！");
+            }else{
+                AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                long triggerAtTime = System.currentTimeMillis() + 1*60*1000;
+                Intent updateWeatherIntent = new Intent(this,ScheduledTaskService.class);
+                updateWeatherIntent.putExtra("province",province);
+                updateWeatherIntent.putExtra("city",city);
+                updateWeatherIntent.putExtra("country",district);
+                updateWeatherIntent.putExtra("type",TYPE_ACQUIRE_WEATHER_ID);
+                PendingIntent pendingIntent = PendingIntent.getService(this,0,updateWeatherIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
+            }
+        }
+    }
+
 
     private void scheduleUpdateWeather(){
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -88,9 +155,9 @@ public class ScheduledTaskService extends Service {
         manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
     }
 
-    private void updateWeather(){
+    private void updateWeather(String weatherId){
         mUpdateUtils.updateWeather(Constants.HE_WEATHER_BASE_URL
-                + "CN101190401" + Constants.APP_KEY);
+                + weatherId + Constants.APP_KEY,weatherId);
     }
 
     /**

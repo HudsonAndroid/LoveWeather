@@ -1,9 +1,15 @@
 package com.hudson.loveweather.utils.update;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.HttpUtils;
+import com.hudson.loveweather.utils.SharedPreferenceUtils;
+import com.hudson.loveweather.utils.TimeUtils;
+import com.hudson.loveweather.utils.log.LogUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,17 +43,51 @@ import okhttp3.Response;
 
     @Override
     public void update(String url,Object... objects) {
-        //由于Weather数据需要从网上获取并实时反馈到天气页面，所以这里只是发一个广播告知天气页面该回调
-        //updateWeather来更新天气了
-//        UIUtils.getContext().sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_WEATHER));
-        updateWeather(url);
+        //先从缓存中读取
+        String weatherId = (String) objects[0];
+        String weatherInfo = SharedPreferenceUtils.getInstance().getWeatherInfo(weatherId);
+        if(!TextUtils.isEmpty(weatherInfo)){
+            try{
+                Weather weather = new Gson().fromJson(weatherInfo,
+                        Weather.class);
+                int lastUpdateTime = TimeUtils.parseMinuteTime(weather.getHeWeather()
+                        .get(0).getBasic().getUpdate().getLoc(),0);
+                if((TimeUtils.parseCurrentMinuteTime() +24*60 - lastUpdateTime)%(24*60)
+                        > Constants.SERVER_WEATHER_UPDATE_OFFSET){
+                    LogUtils.e("时间长度超出服务器更新范围，所以请求网络");
+                    updateWeather(url,weatherId);
+                }else{//使用本地
+                    LogUtils.e("使用本地缓存数据");
+                    notifyUpdateSuccess(weather);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                updateWeather(url,weatherId);
+            }
+        }else{
+            updateWeather(url,weatherId);
+        }
     }
+
+
+    Weather parseWeatherFromJson(String json){
+        if(!TextUtils.isEmpty(json)){
+            try{
+                return new Gson().fromJson(json,Weather.class);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
 
     /**
      * 真正的天气更新在这里
      * @param url
      */
-    void updateWeather(String url){
+    void updateWeather(String url,final String weatherId){
         HttpUtils.requestNetData(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -57,9 +97,11 @@ import okhttp3.Response;
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try{
-                    Weather weather = new Gson().fromJson(response.body().string(),
+                    String string = response.body().string();
+                    Weather weather = new Gson().fromJson(string,
                             Weather.class);
                     notifyUpdateSuccess(weather);
+                    SharedPreferenceUtils.getInstance().saveWeatherInfo(weatherId,string);
                 }catch (JsonSyntaxException e){
                     e.printStackTrace();
                     notifyUpdateFailed(e);

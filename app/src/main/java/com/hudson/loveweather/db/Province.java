@@ -1,13 +1,11 @@
 package com.hudson.loveweather.db;
 
-import org.litepal.crud.DataSupport;
-
 /**
  * Created by Hudson on 2017/11/24.
  * 省
  */
 
-public class Province extends DataSupport{
+public class Province {
     private int id;
     private int provinceCode;
     private String provinceName;

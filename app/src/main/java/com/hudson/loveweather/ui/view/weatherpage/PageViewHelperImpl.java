@@ -34,7 +34,7 @@ public abstract class PageViewHelperImpl implements WeatherPageViewHelper<Weathe
 
     abstract View inflate(Context context,ViewGroup parent);
 
-     abstract void initView(View root);
+    abstract void initView(View root);
 
 
     @Override

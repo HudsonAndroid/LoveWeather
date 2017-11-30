@@ -21,7 +21,7 @@ public class CountryJsonParser extends JsonParser<ArrayList<Country>> {
             JSONObject cityObject = countries.getJSONObject(i);
             country = new Country();
             country.setCountryName(cityObject.getString("name"));
-            country.setWeatherId(cityObject.getString("id"));
+            country.setWeatherId(cityObject.getString("weather_id"));
             country.setProvinceName((String)args[0]);
             country.setCityName((String)args[1]);
             dest.add(country);

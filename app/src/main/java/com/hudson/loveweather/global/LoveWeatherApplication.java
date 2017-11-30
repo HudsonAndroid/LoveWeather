@@ -103,7 +103,7 @@ public class LoveWeatherApplication extends Application {
     }
 
     public static void checkDataLoadStatus(){
-        if(!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()){
+        if(!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()&&DataBaseLoader.loadStatus){
             SharedPreferenceUtils.getInstance().saveLocalDatabaseFlag(DataBaseLoader.loadStatus);
         }
     }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,7 +23,9 @@ public class HttpUtils {
      * @param callback 结果回调
      */
     public static void requestNetData(String url, Callback callback){
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(4000, TimeUnit.SECONDS).build();
+
         //enqueue自动开启子线程（异步）
         okHttpClient.newCall(new Request.Builder().url(url).build()).enqueue(callback);
     }
