@@ -4,6 +4,12 @@ import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -69,10 +75,13 @@ public class BitmapUtils {
      * 背景动画切换
      *
      * @param view       设置了bitmap背景的view
-     * @param nextBitmap 需要切换的目标
+     * @param nextBitmapLocalPath 需要切换的目标图片的路径
      */
-    public static void backgroundBitmapTransition(final View view, Bitmap nextBitmap) {
-        backgroundBitmapTransition(view, nextBitmap,
+    public static void backgroundBitmapTransition(final View view, String nextBitmapLocalPath) {
+        backgroundBitmapTransition(view,
+                createTransitionBackgroundBitmap(BitmapFactory.decodeFile(nextBitmapLocalPath)
+                        ,new int[]{0x99000000,0x0000000,0x00000000,0x99000000},
+                        new float[]{0.0f,0.3f,0.6f,1.0f}),
                 com.hudson.loveweather.global.Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
     }
 
@@ -119,9 +128,18 @@ public class BitmapUtils {
      * @return
      */
     public static Bitmap getShowPic() {
-        return BitmapFactory.decodeFile(new StringBuilder(AppStorageUtils.getPicCachePath())
+        return createTransitionBackgroundBitmap(BitmapFactory
+                .decodeFile(new StringBuilder(AppStorageUtils.getPicCachePath())
                 .append("/").append(Constants.PIC_CACHE_NAME)
-                .append("0").append(".jpg").toString());
+                .append("0").append(".jpg").toString()),new int[]{0x99000000,0x0000000,0x00000000,0x99000000},
+                new float[]{0.0f,0.3f,0.6f,1.0f});
+    }
+
+    public static Bitmap getShowPic(int[] colors,float[] stops){
+        return createTransitionBackgroundBitmap(BitmapFactory
+                        .decodeFile(new StringBuilder(AppStorageUtils.getPicCachePath())
+                                .append("/").append(Constants.PIC_CACHE_NAME)
+                                .append("0").append(".jpg").toString()),colors,stops);
     }
 
     /**
@@ -135,8 +153,46 @@ public class BitmapUtils {
         if(source != null){
             int xOffset = (source.getWidth() - destWidth)>>2;
             int yOffset = (source.getHeight() - destHeight)>>2;
-            return Bitmap.createBitmap(source,xOffset,yOffset,destWidth,destHeight);
+            return createTransitionBackgroundBitmap(Bitmap.createBitmap(source,xOffset,yOffset,destWidth,destHeight)
+            ,new int[]{0x0000000,0x00000000,0x99000000}
+            ,new float[]{0.0f,0.6f,1.0f});
         }
         return null;
     }
+
+    public static Bitmap createTransitionBackgroundBitmap(Bitmap sourceBg,int[] colors,float[] stops){
+        if(sourceBg !=null){
+            int width = sourceBg.getWidth();
+            int height = sourceBg.getHeight();
+            Bitmap bitmap = Bitmap.createBitmap(width, height,
+                    Bitmap.Config.ARGB_4444);
+            Canvas canvas = new Canvas(bitmap);
+            Bitmap dst = createDarkTransitionBitmap(width,height,colors,stops);
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            canvas.drawBitmap(dst,0,0,paint);//目标
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
+            canvas.drawBitmap(sourceBg,0,0,paint);//源
+            return bitmap;
+        }
+        return null;
+    }
+
+
+    /**
+     * 防止因为背景导致文字看不清楚
+     * bottom + top
+     * @param width
+     * @param height
+     * @return
+     */
+    public static Bitmap createDarkTransitionBitmap(int width, int height,int[] colors,float[] stops){
+        Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        LinearGradient gradient = new LinearGradient(0,0,0,height,colors,stops,Shader.TileMode.CLAMP);
+        paint.setShader(gradient);
+        canvas.drawRect(new Rect(0,0,width,height),paint);
+        return bitmap;
+    }
+
 }

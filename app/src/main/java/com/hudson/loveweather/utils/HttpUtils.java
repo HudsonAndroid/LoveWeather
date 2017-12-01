@@ -3,12 +3,18 @@ package com.hudson.loveweather.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 
+import com.hudson.loveweather.global.Constants;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Hudson on 2017/11/26.
@@ -66,5 +72,31 @@ public class HttpUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * 初始化每日一句的语录
+     */
+    public static void initializeDailyWords(){
+        final SharedPreferenceUtils instance = SharedPreferenceUtils.getInstance();
+        if(instance.getDailyWordsUpdateDate() != TimeUtils.getDayNumberOfDate()){
+            HttpUtils.requestNetData(Constants.DAILY_WORD_URL, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String words = response.body().string();
+                    if(!TextUtils.isEmpty(words)&&words.length()>15){
+                        instance.saveDailyWords(words);
+                        instance.saveDailyWordsUpdateDate(TimeUtils.getDayNumberOfDate());
+                    }else{//不符合要求，重新获取
+                        initializeDailyWords();
+                    }
+                }
+            });
+        }
     }
 }

@@ -32,6 +32,7 @@ public class DataBaseLoader {
      */
     public static void loadDatabaseToLocal(){
         if(!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()){
+            LogUtils.e("开始同步数据库了");
             loadStatus = true;
             loadProvinceData();
         }
@@ -106,6 +107,17 @@ public class DataBaseLoader {
                 }
             }
         });
+    }
+
+    /**
+     * 检查数据库是否同步到本地成功了
+     * @return 是否同步成功
+     */
+    public static boolean checkDataLoadStatus(){
+        if(!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()&&loadStatus){
+            SharedPreferenceUtils.getInstance().saveLocalDatabaseFlag(loadStatus);
+        }
+        return loadStatus;
     }
 
 }

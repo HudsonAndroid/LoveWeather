@@ -131,5 +131,35 @@ public class SharedPreferenceUtils {
         mEditor.commit();
     }
 
+    /**
+     * 每日一句语句
+     * @param words
+     */
+    public void saveDailyWords(String words){
+        mEditor.putString("daily_words_content",words);
+        mEditor.commit();
+    }
+
+    /**
+     * 获取每日一句
+     * @return
+     */
+    public String getDailyWords(){
+        return mSp.getString("daily_words_content","爱在左，同情在右，走在生命的两旁，随时播种，随时开花，将这一径长途，点缀得香花弥漫，使穿枝拂叶的行人，踏着荆棘，不觉得痛苦，有泪可落，却不是悲凉");
+    }
+
+    /**
+     * 保存每日一句更新的日期
+     * @param date 日期
+     */
+    public void saveDailyWordsUpdateDate(int date){
+        mEditor.putInt("daily_words_date",date);
+        mEditor.commit();
+    }
+
+    public int getDailyWordsUpdateDate(){
+        return mSp.getInt("daily_words_date",-1);
+    }
+
 
 }

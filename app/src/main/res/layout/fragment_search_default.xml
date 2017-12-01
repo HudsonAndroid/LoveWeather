@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/ll_current_locate"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/small_margin"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/tv_current_location"
+            android:gravity="center_vertical"
+            android:drawableLeft="@drawable/location"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/edit_text_size"
+            android:text="当前定位城市:太原"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="（点击重新定位）"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/edit_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/line_sub"/>
+
+    <TextView
+        android:text="历史搜索"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/view_internal_margin"
+        android:layout_marginBottom="@dimen/view_internal_margin"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <include layout="@layout/line_main"/>
+
+    <com.hudson.loveweather.ui.view.customview.AutoAdapterLayout
+        android:id="@+id/aal_history_container"
+        android:layout_marginTop="@dimen/view_internal_margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.hudson.loveweather.ui.view.customview.AutoAdapterLayout>
+
+
+    <TextView
+        android:text="热门城市"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/view_internal_margin"
+        android:layout_marginBottom="@dimen/view_internal_margin"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <include layout="@layout/line_main"/>
+
+    <com.hudson.loveweather.ui.view.customview.AutoAdapterLayout
+        android:id="@+id/aal_hot_city_container"
+        android:layout_marginTop="@dimen/view_internal_margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.hudson.loveweather.ui.view.customview.AutoAdapterLayout>
+
+</LinearLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_input"
+            android:layout_marginTop="@dimen/view_internal_margin"
+            android:layout_marginBottom="@dimen/view_internal_margin"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
+            android:drawableLeft="@drawable/search"
+            android:textSize="@dimen/edit_text_size"
+            android:textColor="@android:color/white"
+            android:paddingLeft="@dimen/view_internal_margin"
+            android:paddingTop="@dimen/view_internal_margin"
+            android:paddingBottom="@dimen/view_internal_margin"
+            android:paddingRight="@dimen/edit_text_height"
+            android:hint="输入城市名搜索"
+            android:textColorHint="@android:color/darker_gray"
+            android:background="@drawable/shape_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"/>
+
+        <ImageView
+            android:id="@+id/iv_clean_text"
+            android:layout_centerVertical="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:layout_marginRight="@dimen/view_internal_margin"
+            android:layout_alignRight="@id/et_input"
+            android:src="@drawable/clean_text"
+            android:padding="7dp"
+            android:layout_width="@dimen/edit_text_height"
+            android:layout_height="@dimen/edit_text_height"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_marginTop="@dimen/view_internal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

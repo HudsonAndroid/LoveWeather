@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape >
+
+            <corners android:radius="@dimen/edit_text_radius"/>
+
+            <padding
+                android:bottom="@dimen/view_internal_margin"
+                android:left="@dimen/daily_text_content_horizontal_margin"
+                android:right="@dimen/daily_text_content_horizontal_margin"
+                android:top="@dimen/view_internal_margin" />
+
+            <solid android:color="@color/selected_color"/>
+
+            <stroke
+                android:width="@dimen/line_height"
+                android:color="@color/gray"/>
+        </shape>
+    </item>
+
+    <item android:state_selected="true">
+        <shape >
+
+            <corners android:radius="@dimen/edit_text_radius"/>
+
+            <padding
+                android:bottom="@dimen/view_internal_margin"
+                android:left="@dimen/daily_text_content_horizontal_margin"
+                android:right="@dimen/daily_text_content_horizontal_margin"
+                android:top="@dimen/view_internal_margin" />
+
+            <solid android:color="@color/selected_color"/>
+
+            <stroke
+                android:width="@dimen/line_height"
+                android:color="@color/gray"/>
+        </shape>
+    </item>
+
+    <item >
+        <shape >
+
+            <corners android:radius="@dimen/edit_text_radius"/>
+
+            <padding
+                android:bottom="@dimen/view_internal_margin"
+                android:left="@dimen/daily_text_content_horizontal_margin"
+                android:right="@dimen/daily_text_content_horizontal_margin"
+                android:top="@dimen/view_internal_margin" />
+
+            <solid android:color="@color/city_text_color"/>
+
+            <stroke
+                android:width="@dimen/line_height"
+                android:color="@color/gray"/>
+        </shape>
+    </item>
+
+</selector>

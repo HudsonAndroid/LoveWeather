@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.bean.Weather;
 
+import java.util.List;
+
 /**
  * Created by Hudson on 2017/11/28.
  */
@@ -55,16 +57,29 @@ public class FirstPageViewHelper extends PageViewHelperImpl {
     @Override
     public void refreshView(Weather object, Object... objects) {
         if(object!=null){
-            Weather.HeWeatherBean heWeatherBean = object.getHeWeather().get(0);
-            mUpdateTime.setText(heWeatherBean.getBasic().getUpdate().getLoc());
-            mAirDesc.setText("空气  "+heWeatherBean.getAqi().getCity().getQlty());
-            Weather.HeWeatherBean.NowBean now = heWeatherBean.getNow();
-            mTemp.setText(now.getTmp());
-            mWeatherDesc.setText(now.getCond().getTxt().trim());
-            mBodyTemp.setText("体感温度"+now.getFl()+"℃");
-            mHum.setText("空气湿度"+now.getHum()+"%");
-            mWind.setText(now.getWind().getSc());
-            //air图片
+            List<Weather.HeWeatherBean> heWeather = object.getHeWeather();
+            if(heWeather!=null&&heWeather.size()>0){
+                Weather.HeWeatherBean heWeatherBean = heWeather.get(0);
+                if(heWeatherBean!=null){
+                    Weather.HeWeatherBean.BasicBean basic = heWeatherBean.getBasic();
+                    if(basic!=null){
+                        mUpdateTime.setText(basic.getUpdate().getLoc());
+                    }
+                    Weather.HeWeatherBean.AqiBean aqi = heWeatherBean.getAqi();
+                    if(aqi!=null) {
+                        mAirDesc.setText("空气  " + aqi.getCity().getQlty());
+                    }
+                    Weather.HeWeatherBean.NowBean now = heWeatherBean.getNow();
+                    if(now!=null){
+                        mTemp.setText(now.getTmp());
+                        mWeatherDesc.setText(now.getCond().getTxt().trim());
+                        mBodyTemp.setText("体感温度"+now.getFl()+"℃");
+                        mHum.setText("空气湿度"+now.getHum()+"%");
+                        mWind.setText(now.getWind().getSc());
+                        //air图片
+                    }
+                }
+            }
         }
     }
 }

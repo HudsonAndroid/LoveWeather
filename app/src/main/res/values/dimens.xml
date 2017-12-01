@@ -16,7 +16,15 @@
     <dimen name="image_top_margin">20dp</dimen>
     <dimen name="image_bottom_margin">16dp</dimen>
     <dimen name="small_margin">10dp</dimen>
+    <dimen name="view_internal_margin">5dp</dimen>
+    <dimen name="main_line_margin">10dp</dimen>
+    <dimen name="sub_line_margin">20dp</dimen>
+    <dimen name="edit_text_radius">15dp</dimen>
+    <dimen name="city_text_radius">5dp</dimen>
+    <dimen name="edit_text_height">30dp</dimen>
 
     <dimen name="weather_text_size">16sp</dimen>
+    <dimen name="edit_text_size">14sp</dimen>
 
+    <dimen name="line_height">0.5dp</dimen>
 </resources>

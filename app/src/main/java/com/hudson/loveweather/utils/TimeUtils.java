@@ -12,10 +12,11 @@ public class TimeUtils {
 
     /**
      * 获取几号
+     * warning: if you want set it to TextView,please convert to String firstly.
      * @return
      */
-    public static String getDayNumberOfDate(){
-        return String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+    public static int getDayNumberOfDate(){
+        return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 
     public static int getHourOfDay(){
@@ -107,4 +108,5 @@ public class TimeUtils {
     public static int parseCurrentMinuteTime(){
         return getHourOfDay()*60 + getMinuteOfHour();
     }
+
 }

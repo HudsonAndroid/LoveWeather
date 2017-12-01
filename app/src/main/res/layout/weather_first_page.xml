@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_margin="@dimen/view_internal_margin"
         android:textColor="@color/gray"/>
 
     <LinearLayout
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_update_time"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_margin="@dimen/view_internal_margin"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

@@ -25,6 +25,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract void initView();
 
+    /**
+     * this method is invoked by onDestroy
+     */
     public abstract void recycle();
 
     @Override

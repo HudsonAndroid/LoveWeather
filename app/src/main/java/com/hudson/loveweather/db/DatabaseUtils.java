@@ -19,4 +19,15 @@ public class DatabaseUtils {
         return results.get(0).getWeatherId();
     }
 
+    /**
+     * 查找包含目标字符串的country
+     * @param words 关键字
+     * @return
+     */
+    public static List<Country> queryCountry(String words){
+        words = "%" + words + "%";
+        return DataSupport.where("provinceName like ? or cityName like ? or countryName like ?",
+                words,words,words).find(Country.class);
+    }
+
 }

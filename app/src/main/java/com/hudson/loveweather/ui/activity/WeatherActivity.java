@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
@@ -93,7 +92,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
             }
         });
         mCalendar = (TextView) this.findViewById(R.id.tv_calendar);
-        mCalendar.setText(TimeUtils.getDayNumberOfDate());
+        mCalendar.setText(String.valueOf(TimeUtils.getDayNumberOfDate()));
         initializeBackgroundFromCache();
     }
 
@@ -113,7 +112,6 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         UpdateUtils.getInstance().unRegisterWeatherObserver(this);
-        LoveWeatherApplication.exitApp();
     }
 
     private void initializeDatabase() {
@@ -136,7 +134,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         if(HttpUtils.isNetworkAvailable()){
             if(!DataBaseLoader.loadStatus&&!mInstance.isLocalDatabaseLoaded()){
                 initializeDatabase();
-                startService(new Intent(this, ScheduledTaskService.class));
+                startBackgroundService();
             }else{
                 //更新天气
                 String lastLocationWeatherId = mInstance.getLastLocationWeatherId();
@@ -150,10 +148,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void startBackgroundService(){
-        //如果是数据库已经初始化或者没有初始化，但是网络可用
-        if(mIsDatabaseInit||(!mIsDatabaseInit&&HttpUtils.isNetworkAvailable())){
-            startService(new Intent(this, ScheduledTaskService.class));
-        }
+        startService(new Intent(this, ScheduledTaskService.class));
     }
 
     /**
@@ -274,15 +269,14 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_city:
-//                ToastUtils.showToast("切换城市了");
-//                BitmapUtils.backgroundAnimation(mRoot);
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.rl_calendar:
                 startActivity(new Intent(this,DailyWordActivity.class));
                 overridePendingTransition(-1,-1);
                 break;
             case R.id.iv_settings:
-                ToastUtils.showToast("设置页面");
+                startActivity(new Intent(this,SettingsActivity.class));
                 break;
             default:
                 break;
@@ -291,8 +285,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
 
     private void toggleBackgroundPic(String localPath){
         try{
-            BitmapUtils.backgroundBitmapTransition(mRoot,
-                    BitmapFactory.decodeFile(localPath));
+            BitmapUtils.backgroundBitmapTransition(mRoot,localPath);
         }catch (Exception e){
             e.printStackTrace();
         }

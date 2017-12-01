@@ -7,23 +7,15 @@ import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.BitmapUtils;
-import com.hudson.loveweather.utils.HttpUtils;
+import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.ToastUtils;
-import com.hudson.loveweather.utils.UIUtils;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 import static com.hudson.loveweather.utils.BitmapUtils.gaussianBlur;
 import static com.hudson.loveweather.utils.BitmapUtils.getShowPic;
@@ -35,11 +27,11 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
     public View mCloseView;
     private TextView mDate,mMonth,mDay;
     private View mImage;
+    public AnimatorSet mAnimatorSet;
 
     @Override
     public void setContentViewAndInit() {
         setContentView(R.layout.activity_daily_word);
-        getDailyWord();
     }
 
     @Override
@@ -54,9 +46,10 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
         mDate = (TextView) this.findViewById(R.id.tv_date);
         mMonth = (TextView) this.findViewById(R.id.tv_month);
         mDay = (TextView) this.findViewById(R.id.tv_day);
-        mDate.setText(TimeUtils.getDayNumberOfDate());
+        mDate.setText(String.valueOf(TimeUtils.getDayNumberOfDate()));
         mDay.setText(TimeUtils.getDayWeekOfDate());
         mMonth.setText(TimeUtils.getMonthOfYear());
+        mTextView.setText(SharedPreferenceUtils.getInstance().getDailyWords());
         findViewById(R.id.iv_share).setOnClickListener(this);
         final Bitmap background = getShowPic();
         if(background!=null){
@@ -115,11 +108,11 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
                 }
             });
         }
-        AnimatorSet set = new AnimatorSet();
-        set.setDuration(Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
-        set.playTogether(translateY,alpha,rootAlpha,backgroundAnimator);
-        set.start();
-        set.addListener(new Animator.AnimatorListener() {
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.setDuration(Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
+        mAnimatorSet.playTogether(translateY,alpha,rootAlpha,backgroundAnimator);
+        mAnimatorSet.start();
+        mAnimatorSet.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -142,24 +135,22 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
-    //避免快速点击导致重复回调动画
-    private boolean mIsAnimationStarted = false;
 
     private void startOutAnimation(){
-        if(mIsAnimationStarted){
+        if(mAnimatorSet.isStarted()){
             return ;
         }
         ObjectAnimator translateY = ObjectAnimator.ofFloat(mContent,"translationY",0.0f,200.0f);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(mContent,"alpha",1f,0f);
         ObjectAnimator rootAlpha = ObjectAnimator.ofFloat(mRootView,"alpha",1f,0f);
-        AnimatorSet set = new AnimatorSet();
-        set.setDuration(Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
-        set.playTogether(translateY,alpha,rootAlpha);
-        set.start();
-        set.addListener(new Animator.AnimatorListener() {
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.setDuration(Constants.DEFAULT_BACKGROUND_TRANSITION_DURATION);
+        mAnimatorSet.playTogether(translateY,alpha,rootAlpha);
+        mAnimatorSet.start();
+        mAnimatorSet.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                mIsAnimationStarted = true;
+
             }
 
             @Override
@@ -176,28 +167,6 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onAnimationRepeat(Animator animation) {
 
-            }
-        });
-    }
-
-    private void getDailyWord(){
-        HttpUtils.requestNetData(Constants.DAILY_WORD_URL, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final String words = response.body().string();
-                if(!TextUtils.isEmpty(words)){
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTextView.setText(words);
-                        }
-                    });
-                }
             }
         });
     }

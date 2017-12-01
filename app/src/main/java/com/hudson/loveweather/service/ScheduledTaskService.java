@@ -10,7 +10,9 @@ import android.text.TextUtils;
 
 import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.global.Constants;
+import com.hudson.loveweather.utils.DataBaseLoader;
 import com.hudson.loveweather.utils.DeviceUtils;
+import com.hudson.loveweather.utils.HttpUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.location.LocationUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
@@ -26,13 +28,15 @@ import org.greenrobot.eventbus.EventBus;
 public class ScheduledTaskService extends Service {
     public static final int DEFAULT_WEATHER_TRIGGER_TIME = 5*60*60*1000;//5个小时更新一次天气
     public static final int DEFAULT_BACKGROUND_PIC_TRIG_TIME = 5*60*1000;//5分钟更新背景
+    private static final int DATABASE_SYNCHRONIZED_TIME = 20*1000;//20s更新完数据库
     private SharedPreferenceUtils mSharedPreferenceUtils;
     public static final int TYPE_UPDATE_WEATHER = 0;
     public static final int TYPE_UPDATE_PIC = 1;
     public static final int TYPE_ACQUIRE_WEATHER_ID = 2;
+    public static final int TYPE_CHECK_DATABASE_SYNCHRONIZED = 3;//数据库是否同步成功
     private int mAcquireCount = 0;
     private static final int ACQUIRE_MAX_COUNT = 4;//最多请求三次
-    private int mPicIndex = -1;//请求图片的index
+    private int mPicIndex = 0;//请求图片的index
     private String mPicCategory;
     private String mPicUrl;
     private UpdateUtils mUpdateUtils;
@@ -72,10 +76,16 @@ public class ScheduledTaskService extends Service {
         }else if(type == TYPE_ACQUIRE_WEATHER_ID){
             acquireWeatherIdAndUpdateWeather(intent.getStringExtra("province"),
                     intent.getStringExtra("city"),intent.getStringExtra("country"));
+        }else if(type == TYPE_CHECK_DATABASE_SYNCHRONIZED){
+            checkDatabaseSynchronizedStatus();
         }else{
+            //更新每日一句
+            updateDailyWords();
+            //更新天气
             startLocation();
             scheduleUpdateWeather();
             scheduleUpdatePic();
+            scheduleCheckDatabaseSynchronizedStatus();
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -114,45 +124,27 @@ public class ScheduledTaskService extends Service {
             mSharedPreferenceUtils.saveLastLocationWeatherId(weatherId);
             mSharedPreferenceUtils.saveLastLocationInfo(city+" "+district);
             updateWeather(weatherId);
-        }else{//可能是本地数据库还没有创建好，尝试过1分钟后再次从数据库中查找，不过请求次数不超过最大值
+        }else{//可能是本地数据库还没有创建好，尝试过30s后再次从数据库中查找，不过请求次数不超过最大值
             if(mAcquireCount>ACQUIRE_MAX_COUNT){
                 EventBus.getDefault().post("您所在的区域好像无法获取天气信息！");
             }else{
-                AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                long triggerAtTime = System.currentTimeMillis() + 1*60*1000;
-                Intent updateWeatherIntent = new Intent(this,ScheduledTaskService.class);
-                updateWeatherIntent.putExtra("province",province);
-                updateWeatherIntent.putExtra("city",city);
-                updateWeatherIntent.putExtra("country",district);
-                updateWeatherIntent.putExtra("type",TYPE_ACQUIRE_WEATHER_ID);
-                PendingIntent pendingIntent = PendingIntent.getService(this,0,updateWeatherIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-                manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
+                Intent acquireWeatherIntent = new Intent(this,ScheduledTaskService.class);
+                acquireWeatherIntent.putExtra("province",province);
+                acquireWeatherIntent.putExtra("city",city);
+                acquireWeatherIntent.putExtra("country",district);
+                acquireWeatherIntent.putExtra("type",TYPE_ACQUIRE_WEATHER_ID);
+                scheduleTask(DATABASE_SYNCHRONIZED_TIME,acquireWeatherIntent);
             }
         }
     }
 
 
     private void scheduleUpdateWeather(){
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long triggerAtTime = System.currentTimeMillis() +
-                mSharedPreferenceUtils.getUpdateWeatherTriggerTime();
-        Intent updateWeatherIntent = new Intent(this,ScheduledTaskService.class);
-        updateWeatherIntent.putExtra("type",TYPE_UPDATE_WEATHER);
-        PendingIntent pendingIntent = PendingIntent.getService(this,0,updateWeatherIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
+        scheduleTask(TYPE_UPDATE_WEATHER,mSharedPreferenceUtils.getUpdateWeatherTriggerTime());
     }
 
     private void scheduleUpdatePic(){
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long triggerAtTime = System.currentTimeMillis()
-                + mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime();
-        Intent updatePicIntent = new Intent(this,ScheduledTaskService.class);
-        updatePicIntent.putExtra("type",TYPE_UPDATE_PIC);
-        PendingIntent pendingIntent = PendingIntent.getService(this,0,updatePicIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
+        scheduleTask(TYPE_UPDATE_PIC,mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime());
     }
 
     private void updateWeather(String weatherId){
@@ -166,9 +158,44 @@ public class ScheduledTaskService extends Service {
      */
     private void updateBackgroundPic(){
         mPicUrl += (++ mPicIndex);
-        LogUtils.e("更新图片了"+mPicIndex);
+        LogUtils.e("服务请求更新图片了"+mPicIndex);
         mUpdateUtils.updateBackgroundPic(mPicUrl,mPicIndex);
     }
 
+    private void updateDailyWords(){
+        HttpUtils.initializeDailyWords();
+    }
+
+    private void checkDatabaseSynchronizedStatus(){
+        LogUtils.e("检查数据库同步状态");
+        if(!DataBaseLoader.checkDataLoadStatus()){
+            LogUtils.e("数据库同步失败");
+            //数据库同步失败，尝试再次同步
+            startService(new Intent(this, DataInitializeService.class));
+            //过会再次检查数据库是否同步成功
+            scheduleCheckDatabaseSynchronizedStatus();
+        }
+    }
+
+    private void scheduleCheckDatabaseSynchronizedStatus(){
+        if(!mSharedPreferenceUtils.isLocalDatabaseLoaded()){
+            LogUtils.e("数据库并没有同步成功，所以需要过会检测结果");
+            scheduleTask(TYPE_CHECK_DATABASE_SYNCHRONIZED,DATABASE_SYNCHRONIZED_TIME);
+        }
+    }
+
+    private void scheduleTask(int taskType,long triggerOffset){
+        Intent intent = new Intent(this,ScheduledTaskService.class);
+        intent.putExtra("type",taskType);
+        scheduleTask(triggerOffset,intent);
+    }
+
+    private void scheduleTask(long triggerOffset,Intent intent){
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long triggerAtTime = System.currentTimeMillis() + triggerOffset;
+        PendingIntent pendingIntent = PendingIntent.getService(this,0,intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
+    }
 
 }

@@ -5,9 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
-import com.hudson.loveweather.utils.DataBaseLoader;
-import com.hudson.loveweather.utils.SharedPreferenceUtils;
-
 import org.litepal.LitePal;
 
 import java.util.Stack;
@@ -97,15 +94,9 @@ public class LoveWeatherApplication extends Application {
     }
 
     public static void exitApp(){
-        checkDataLoadStatus();
         finishAll();
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
-    public static void checkDataLoadStatus(){
-        if(!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()&&DataBaseLoader.loadStatus){
-            SharedPreferenceUtils.getInstance().saveLocalDatabaseFlag(DataBaseLoader.loadStatus);
-        }
-    }
 
 }

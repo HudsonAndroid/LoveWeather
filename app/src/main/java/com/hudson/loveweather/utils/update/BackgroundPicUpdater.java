@@ -6,7 +6,6 @@ import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.HttpUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.UIUtils;
-import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.storage.AppStorageUtils;
 
 import java.io.File;
@@ -54,7 +53,6 @@ import okhttp3.Response;
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(AppStorageUtils.writeFile(localPath,response.body().byteStream())){
-                    LogUtils.e("文件写入成功,当前线程"+Thread.currentThread().getName());
                     notifyUpdatePic(localPath);
                 }
             }
