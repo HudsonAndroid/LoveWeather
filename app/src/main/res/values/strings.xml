@@ -2,4 +2,8 @@
     <string name="app_name">爱天气</string>
     <string name="app_english_name">LoveWeather</string>
     <string name="loading">正在加载</string>
+    <string name="search_empty_tips">抱歉,没有匹配到任何结果</string>
+    <string name="locating">正在定位...</string>
+    <string name="locate_failed">定位失败</string>
+    <string name="server_not_support">服务不支持</string>
 </resources>

@@ -33,6 +33,7 @@ import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.ToastUtils;
 import com.hudson.loveweather.utils.UIUtils;
+import com.hudson.loveweather.utils.WeatherChooseUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.update.UpdateUtils;
 import com.hudson.loveweather.utils.update.WeatherObserver;
@@ -54,6 +55,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     private boolean mIsDatabaseInit = false;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SharedPreferenceUtils mInstance;
+    private UpdateUtils mUpdateUtils;
 
 
     @Override
@@ -64,7 +66,8 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         mReceiver = new WeatherBroadCastReceiver();
         IntentFilter filter = new IntentFilter(Constants.BROADCAST_UPDATE_PIC);
         registerReceiver(mReceiver,filter);
-        UpdateUtils.getInstance().registerWeatherObserver(this);
+        mUpdateUtils = UpdateUtils.getInstance();
+        mUpdateUtils.registerWeatherObserver(this);
         EventBus.getDefault().register(this);
     }
 
@@ -87,12 +90,13 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 mFirstViewHelper.inflateView(WeatherActivity.this
                         ,mWeatherContainer,mActionBar.getHeight());
                 //读取缓存的天气信息
-                updateWeather(UpdateUtils.getInstance().parseWeatherFromJson(
-                        mInstance.getWeatherInfo(mInstance.getLastLocationWeatherId())));
+                WeatherChooseUtils instance = WeatherChooseUtils.getInstance();
+                instance.chooseDefaultCountry();
+                updateWeather(mUpdateUtils.getWeatherCache(mInstance.getSelectedLocationWeatherId()));
             }
         });
         mCalendar = (TextView) this.findViewById(R.id.tv_calendar);
-        mCalendar.setText(String.valueOf(TimeUtils.getDayNumberOfDate()));
+        mCalendar.setText(TimeUtils.getDayNumberStringOfDate());
         initializeBackgroundFromCache();
     }
 
@@ -111,7 +115,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     public void recycle() {
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
-        UpdateUtils.getInstance().unRegisterWeatherObserver(this);
+        mUpdateUtils.unRegisterWeatherObserver(this);
     }
 
     private void initializeDatabase() {
@@ -136,10 +140,11 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 initializeDatabase();
                 startBackgroundService();
             }else{
-                //更新天气
-                String lastLocationWeatherId = mInstance.getLastLocationWeatherId();
-                UpdateUtils.getInstance().updateWeather(Constants.HE_WEATHER_BASE_URL
-                        + lastLocationWeatherId + Constants.APP_KEY,lastLocationWeatherId);
+                //更新天气（我们更新的是选中的地点的天气，即当前页面显示的城市的天气）
+                String selectedLocationWeatherId = mInstance.getSelectedLocationWeatherId();
+                mUpdateUtils.updateWeather(
+                        UpdateUtils.generateWeatherUrl(selectedLocationWeatherId),
+                        selectedLocationWeatherId);
             }
         }else{
             ToastUtils.showToast("网络不可用！");
@@ -276,7 +281,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 overridePendingTransition(-1,-1);
                 break;
             case R.id.iv_settings:
-                startActivity(new Intent(this,SettingsActivity.class));
+                startActivity(new Intent(this,CountryManagerActivity.class));
                 break;
             default:
                 break;
@@ -332,18 +337,27 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void run() {
                 updateWeather(weather);
-                ToastUtils.showToast("天气更新成功");
+                if(HttpUtils.isNetworkAvailable()){
+                    //因为有可能是从本地缓存读取的，所以造点假数据，哈哈哈哈，迷之微笑
+                    ToastUtils.showToast("天气更新成功");
+                }
             }
         });
     }
 
     private void updateWeather(Weather weather) {
+        String locationInfo = WeatherChooseUtils.clipLocationInfo(
+                mInstance.getLastSelectedLocationInfo());
+        if(!TextUtils.isEmpty(locationInfo)){
+            mCity.setText(locationInfo);
+        }
         if(weather != null){
             mFirstViewHelper.refreshView(weather);
-            mCity.setText(mInstance.getLastLocationInfo());
-            if(mSwipeRefreshLayout.isRefreshing()){
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
+        }else{//天气数据为空
+            mFirstViewHelper.cleanViewData();
+        }
+        if(mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -355,26 +369,43 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 if(mSwipeRefreshLayout.isRefreshing()){
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
-                ToastUtils.showToast("天气更新失败");
+                //从缓存中读取
+                ToastUtils.showToast("天气更新失败，请检查网络设置！");
+                updateWeather(mUpdateUtils.getWeatherCache(mInstance.getSelectedLocationWeatherId()));
             }
         });
     }
 
 
     /**
-     * 新地区天气信息获取失败，可能是 1.定位失败  2.weatherId没找到
+     * 这里用eventBus代替了系统的广播机制
+     * 定位消息：
+     *      1.开始定位
+     *      2.定位失败
+     *      3.定位成功，但是数据库没有找到该地点
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewLocationWeatherFailed(String event){
-        String lastLocationWeatherId = mInstance.getLastLocationWeatherId();
-        if(TextUtils.isEmpty(lastLocationWeatherId)){//首次启动就更新失败
-            String lastLocationInfo = mInstance.getLastLocationInfo();
-            if(TextUtils.isEmpty(lastLocationInfo)){
-                mCity.setText("天气更新失败");
+    public void onNewInformation(String event){
+        if(event.equals(Constants.EVENT_START_LOCATE)){
+            mCity.setText(UIUtils.getString(R.string.locating));
+        }else if(event.equals(Constants.EVENT_LOCATE_FAILED)){
+            String locationInfo = WeatherChooseUtils.clipLocationInfo(
+                    mInstance.getLastSelectedLocationInfo());
+            if(!TextUtils.isEmpty(locationInfo)){
+                mCity.setText(locationInfo);
             }else{
-                mCity.setText(lastLocationInfo);//把定位到的信息加载上面
+                mCity.setText(UIUtils.getString(R.string.locate_failed));
             }
-            ToastUtils.showToast(event);
+            ToastUtils.showToast("定位失败，请检查您的设置！");
+        }else if(event.equals(Constants.EVENT_WEATHER_ID_NOT_FOUND)){
+            String locationInfo = WeatherChooseUtils.clipLocationInfo(
+                    mInstance.getLastSelectedLocationInfo());
+            if(!TextUtils.isEmpty(locationInfo)){
+                mCity.setText(locationInfo);
+            }else{
+                mCity.setText(UIUtils.getString(R.string.server_not_support));
+            }
+            ToastUtils.showToast("您所在的区域好像无法获取天气信息！");
         }
         if(mSwipeRefreshLayout.isRefreshing()){
             mSwipeRefreshLayout.setRefreshing(false);

@@ -1,9 +1,10 @@
 <litepal>
     <dbname value="love_weather"></dbname>
 
-    <version value="1"/>
+    <version value="2"/>
 
     <list>
         <mapping class="com.hudson.loveweather.db.Country"/>
+        <mapping class="com.hudson.loveweather.db.SelectedCountry"/>
     </list>
 </litepal>

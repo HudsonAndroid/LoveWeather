@@ -82,4 +82,15 @@ public class FirstPageViewHelper extends PageViewHelperImpl {
             }
         }
     }
+
+    public void cleanViewData(){
+        mUpdateTime.setText("数据获取失败");
+        mAirDesc.setText("");
+        mTemp.setText("0");
+        mWeatherDesc.setText("");
+        mBodyTemp.setText("");
+        mHum.setText("");
+        mWind.setText("");
+        //air图片
+    }
 }

@@ -10,6 +10,7 @@
         android:id="@+id/ll_current_locate"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:paddingLeft="@dimen/small_margin"
         android:layout_height="50dp">
 
@@ -19,7 +20,7 @@
             android:drawableLeft="@drawable/location"
             android:textColor="@android:color/white"
             android:textSize="@dimen/edit_text_size"
-            android:text="当前定位城市:太原"
+            android:text="当前位置:太原"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -34,31 +35,17 @@
 
     <include layout="@layout/line_sub"/>
 
-    <TextView
-        android:text="历史搜索"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/view_internal_margin"
-        android:layout_marginBottom="@dimen/view_internal_margin"
-        android:textColor="@android:color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <include layout="@layout/line_main"/>
-
-    <com.hudson.loveweather.ui.view.customview.AutoAdapterLayout
-        android:id="@+id/aal_history_container"
-        android:layout_marginTop="@dimen/view_internal_margin"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginRight="@dimen/small_margin"
+    <ViewStub
+        android:id="@+id/vs_history"
+        android:inflatedId="@+id/ll_history"
+        android:layout="@layout/layout_history"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </com.hudson.loveweather.ui.view.customview.AutoAdapterLayout>
+        android:layout_height="wrap_content"/>
 
 
     <TextView
         android:text="热门城市"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/text_content_vertical_margin"
         android:layout_marginLeft="@dimen/view_internal_margin"
         android:layout_marginBottom="@dimen/view_internal_margin"
         android:textColor="@android:color/white"

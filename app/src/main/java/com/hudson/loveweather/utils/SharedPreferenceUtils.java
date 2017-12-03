@@ -94,6 +94,23 @@ public class SharedPreferenceUtils {
         return mSp.getString("default_weather_id",null);
     }
 
+    /**
+     * 保存应用运行时选中的地点的weatherId
+     * @param weatherId
+     */
+    public void saveSelectedLocationWeatherId(String weatherId){
+        mEditor.putString("selected_weather_id",weatherId);
+        mEditor.commit();
+    }
+
+    /**
+     * 获取应用运行时选中的地点的weatherId
+     * @return
+     */
+    public String getSelectedLocationWeatherId(){
+        return mSp.getString("selected_weather_id",null);
+    }
+
     public void saveLastLocationInfo(String locationInfo){
         mEditor.putString("default_location_info",locationInfo);
         mEditor.commit();
@@ -101,6 +118,15 @@ public class SharedPreferenceUtils {
 
     public String getLastLocationInfo(){
         return mSp.getString("default_location_info",null);
+    }
+
+    public void saveLastSelectedLocationInfo(String locationInfo){
+        mEditor.putString("selected_location_info",locationInfo);
+        mEditor.commit();
+    }
+
+    public String getLastSelectedLocationInfo(){
+        return mSp.getString("selected_location_info",null);
     }
 
 
@@ -159,6 +185,16 @@ public class SharedPreferenceUtils {
 
     public int getDailyWordsUpdateDate(){
         return mSp.getInt("daily_words_date",-1);
+    }
+
+
+    public void saveHistory(String history){
+        mEditor.putString("search_history",history);
+        mEditor.commit();
+    }
+
+    public String getHistory(){
+        return mSp.getString("search_history",null);
     }
 
 

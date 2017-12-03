@@ -1,14 +1,12 @@
 package com.hudson.loveweather.utils.update;
 
-import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.hudson.loveweather.bean.Weather;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.HttpUtils;
-import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
+import com.hudson.loveweather.utils.WeatherChooseUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
 
 import java.io.IOException;
@@ -43,45 +41,48 @@ import okhttp3.Response;
 
     @Override
     public void update(String url,Object... objects) {
-        //先从缓存中读取
         String weatherId = (String) objects[0];
-        String weatherInfo = SharedPreferenceUtils.getInstance().getWeatherInfo(weatherId);
-        if(!TextUtils.isEmpty(weatherInfo)){
-            try{
-                Weather weather = new Gson().fromJson(weatherInfo,
-                        Weather.class);
-                int lastUpdateTime = TimeUtils.parseMinuteTime(weather.getHeWeather()
-                        .get(0).getBasic().getUpdate().getLoc(),0);
-                if((TimeUtils.parseCurrentMinuteTime() +24*60 - lastUpdateTime)%(24*60)
-                        > Constants.SERVER_WEATHER_UPDATE_OFFSET){
-                    LogUtils.e("时间长度超出服务器更新范围，所以请求网络");
-                    updateWeather(url,weatherId);
-                }else{//使用本地
-                    LogUtils.e("使用本地缓存数据");
-                    notifyUpdateSuccess(weather);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
+        Weather weatherCache = getWeatherCache(weatherId);
+        if(weatherCache!=null){
+            int lastUpdateTime = TimeUtils.parseMinuteTime(weatherCache.getHeWeather()
+                    .get(0).getBasic().getUpdate().getLoc(),0);
+            if(lastUpdateTime!=-1&&(TimeUtils.parseCurrentMinuteTime() +24*60 - lastUpdateTime)%(24*60)
+                    > Constants.SERVER_WEATHER_UPDATE_OFFSET){
+                LogUtils.e("时间长度超出服务器更新范围，所以请求网络");
                 updateWeather(url,weatherId);
+            }else{//使用本地
+                LogUtils.e("使用本地缓存数据");
+                notifyUpdateSuccess(weatherCache);
             }
         }else{
             updateWeather(url,weatherId);
         }
     }
 
-
-    Weather parseWeatherFromJson(String json){
-        if(!TextUtils.isEmpty(json)){
-            try{
-                return new Gson().fromJson(json,Weather.class);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+    /**
+     * 获取缓存数据
+     * @param weatherId
+     * @return
+     */
+    public Weather getWeatherCache(String weatherId){
+        try{
+            return new Gson().fromJson(
+                    WeatherChooseUtils.getInstance().getWeatherJsonByWeatherId(weatherId),
+                    Weather.class);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }
 
-
+    public Weather getWeatherInstance(String json){
+        try{
+            return new Gson().fromJson(json, Weather.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 真正的天气更新在这里
@@ -101,7 +102,8 @@ import okhttp3.Response;
                     Weather weather = new Gson().fromJson(string,
                             Weather.class);
                     notifyUpdateSuccess(weather);
-                    SharedPreferenceUtils.getInstance().saveWeatherInfo(weatherId,string);
+                    //将当前选中的地区的天气信息保存到数据库
+                    WeatherChooseUtils.getInstance().updateChooseCountryWeatherCache(string);
                 }catch (JsonSyntaxException e){
                     e.printStackTrace();
                     notifyUpdateFailed(e);

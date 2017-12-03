@@ -34,10 +34,15 @@ public class Constants {
 
     public static final int PERMISSION_REQUEST_CODE = 1;
     public static final int DEFAULT_BACKGROUND_TRANSITION_DURATION = 600;
+    public static final String[] HOT_CITIES = new String[]{
+            "上海","北京","广州","深圳","南京","武汉","杭州","厦门","成都","长沙"
+    };
 //    public static final int WEATHER_NETWORK_UPDATE_SUCCESS = 1;//天气信息网络获取成功
 //    public static final int WEATHER_NETWORK_UPDATE_FAILED = 2;//天气信息网络获取失败
 
-
+    public static final String EVENT_START_LOCATE = "start_locate";
+    public static final String EVENT_LOCATE_FAILED = "locate_failed";
+    public static final String EVENT_WEATHER_ID_NOT_FOUND = "weather_id_not_found";
     public static final String BROADCAST_UPDATE_PIC = "com.hudson.loveweather.update_pic";
 //    public static final String BROADCAST_UPDATE_WEATHER = "com.hudson.loveweather.update_weather";
 

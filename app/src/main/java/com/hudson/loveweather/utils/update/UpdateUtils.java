@@ -1,6 +1,7 @@
 package com.hudson.loveweather.utils.update;
 
 import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.global.Constants;
 
 /**
  * Created by Hudson on 2017/11/27.
@@ -33,10 +34,6 @@ public class UpdateUtils {
         mWeatherDataUpdater.update(url,objects);
     }
 
-    public Weather parseWeatherFromJson(String json){
-        return mWeatherDataUpdater.parseWeatherFromJson(json);
-    }
-
     public void registerWeatherObserver(WeatherObserver observer){
         mWeatherDataUpdater.registerObserver(observer);
     }
@@ -45,16 +42,19 @@ public class UpdateUtils {
         mWeatherDataUpdater.unRegisterObserver(observer);
     }
 
-//    /**
-//     * use in activity
-//     * @param url
-//     * @param callback
-//     */
-//    public void updateWeather(String url, Callback callback){
-//        mWeatherDataUpdater.updateWeather(url,callback);
-//    }
+    public Weather getWeatherCache(String weatherId){
+        return mWeatherDataUpdater.getWeatherCache(weatherId);
+    }
+
+    public Weather getWeatherInstance(String json){
+        return mWeatherDataUpdater.getWeatherInstance(json);
+    }
 
     public void updateBackgroundPic(String url,Object... objects){
         mBackgroundPicUpdater.update(url,objects);
+    }
+
+    public static String generateWeatherUrl(String weatherId){
+        return Constants.HE_WEATHER_BASE_URL + weatherId + Constants.APP_KEY;
     }
 }

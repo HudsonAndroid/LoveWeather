@@ -2,6 +2,7 @@ package com.hudson.loveweather.ui.activity;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,7 +29,10 @@ public abstract class BaseSubActivity extends BaseActivity {
             }
         });
         ((TextView) this.findViewById(R.id.tv_title)).setText(getActivityTitle());
-        ((LinearLayout) this.findViewById(R.id.ll_content_container)).addView(setContent());
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ((LinearLayout) this.findViewById(R.id.ll_content_container)).addView(setContent(),
+                layoutParams);
         findViewById(R.id.ll_root).setBackground(
                 new BitmapDrawable(BitmapUtils.gaussianBlur(25,BitmapUtils.getShowPic(
                         new int[]{0xaa000000,0x55000000,0x55000000,0xaa000000},

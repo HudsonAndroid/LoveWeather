@@ -7,6 +7,6 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="@dimen/main_line_margin"
         android:layout_marginRight="@dimen/main_line_margin"
-        android:background="@android:color/white"
+        android:background="@color/dark_gray"
         android:layout_height="@dimen/line_height"/>
 </merge>

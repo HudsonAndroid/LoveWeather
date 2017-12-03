@@ -14,6 +14,7 @@ import com.hudson.loveweather.utils.DataBaseLoader;
 import com.hudson.loveweather.utils.DeviceUtils;
 import com.hudson.loveweather.utils.HttpUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
+import com.hudson.loveweather.utils.WeatherChooseUtils;
 import com.hudson.loveweather.utils.location.LocationUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.update.UpdateUtils;
@@ -36,7 +37,7 @@ public class ScheduledTaskService extends Service {
     public static final int TYPE_CHECK_DATABASE_SYNCHRONIZED = 3;//数据库是否同步成功
     private int mAcquireCount = 0;
     private static final int ACQUIRE_MAX_COUNT = 4;//最多请求三次
-    private int mPicIndex = 0;//请求图片的index
+    private int mPicIndex = -1;//请求图片的index
     private String mPicCategory;
     private String mPicUrl;
     private UpdateUtils mUpdateUtils;
@@ -65,9 +66,9 @@ public class ScheduledTaskService extends Service {
     public int onStartCommand(Intent intent,  int flags, int startId) {
         int type = intent.getIntExtra("type",-1);
         if(type == TYPE_UPDATE_WEATHER){
-            String lastLocationWeatherId = mSharedPreferenceUtils.getLastLocationWeatherId();
-            if(!TextUtils.isEmpty(lastLocationWeatherId)){
-                updateWeather(lastLocationWeatherId);
+            String lastSelectedWeatherId = mSharedPreferenceUtils.getSelectedLocationWeatherId();
+            if(!TextUtils.isEmpty(lastSelectedWeatherId)){
+                updateWeather(lastSelectedWeatherId);
                 scheduleUpdateWeather();
             }
         }else if(type == TYPE_UPDATE_PIC){
@@ -94,7 +95,8 @@ public class ScheduledTaskService extends Service {
         new Thread(){
             @Override
             public void run(){
-                LogUtils.e("子线程开始搜索数据库");
+                LogUtils.e("开始定位");
+                EventBus.getDefault().post(Constants.EVENT_START_LOCATE);
                 LocationUtils locationUtils = new LocationUtils();
                 locationUtils.startLocation();
                 locationUtils.setLocationInfoGetListener(new LocationUtils.LocationInfoGetListener() {
@@ -104,7 +106,7 @@ public class ScheduledTaskService extends Service {
                             acquireWeatherIdAndUpdateWeather(province, city, district);
                         }else{
                             LogUtils.e("百度定位失败");
-                            EventBus.getDefault().post("定位失败，请检查您的设置！");
+                            EventBus.getDefault().post(Constants.EVENT_LOCATE_FAILED);
                         }
                     }
                 });
@@ -122,11 +124,12 @@ public class ScheduledTaskService extends Service {
         if(!TextUtils.isEmpty(weatherId)){
             mAcquireCount =0;
             mSharedPreferenceUtils.saveLastLocationWeatherId(weatherId);
-            mSharedPreferenceUtils.saveLastLocationInfo(city+" "+district);
+            mSharedPreferenceUtils.saveLastLocationInfo(WeatherChooseUtils.buildLocationInfo(city,district));
+            WeatherChooseUtils.getInstance().chooseCountry(weatherId,city,district);
             updateWeather(weatherId);
         }else{//可能是本地数据库还没有创建好，尝试过30s后再次从数据库中查找，不过请求次数不超过最大值
             if(mAcquireCount>ACQUIRE_MAX_COUNT){
-                EventBus.getDefault().post("您所在的区域好像无法获取天气信息！");
+                EventBus.getDefault().post(Constants.EVENT_WEATHER_ID_NOT_FOUND);
             }else{
                 Intent acquireWeatherIntent = new Intent(this,ScheduledTaskService.class);
                 acquireWeatherIntent.putExtra("province",province);
@@ -148,8 +151,7 @@ public class ScheduledTaskService extends Service {
     }
 
     private void updateWeather(String weatherId){
-        mUpdateUtils.updateWeather(Constants.HE_WEATHER_BASE_URL
-                + weatherId + Constants.APP_KEY,weatherId);
+        mUpdateUtils.updateWeather(UpdateUtils.generateWeatherUrl(weatherId),weatherId);
     }
 
     /**

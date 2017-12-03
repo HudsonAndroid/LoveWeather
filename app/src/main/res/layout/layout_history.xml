@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_history"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/view_internal_margin"
+        android:layout_marginLeft="@dimen/view_internal_margin"
+        android:layout_marginTop="@dimen/text_content_vertical_margin"
+        android:text="历史搜索"
+        android:textColor="@android:color/white"/>
+
+    <include layout="@layout/line_main"/>
+
+    <com.hudson.loveweather.ui.view.customview.AutoAdapterLayout
+        android:id="@+id/aal_history_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_marginTop="@dimen/view_internal_margin">
+
+    </com.hudson.loveweather.ui.view.customview.AutoAdapterLayout>
+</LinearLayout>

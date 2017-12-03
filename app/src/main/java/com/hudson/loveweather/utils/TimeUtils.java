@@ -19,6 +19,18 @@ public class TimeUtils {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 
+    /**
+     * 获取几号，与上面不同的是，如果是1-9，那么结果会加0，例如01
+     * @return
+     */
+    public static String getDayNumberStringOfDate(){
+        int date = getDayNumberOfDate();
+        if(date>0&&date<9){
+            return "0"+date;
+        }
+        return date+"";
+    }
+
     public static int getHourOfDay(){
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     }

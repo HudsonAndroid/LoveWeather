@@ -46,7 +46,7 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
         mDate = (TextView) this.findViewById(R.id.tv_date);
         mMonth = (TextView) this.findViewById(R.id.tv_month);
         mDay = (TextView) this.findViewById(R.id.tv_day);
-        mDate.setText(String.valueOf(TimeUtils.getDayNumberOfDate()));
+        mDate.setText(TimeUtils.getDayNumberStringOfDate());
         mDay.setText(TimeUtils.getDayWeekOfDate());
         mMonth.setText(TimeUtils.getMonthOfYear());
         mTextView.setText(SharedPreferenceUtils.getInstance().getDailyWords());
