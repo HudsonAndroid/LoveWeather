@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SelectProgressBar">
+		<attr name="style">
+			<enum name="horizontal" value="0" />
+			<enum name="vertical" value="1" />
+		</attr>
+		<attr name ="line_length" format="dimension"/>
+		<attr name ="select_circle_radius" format="dimension"/>
+		<attr name ="line_stroke_width" format="dimension"/>
+		<attr name ="min_value" format="integer"/>
+		<attr name = "max_value" format="integer"/>
+		<attr name="line_color" format="color"/>
+		<attr name="circle_color" format="color"/>
+		<attr name="select_text_size" format="dimension"/>
+	</declare-styleable>
+</resources>

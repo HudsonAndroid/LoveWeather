@@ -31,6 +31,19 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/weather_text_size"/>
 
+            <TextView
+                android:id="@+id/tv_extend"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/small_margin"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/edit_text_size"
+                android:text="编辑"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </RelativeLayout>
 
         <include layout="@layout/line_main"/>

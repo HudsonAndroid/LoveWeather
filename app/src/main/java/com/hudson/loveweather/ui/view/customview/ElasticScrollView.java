@@ -13,6 +13,7 @@ import android.widget.ScrollView;
  * Created by Hudson on 2017/12/3.
  * 弹性scrollView
  * 参考：http://blog.csdn.net/a105865708/article/details/17784041
+ * 原文有小bug,这里已经做了修改
  */
 
 public class ElasticScrollView extends ScrollView {
@@ -75,26 +76,13 @@ public class ElasticScrollView extends ScrollView {
             int action = ev.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
-//              System.out.println("ACTION_DOWN");
                     y = ev.getY();
                     super.onTouchEvent(ev);
                     break;
-                case MotionEvent.ACTION_UP:
-//              System.out.println("ACTION_UP");
-                    y = 0;
-                    if (isNeedAnimation()) {
-                        animation();
-                    }
-                    super.onTouchEvent(ev);
-                    break;
                 case MotionEvent.ACTION_MOVE:
-//              System.out.println("ACTION_MOVE");
                     final float preY = y == 0 ? ev.getY() : y;
                     float nowY = ev.getY();
                     int deltaY = (int) (preY - nowY);
-                    // 滚动
-//              scrollBy(0, deltaY);
-
                     y = nowY;
                     // 当滚动到最上或者最下时就不会再滚动，这时移动布局
                     if (isNeedMove()) {
@@ -103,10 +91,20 @@ public class ElasticScrollView extends ScrollView {
                             normal.set(inner.getLeft(), inner.getTop(), inner.getRight(), inner.getBottom());
                         }
                         // 移动布局
-                        inner.layout(inner.getLeft(), inner.getTop() - deltaY / 2, inner.getRight(), inner.getBottom() - deltaY / 2);
+                        int bottom = inner.getBottom() - deltaY / 2;
+                        if(bottom>0){//这里有个bug，整个视图移出不可见了就会导致后面的animation不执行，所以防止移出不可见
+                            inner.layout(inner.getLeft(), inner.getTop() - deltaY / 2, inner.getRight(), bottom);
+                        }
                     } else {
                         super.onTouchEvent(ev);
                     }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    y = 0;
+                    if (isNeedAnimation()) {
+                        animation();
+                    }
+                    super.onTouchEvent(ev);
                     break;
                 default:
                     break;
@@ -115,7 +113,6 @@ public class ElasticScrollView extends ScrollView {
     }
 
     // 开启动画移动
-
     public void animation() {
         // 开启移动动画
         TranslateAnimation ta = new TranslateAnimation(0, 0, 0, normal.top - inner.getTop());
@@ -153,7 +150,7 @@ public class ElasticScrollView extends ScrollView {
     public boolean isNeedMove() {
         int offset = inner.getMeasuredHeight() - getHeight();
         int scrollY = getScrollY();
-        if (scrollY == 0 || scrollY == offset) {
+        if (scrollY == 0 || scrollY == offset) {//当scroll到了边界值，那么就需要弹性滑动
             return true;
         }
         return false;

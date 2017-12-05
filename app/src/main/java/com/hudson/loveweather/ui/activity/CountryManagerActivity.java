@@ -10,7 +10,7 @@ import com.hudson.loveweather.db.Country;
 import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.db.SelectedCountry;
 import com.hudson.loveweather.ui.view.customview.CountryItemViewHelper;
-import com.hudson.loveweather.utils.ToastUtils;
+import com.hudson.loveweather.utils.UIUtils;
 import com.hudson.loveweather.utils.WeatherChooseUtils;
 
 import java.util.ArrayList;
@@ -26,6 +26,9 @@ public class CountryManagerActivity extends BaseSubActivity implements View.OnCl
         View root = View.inflate(this, R.layout.content_activity_country_manager, null);
         mCountryContainer = (LinearLayout) root.findViewById(R.id.ll_country_container);
         root.findViewById(R.id.iv_add_country).setOnClickListener(this);
+        mExtendTextView.setVisibility(View.VISIBLE);
+        mExtendTextView.setText("编辑");
+        mExtendTextView.setOnClickListener(this);
         return root;
     }
 
@@ -41,17 +44,7 @@ public class CountryManagerActivity extends BaseSubActivity implements View.OnCl
                     countries.get(i), mOnItemEventListener);
             mCountryContainer.addView(countryItemViewHelper.mRoot,layoutParams);
             mHelpers.add(countryItemViewHelper);
-            View.inflate(this,R.layout.line_main,mCountryContainer);
         }
-
-        mCountryContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ToastUtils.showToast("长按 了");
-                notifyShowCheckBox();
-                return true;
-            }
-        });
     }
 
     @Override
@@ -61,7 +54,10 @@ public class CountryManagerActivity extends BaseSubActivity implements View.OnCl
 
     @Override
     public void recycle() {
-
+        if(mHelpers!=null){
+            mHelpers.removeAll(mHelpers);
+            mHelpers = null;
+        }
     }
 
     private void notifyShowCheckBox(){
@@ -69,6 +65,8 @@ public class CountryManagerActivity extends BaseSubActivity implements View.OnCl
             for (CountryItemViewHelper helper : mHelpers) {
                 helper.showCheckBox();
             }
+            mExtendTextView.setText("删除");
+            mExtendTextView.setTextColor(UIUtils.getColor(R.color.red));
             isCheckBoxShowing = true;
         }
     }
@@ -82,10 +80,28 @@ public class CountryManagerActivity extends BaseSubActivity implements View.OnCl
             for (CountryItemViewHelper helper : mHelpers) {
                 helper.hideCheckBox();
             }
+            mExtendTextView.setText("编辑");
+            mExtendTextView.setTextColor(UIUtils.getColor(R.color.white));
             isCheckBoxShowing = false;
             return true;
         }
         return false;
+    }
+
+    private void deleteSelectedItem(){
+        CountryItemViewHelper helper;
+        for (int i = 0; i < mHelpers.size();) {
+            helper = mHelpers.get(i);
+            boolean selected = helper.isSelected();
+            if(selected){
+                mCountryContainer.removeView(helper.mRoot);
+                helper.deleteFromDataBase();
+                mHelpers.remove(helper);//后面的元素会往前面移，所以不需要i自增
+            }else{
+                i++;
+            }
+        }
+        notifyHideCheckBox();//hide checkbox
     }
 
     @Override
@@ -108,9 +124,10 @@ public class CountryManagerActivity extends BaseSubActivity implements View.OnCl
         }
 
         @Override
-        public void onItemDelete(View root,SelectedCountry country) {
+        public void onItemDelete(CountryItemViewHelper helper,View root,SelectedCountry country) {
+            helper.deleteFromDataBase();
+            mHelpers.remove(helper);
             mCountryContainer.removeView(root);
-            DatabaseUtils.removeSelectedCountry(country);
         }
     };
 
@@ -119,13 +136,19 @@ public class CountryManagerActivity extends BaseSubActivity implements View.OnCl
         switch (v.getId()){
             case R.id.iv_add_country:
                 startActivity(new Intent(CountryManagerActivity.this,SearchActivity.class));
-                finish();
+                break;
+            case R.id.tv_extend:
+                if(isCheckBoxShowing){//删除
+                    deleteSelectedItem();
+                }else{//选择
+                    notifyShowCheckBox();
+                }
                 break;
         }
     }
 
     public interface OnItemEventListener{
         void onItemClick(SelectedCountry country);
-        void onItemDelete(View root,SelectedCountry country);
+        void onItemDelete(CountryItemViewHelper helper,View root,SelectedCountry country);
     }
 }

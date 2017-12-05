@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="darkBlack">#333333</color>
-    <color name="gray">#eeeeec</color>
+    <color name="gray">#bcbcbc</color>
     <color name="edit_color">#44464B44</color>
     <color name="city_text_color">#22464B44</color>
     <color name="selected_color">#88464B44</color>
@@ -12,4 +12,5 @@
     <color name="dark_gray">#999999</color>
     <color name="white">#ffffff</color>
     <color name="red">#ff0000</color>
+    <color name="warning_color">#E7BE5F</color>
 </resources>

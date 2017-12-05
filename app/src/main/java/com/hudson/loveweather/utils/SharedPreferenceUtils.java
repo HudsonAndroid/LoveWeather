@@ -43,21 +43,37 @@ public class SharedPreferenceUtils {
         mEditor.commit();
     }
 
+    /**
+     *
+     * @return 小时数
+     */
     public int getUpdateWeatherTriggerTime(){
         return mSp.getInt("weather_update_trigger_time",
                 ScheduledTaskService.DEFAULT_WEATHER_TRIGGER_TIME);
     }
 
+    /**
+     *
+     * @param triggerTime 小时
+     */
     public void saveUpdateBackgroundPicTriggerTime(int triggerTime){
         mEditor.putInt("pic_update_trigger_time",triggerTime);
         mEditor.commit();
     }
 
+    /**
+     *
+     * @return 分钟
+     */
     public int getUpdateBackgroundPicTriggerTime(){
         return mSp.getInt("pic_update_trigger_time",
                 ScheduledTaskService.DEFAULT_BACKGROUND_PIC_TRIG_TIME);
     }
 
+    /**
+     *
+     * @param category 分钟
+     */
     public void saveBackgroundPicCategory(String category){
         mEditor.putString("pic_category",category);
         mEditor.commit();
@@ -130,32 +146,32 @@ public class SharedPreferenceUtils {
     }
 
 
-    /**
-     *
-     * @param weather 天气的json格式字符串
-     */
-    public void saveWeatherInfo(String key,String weather){
-        mEditor.putString(key,weather);
-        mEditor.commit();
-    }
-
-    /**
-     * 获取缓存
-     * @param key
-     * @return
-     */
-    public String getWeatherInfo(String key){
-        return mSp.getString(key,null);
-    }
-
-    /**
-     * 移除缓存
-     * @param key
-     */
-    public void removeWeatherInfo(String key){
-        mEditor.remove(key);
-        mEditor.commit();
-    }
+//    /**
+//     *
+//     * @param weather 天气的json格式字符串
+//     */
+//    public void saveWeatherInfo(String key,String weather){
+//        mEditor.putString(key,weather);
+//        mEditor.commit();
+//    }
+//
+//    /**
+//     * 获取缓存
+//     * @param key
+//     * @return
+//     */
+//    public String getWeatherInfo(String key){
+//        return mSp.getString(key,null);
+//    }
+//
+//    /**
+//     * 移除缓存
+//     * @param key
+//     */
+//    public void removeWeatherInfo(String key){
+//        mEditor.remove(key);
+//        mEditor.commit();
+//    }
 
     /**
      * 每日一句语句
@@ -195,6 +211,15 @@ public class SharedPreferenceUtils {
 
     public String getHistory(){
         return mSp.getString("search_history",null);
+    }
+
+    public void saveShowNotification(boolean show){
+        mEditor.putBoolean("show_notification",show);
+        mEditor.commit();
+    }
+
+    public boolean isShowNotification(){
+        return mSp.getBoolean("show_notification",false);
     }
 
 

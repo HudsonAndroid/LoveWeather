@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.utils.ToastUtils;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class FirstPageViewHelper extends PageViewHelperImpl {
             List<Weather.HeWeatherBean> heWeather = object.getHeWeather();
             if(heWeather!=null&&heWeather.size()>0){
                 Weather.HeWeatherBean heWeatherBean = heWeather.get(0);
-                if(heWeatherBean!=null){
+                if(heWeatherBean!=null&&heWeatherBean.getStatus().equals("ok")){
                     Weather.HeWeatherBean.BasicBean basic = heWeatherBean.getBasic();
                     if(basic!=null){
                         mUpdateTime.setText(basic.getUpdate().getLoc());
@@ -78,6 +79,8 @@ public class FirstPageViewHelper extends PageViewHelperImpl {
                         mWind.setText(now.getWind().getSc());
                         //air图片
                     }
+                }else{//可能是url错误，导致json格式不正确，或者访问次数达到限制
+                    ToastUtils.showToast("服务器数据异常！");
                 }
             }
         }

@@ -1,17 +1,12 @@
 package com.hudson.loveweather.bean;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Hudson on 2017/11/28.
+ * Created by Hudson on 2017/12/4.
  */
 
-public class Weather implements Parcelable {
-
+public class Weather {
 
     private List<HeWeatherBean> HeWeather;
 
@@ -25,12 +20,13 @@ public class Weather implements Parcelable {
 
     public static class HeWeatherBean {
         /**
-         * aqi : {"city":{"aqi":"90","co":"1","no2":"83","o3":"36","pm10":"86","pm25":"67","qlty":"良","so2":"12"}}
-         * basic : {"city":"苏州","cnty":"中国","id":"CN101190401","lat":"31.29937935","lon":"120.61958313","update":{"loc":"2017-11-28 17:51","utc":"2017-11-28 09:51"}}
-         * daily_forecast : [{"astro":{"mr":"13:24","ms":"00:27","sr":"06:37","ss":"16:56"},"cond":{"code_d":"305","code_n":"305","txt_d":"小雨","txt_n":"小雨"},"date":"2017-11-28","hum":"72","pcpn":"0.4","pop":"86","pres":"1022","tmp":{"max":"17","min":"12"},"uv":"3","vis":"15","wind":{"deg":"0","dir":"无持续风向","sc":"3-4","spd":"19"}},{"astro":{"mr":"14:00","ms":"01:26","sr":"06:37","ss":"16:55"},"cond":{"code_d":"305","code_n":"305","txt_d":"小雨","txt_n":"小雨"},"date":"2017-11-29","hum":"77","pcpn":"10.3","pop":"89","pres":"1026","tmp":{"max":"13","min":"8"},"uv":"1","vis":"16","wind":{"deg":"68","dir":"东北风","sc":"3-4","spd":"26"}},{"astro":{"mr":"14:37","ms":"02:26","sr":"06:38","ss":"16:55"},"cond":{"code_d":"104","code_n":"101","txt_d":"阴","txt_n":"多云"},"date":"2017-11-30","hum":"70","pcpn":"7.2","pop":"83","pres":"1030","tmp":{"max":"11","min":"6"},"uv":"1","vis":"15","wind":{"deg":"64","dir":"东北风","sc":"3-4","spd":"21"}}]
-         * now : {"cond":{"code":"104","txt":"阴"},"fl":"16","hum":"81","pcpn":"0","pres":"1021","tmp":"13","vis":"10","wind":{"deg":"270","dir":"西风","sc":"微风","spd":"9"}}
+         * aqi : {"city":{"aqi":"67","co":"1","no2":"51","o3":"40","pm10":"74","pm25":"48","qlty":"良","so2":"14"}}
+         * basic : {"city":"苏州","cnty":"中国","id":"CN101190401","lat":"31.29937935","lon":"120.61958313","update":{"loc":"2017-12-04 20:52","utc":"2017-12-04 12:52"}}
+         * daily_forecast : [{"astro":{"mr":"17:47","ms":"06:53","sr":"06:41","ss":"16:55"},"cond":{"code_d":"103","code_n":"101","txt_d":"晴间多云","txt_n":"多云"},"date":"2017-12-04","hum":"59","pcpn":"0.0","pop":"0","pres":"1027","tmp":{"max":"12","min":"3"},"uv":"3","vis":"16","wind":{"deg":"299","dir":"西北风","sc":"微风","spd":"7"}},{"astro":{"mr":"18:47","ms":"08:00","sr":"06:42","ss":"16:55"},"cond":{"code_d":"101","code_n":"100","txt_d":"多云","txt_n":"晴"},"date":"2017-12-05","hum":"36","pcpn":"0.0","pop":"0","pres":"1029","tmp":{"max":"7","min":"2"},"uv":"3","vis":"20","wind":{"deg":"345","dir":"西北风","sc":"微风","spd":"14"}},{"astro":{"mr":"19:52","ms":"09:03","sr":"06:43","ss":"16:55"},"cond":{"code_d":"101","code_n":"101","txt_d":"多云","txt_n":"多云"},"date":"2017-12-06","hum":"38","pcpn":"0.0","pop":"0","pres":"1025","tmp":{"max":"11","min":"3"},"uv":"3","vis":"20","wind":{"deg":"187","dir":"南风","sc":"微风","spd":"3"}},{"astro":{"mr":"20:57","ms":"10:00","sr":"06:44","ss":"16:55"},"cond":{"code_d":"101","code_n":"101","txt_d":"多云","txt_n":"多云"},"date":"2017-12-07","hum":"47","pcpn":"0.1","pop":"84","pres":"1025","tmp":{"max":"12","min":"3"},"uv":"2","vis":"20","wind":{"deg":"7","dir":"北风","sc":"微风","spd":"12"}},{"astro":{"mr":"22:02","ms":"10:50","sr":"06:45","ss":"16:56"},"cond":{"code_d":"101","code_n":"101","txt_d":"多云","txt_n":"多云"},"date":"2017-12-08","hum":"40","pcpn":"0.0","pop":"0","pres":"1029","tmp":{"max":"7","min":"1"},"uv":"3","vis":"20","wind":{"deg":"335","dir":"西北风","sc":"微风","spd":"14"}},{"astro":{"mr":"23:05","ms":"11:34","sr":"06:45","ss":"16:56"},"cond":{"code_d":"100","code_n":"100","txt_d":"晴","txt_n":"晴"},"date":"2017-12-09","hum":"30","pcpn":"0.0","pop":"0","pres":"1028","tmp":{"max":"9","min":"3"},"uv":"4","vis":"20","wind":{"deg":"299","dir":"西北风","sc":"微风","spd":"10"}},{"astro":{"mr":"12:46","ms":"12:13","sr":"06:46","ss":"16:56"},"cond":{"code_d":"100","code_n":"100","txt_d":"晴","txt_n":"晴"},"date":"2017-12-10","hum":"33","pcpn":"0.0","pop":"0","pres":"1026","tmp":{"max":"12","min":"4"},"uv":"4","vis":"20","wind":{"deg":"304","dir":"西北风","sc":"微风","spd":"16"}}]
+         * hourly_forecast : [{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-04 22:00","hum":"55","pop":"0","pres":"1029","tmp":"6","wind":{"deg":"35","dir":"东北风","sc":"微风","spd":"15"}},{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-05 01:00","hum":"54","pop":"0","pres":"1029","tmp":"5","wind":{"deg":"243","dir":"西南风","sc":"微风","spd":"13"}},{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-05 04:00","hum":"54","pop":"0","pres":"1029","tmp":"3","wind":{"deg":"347","dir":"西北风","sc":"微风","spd":"12"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 07:00","hum":"47","pop":"0","pres":"1030","tmp":"3","wind":{"deg":"333","dir":"西北风","sc":"微风","spd":"12"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 10:00","hum":"36","pop":"0","pres":"1030","tmp":"5","wind":{"deg":"322","dir":"西北风","sc":"微风","spd":"14"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 13:00","hum":"28","pop":"0","pres":"1028","tmp":"7","wind":{"deg":"311","dir":"西北风","sc":"微风","spd":"13"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 16:00","hum":"30","pop":"0","pres":"1027","tmp":"7","wind":{"deg":"303","dir":"西北风","sc":"微风","spd":"10"}},{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-05 19:00","hum":"35","pop":"0","pres":"1027","tmp":"4","wind":{"deg":"312","dir":"西北风","sc":"微风","spd":"15"}}]
+         * now : {"cond":{"code":"104","txt":"阴"},"fl":"1","hum":"69","pcpn":"0","pres":"1027","tmp":"7","vis":"10","wind":{"deg":"52","dir":"东北风","sc":"微风","spd":"8"}}
          * status : ok
-         * suggestion : {"air":{"brf":"良","txt":"气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动。"},"comf":{"brf":"舒适","txt":"白天不太热也不太冷，风力不大，相信您在这样的天气条件下，应会感到比较清爽和舒适。"},"cw":{"brf":"不宜","txt":"不宜洗车，未来24小时内有雨，如果在此期间洗车，雨水和路上的泥水可能会再次弄脏您的爱车。"},"drsg":{"brf":"较冷","txt":"建议着厚外套加毛衣等服装。年老体弱者宜着大衣、呢外套加羊毛衫。"},"flu":{"brf":"易发","txt":"天冷风大且空气湿度大，易发生感冒，请注意适当增加衣服，加强自我防护避免感冒。"},"sport":{"brf":"较不宜","txt":"有降水，且风力较强，气压较低，推荐您在室内进行低强度运动；若坚持户外运动，须注意避雨防风。"},"trav":{"brf":"适宜","txt":"有降水，温度适宜，在细雨中游玩别有一番情调，可不要错过机会呦！但记得出门要携带雨具。"},"uv":{"brf":"最弱","txt":"属弱紫外线辐射天气，无需特别防护。若长期在户外，建议涂擦SPF在8-12之间的防晒护肤品。"}}
+         * suggestion : {"air":{"brf":"较差","txt":"气象条件较不利于空气污染物稀释、扩散和清除，请适当减少室外活动时间。"},"comf":{"brf":"较舒适","txt":"今天夜间虽然天气晴好，但会感觉偏凉，舒适、宜人。"},"cw":{"brf":"较适宜","txt":"较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。"},"drsg":{"brf":"较冷","txt":"建议着厚外套加毛衣等服装。年老体弱者宜着大衣、呢外套加羊毛衫。"},"flu":{"brf":"较易发","txt":"天气较凉，较易发生感冒，请适当增加衣服。体质较弱的朋友尤其应该注意防护。"},"sport":{"brf":"较适宜","txt":"天气较好，但考虑风力较强且气温较低，推荐您进行室内运动，若在户外运动注意防风并适当增减衣物。"},"trav":{"brf":"一般","txt":"天空状况还是比较好的，但温度稍微有点低，且风稍大，会让您感觉些许凉意。外出请注意防风。"},"uv":{"brf":"最弱","txt":"属弱紫外线辐射天气，无需特别防护。若长期在户外，建议涂擦SPF在8-12之间的防晒护肤品。"}}
          */
 
         private AqiBean aqi;
@@ -39,6 +35,7 @@ public class Weather implements Parcelable {
         private String status;
         private SuggestionBean suggestion;
         private List<DailyForecastBean> daily_forecast;
+        private List<HourlyForecastBean> hourly_forecast;
 
         public AqiBean getAqi() {
             return aqi;
@@ -88,9 +85,17 @@ public class Weather implements Parcelable {
             this.daily_forecast = daily_forecast;
         }
 
+        public List<HourlyForecastBean> getHourly_forecast() {
+            return hourly_forecast;
+        }
+
+        public void setHourly_forecast(List<HourlyForecastBean> hourly_forecast) {
+            this.hourly_forecast = hourly_forecast;
+        }
+
         public static class AqiBean {
             /**
-             * city : {"aqi":"90","co":"1","no2":"83","o3":"36","pm10":"86","pm25":"67","qlty":"良","so2":"12"}
+             * city : {"aqi":"67","co":"1","no2":"51","o3":"40","pm10":"74","pm25":"48","qlty":"良","so2":"14"}
              */
 
             private CityBean city;
@@ -105,14 +110,14 @@ public class Weather implements Parcelable {
 
             public static class CityBean {
                 /**
-                 * aqi : 90
+                 * aqi : 67
                  * co : 1
-                 * no2 : 83
-                 * o3 : 36
-                 * pm10 : 86
-                 * pm25 : 67
+                 * no2 : 51
+                 * o3 : 40
+                 * pm10 : 74
+                 * pm25 : 48
                  * qlty : 良
-                 * so2 : 12
+                 * so2 : 14
                  */
 
                 private String aqi;
@@ -197,7 +202,7 @@ public class Weather implements Parcelable {
              * id : CN101190401
              * lat : 31.29937935
              * lon : 120.61958313
-             * update : {"loc":"2017-11-28 17:51","utc":"2017-11-28 09:51"}
+             * update : {"loc":"2017-12-04 20:52","utc":"2017-12-04 12:52"}
              */
 
             private String city;
@@ -257,8 +262,8 @@ public class Weather implements Parcelable {
 
             public static class UpdateBean {
                 /**
-                 * loc : 2017-11-28 17:51
-                 * utc : 2017-11-28 09:51
+                 * loc : 2017-12-04 20:52
+                 * utc : 2017-12-04 12:52
                  */
 
                 private String loc;
@@ -285,13 +290,13 @@ public class Weather implements Parcelable {
         public static class NowBean {
             /**
              * cond : {"code":"104","txt":"阴"}
-             * fl : 16
-             * hum : 81
+             * fl : 1
+             * hum : 69
              * pcpn : 0
-             * pres : 1021
-             * tmp : 13
+             * pres : 1027
+             * tmp : 7
              * vis : 10
-             * wind : {"deg":"270","dir":"西风","sc":"微风","spd":"9"}
+             * wind : {"deg":"52","dir":"东北风","sc":"微风","spd":"8"}
              */
 
             private CondBean cond;
@@ -395,10 +400,10 @@ public class Weather implements Parcelable {
 
             public static class WindBean {
                 /**
-                 * deg : 270
-                 * dir : 西风
+                 * deg : 52
+                 * dir : 东北风
                  * sc : 微风
-                 * spd : 9
+                 * spd : 8
                  */
 
                 private String deg;
@@ -442,13 +447,13 @@ public class Weather implements Parcelable {
 
         public static class SuggestionBean {
             /**
-             * air : {"brf":"良","txt":"气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动。"}
-             * comf : {"brf":"舒适","txt":"白天不太热也不太冷，风力不大，相信您在这样的天气条件下，应会感到比较清爽和舒适。"}
-             * cw : {"brf":"不宜","txt":"不宜洗车，未来24小时内有雨，如果在此期间洗车，雨水和路上的泥水可能会再次弄脏您的爱车。"}
+             * air : {"brf":"较差","txt":"气象条件较不利于空气污染物稀释、扩散和清除，请适当减少室外活动时间。"}
+             * comf : {"brf":"较舒适","txt":"今天夜间虽然天气晴好，但会感觉偏凉，舒适、宜人。"}
+             * cw : {"brf":"较适宜","txt":"较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。"}
              * drsg : {"brf":"较冷","txt":"建议着厚外套加毛衣等服装。年老体弱者宜着大衣、呢外套加羊毛衫。"}
-             * flu : {"brf":"易发","txt":"天冷风大且空气湿度大，易发生感冒，请注意适当增加衣服，加强自我防护避免感冒。"}
-             * sport : {"brf":"较不宜","txt":"有降水，且风力较强，气压较低，推荐您在室内进行低强度运动；若坚持户外运动，须注意避雨防风。"}
-             * trav : {"brf":"适宜","txt":"有降水，温度适宜，在细雨中游玩别有一番情调，可不要错过机会呦！但记得出门要携带雨具。"}
+             * flu : {"brf":"较易发","txt":"天气较凉，较易发生感冒，请适当增加衣服。体质较弱的朋友尤其应该注意防护。"}
+             * sport : {"brf":"较适宜","txt":"天气较好，但考虑风力较强且气温较低，推荐您进行室内运动，若在户外运动注意防风并适当增减衣物。"}
+             * trav : {"brf":"一般","txt":"天空状况还是比较好的，但温度稍微有点低，且风稍大，会让您感觉些许凉意。外出请注意防风。"}
              * uv : {"brf":"最弱","txt":"属弱紫外线辐射天气，无需特别防护。若长期在户外，建议涂擦SPF在8-12之间的防晒护肤品。"}
              */
 
@@ -527,8 +532,8 @@ public class Weather implements Parcelable {
 
             public static class AirBean {
                 /**
-                 * brf : 良
-                 * txt : 气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动。
+                 * brf : 较差
+                 * txt : 气象条件较不利于空气污染物稀释、扩散和清除，请适当减少室外活动时间。
                  */
 
                 private String brf;
@@ -553,8 +558,8 @@ public class Weather implements Parcelable {
 
             public static class ComfBean {
                 /**
-                 * brf : 舒适
-                 * txt : 白天不太热也不太冷，风力不大，相信您在这样的天气条件下，应会感到比较清爽和舒适。
+                 * brf : 较舒适
+                 * txt : 今天夜间虽然天气晴好，但会感觉偏凉，舒适、宜人。
                  */
 
                 private String brf;
@@ -579,8 +584,8 @@ public class Weather implements Parcelable {
 
             public static class CwBean {
                 /**
-                 * brf : 不宜
-                 * txt : 不宜洗车，未来24小时内有雨，如果在此期间洗车，雨水和路上的泥水可能会再次弄脏您的爱车。
+                 * brf : 较适宜
+                 * txt : 较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。
                  */
 
                 private String brf;
@@ -631,8 +636,8 @@ public class Weather implements Parcelable {
 
             public static class FluBean {
                 /**
-                 * brf : 易发
-                 * txt : 天冷风大且空气湿度大，易发生感冒，请注意适当增加衣服，加强自我防护避免感冒。
+                 * brf : 较易发
+                 * txt : 天气较凉，较易发生感冒，请适当增加衣服。体质较弱的朋友尤其应该注意防护。
                  */
 
                 private String brf;
@@ -657,8 +662,8 @@ public class Weather implements Parcelable {
 
             public static class SportBean {
                 /**
-                 * brf : 较不宜
-                 * txt : 有降水，且风力较强，气压较低，推荐您在室内进行低强度运动；若坚持户外运动，须注意避雨防风。
+                 * brf : 较适宜
+                 * txt : 天气较好，但考虑风力较强且气温较低，推荐您进行室内运动，若在户外运动注意防风并适当增减衣物。
                  */
 
                 private String brf;
@@ -683,8 +688,8 @@ public class Weather implements Parcelable {
 
             public static class TravBean {
                 /**
-                 * brf : 适宜
-                 * txt : 有降水，温度适宜，在细雨中游玩别有一番情调，可不要错过机会呦！但记得出门要携带雨具。
+                 * brf : 一般
+                 * txt : 天空状况还是比较好的，但温度稍微有点低，且风稍大，会让您感觉些许凉意。外出请注意防风。
                  */
 
                 private String brf;
@@ -736,17 +741,17 @@ public class Weather implements Parcelable {
 
         public static class DailyForecastBean {
             /**
-             * astro : {"mr":"13:24","ms":"00:27","sr":"06:37","ss":"16:56"}
-             * cond : {"code_d":"305","code_n":"305","txt_d":"小雨","txt_n":"小雨"}
-             * date : 2017-11-28
-             * hum : 72
-             * pcpn : 0.4
-             * pop : 86
-             * pres : 1022
-             * tmp : {"max":"17","min":"12"}
+             * astro : {"mr":"17:47","ms":"06:53","sr":"06:41","ss":"16:55"}
+             * cond : {"code_d":"103","code_n":"101","txt_d":"晴间多云","txt_n":"多云"}
+             * date : 2017-12-04
+             * hum : 59
+             * pcpn : 0.0
+             * pop : 0
+             * pres : 1027
+             * tmp : {"max":"12","min":"3"}
              * uv : 3
-             * vis : 15
-             * wind : {"deg":"0","dir":"无持续风向","sc":"3-4","spd":"19"}
+             * vis : 16
+             * wind : {"deg":"299","dir":"西北风","sc":"微风","spd":"7"}
              */
 
             private AstroBean astro;
@@ -851,10 +856,10 @@ public class Weather implements Parcelable {
 
             public static class AstroBean {
                 /**
-                 * mr : 13:24
-                 * ms : 00:27
-                 * sr : 06:37
-                 * ss : 16:56
+                 * mr : 17:47
+                 * ms : 06:53
+                 * sr : 06:41
+                 * ss : 16:55
                  */
 
                 private String mr;
@@ -897,10 +902,10 @@ public class Weather implements Parcelable {
 
             public static class CondBeanX {
                 /**
-                 * code_d : 305
-                 * code_n : 305
-                 * txt_d : 小雨
-                 * txt_n : 小雨
+                 * code_d : 103
+                 * code_n : 101
+                 * txt_d : 晴间多云
+                 * txt_n : 多云
                  */
 
                 private String code_d;
@@ -943,8 +948,8 @@ public class Weather implements Parcelable {
 
             public static class TmpBean {
                 /**
-                 * max : 17
-                 * min : 12
+                 * max : 12
+                 * min : 3
                  */
 
                 private String max;
@@ -969,10 +974,158 @@ public class Weather implements Parcelable {
 
             public static class WindBeanX {
                 /**
-                 * deg : 0
-                 * dir : 无持续风向
-                 * sc : 3-4
-                 * spd : 19
+                 * deg : 299
+                 * dir : 西北风
+                 * sc : 微风
+                 * spd : 7
+                 */
+
+                private String deg;
+                private String dir;
+                private String sc;
+                private String spd;
+
+                public String getDeg() {
+                    return deg;
+                }
+
+                public void setDeg(String deg) {
+                    this.deg = deg;
+                }
+
+                public String getDir() {
+                    return dir;
+                }
+
+                public void setDir(String dir) {
+                    this.dir = dir;
+                }
+
+                public String getSc() {
+                    return sc;
+                }
+
+                public void setSc(String sc) {
+                    this.sc = sc;
+                }
+
+                public String getSpd() {
+                    return spd;
+                }
+
+                public void setSpd(String spd) {
+                    this.spd = spd;
+                }
+            }
+        }
+
+        public static class HourlyForecastBean {
+            /**
+             * cond : {"code":"103","txt":"晴间多云"}
+             * date : 2017-12-04 22:00
+             * hum : 55
+             * pop : 0
+             * pres : 1029
+             * tmp : 6
+             * wind : {"deg":"35","dir":"东北风","sc":"微风","spd":"15"}
+             */
+
+            private CondBeanXX cond;
+            private String date;
+            private String hum;
+            private String pop;
+            private String pres;
+            private String tmp;
+            private WindBeanXX wind;
+
+            public CondBeanXX getCond() {
+                return cond;
+            }
+
+            public void setCond(CondBeanXX cond) {
+                this.cond = cond;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public void setDate(String date) {
+                this.date = date;
+            }
+
+            public String getHum() {
+                return hum;
+            }
+
+            public void setHum(String hum) {
+                this.hum = hum;
+            }
+
+            public String getPop() {
+                return pop;
+            }
+
+            public void setPop(String pop) {
+                this.pop = pop;
+            }
+
+            public String getPres() {
+                return pres;
+            }
+
+            public void setPres(String pres) {
+                this.pres = pres;
+            }
+
+            public String getTmp() {
+                return tmp;
+            }
+
+            public void setTmp(String tmp) {
+                this.tmp = tmp;
+            }
+
+            public WindBeanXX getWind() {
+                return wind;
+            }
+
+            public void setWind(WindBeanXX wind) {
+                this.wind = wind;
+            }
+
+            public static class CondBeanXX {
+                /**
+                 * code : 103
+                 * txt : 晴间多云
+                 */
+
+                private String code;
+                private String txt;
+
+                public String getCode() {
+                    return code;
+                }
+
+                public void setCode(String code) {
+                    this.code = code;
+                }
+
+                public String getTxt() {
+                    return txt;
+                }
+
+                public void setTxt(String txt) {
+                    this.txt = txt;
+                }
+            }
+
+            public static class WindBeanXX {
+                /**
+                 * deg : 35
+                 * dir : 东北风
+                 * sc : 微风
+                 * spd : 15
                  */
 
                 private String deg;
@@ -1014,34 +1167,4 @@ public class Weather implements Parcelable {
             }
         }
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(this.HeWeather);
-    }
-
-    public Weather() {
-    }
-
-    protected Weather(Parcel in) {
-        this.HeWeather = new ArrayList<HeWeatherBean>();
-        in.readList(this.HeWeather, HeWeatherBean.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<Weather> CREATOR = new Parcelable.Creator<Weather>() {
-        @Override
-        public Weather createFromParcel(Parcel source) {
-            return new Weather(source);
-        }
-
-        @Override
-        public Weather[] newArray(int size) {
-            return new Weather[size];
-        }
-    };
 }

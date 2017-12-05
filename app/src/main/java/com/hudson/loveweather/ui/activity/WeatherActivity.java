@@ -26,6 +26,7 @@ import com.hudson.loveweather.global.LoveWeatherApplication;
 import com.hudson.loveweather.service.DataInitializeService;
 import com.hudson.loveweather.service.ScheduledTaskService;
 import com.hudson.loveweather.ui.view.weatherpage.FirstPageViewHelper;
+import com.hudson.loveweather.ui.view.weatherpage.SecondPageViewHelper;
 import com.hudson.loveweather.utils.BitmapUtils;
 import com.hudson.loveweather.utils.DataBaseLoader;
 import com.hudson.loveweather.utils.HttpUtils;
@@ -52,6 +53,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     private LinearLayout mWeatherContainer;
     private View mActionBar;
     private FirstPageViewHelper mFirstViewHelper;
+    private SecondPageViewHelper mSecondPageViewHelper;
     private boolean mIsDatabaseInit = false;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SharedPreferenceUtils mInstance;
@@ -83,12 +85,15 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.rl_calendar).setOnClickListener(this);
         mWeatherContainer = (LinearLayout) this.findViewById(R.id.ll_weather_container);
         mFirstViewHelper = new FirstPageViewHelper();
+        mSecondPageViewHelper = new SecondPageViewHelper();
         mWeatherContainer.post(new Runnable() {
             @Override
             public void run() {
                 //第三个参数是actionbar高度
                 mFirstViewHelper.inflateView(WeatherActivity.this
                         ,mWeatherContainer,mActionBar.getHeight());
+                mSecondPageViewHelper.inflateView(WeatherActivity.this,
+                        mWeatherContainer,mActionBar.getHeight());
                 //读取缓存的天气信息
                 WeatherChooseUtils instance = WeatherChooseUtils.getInstance();
                 instance.chooseDefaultCountry();
@@ -274,14 +279,14 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_city:
-                startActivity(new Intent(this, SearchActivity.class));
+                startActivity(new Intent(this,CountryManagerActivity.class));
                 break;
             case R.id.rl_calendar:
                 startActivity(new Intent(this,DailyWordActivity.class));
                 overridePendingTransition(-1,-1);
                 break;
             case R.id.iv_settings:
-                startActivity(new Intent(this,CountryManagerActivity.class));
+                startActivity(new Intent(this,SettingsActivity.class));
                 break;
             default:
                 break;

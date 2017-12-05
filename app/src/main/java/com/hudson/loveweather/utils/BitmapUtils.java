@@ -21,6 +21,7 @@ import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 
 import com.hudson.loveweather.global.Constants;
+import com.hudson.loveweather.service.ScheduledTaskService;
 import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.storage.AppStorageUtils;
 
@@ -123,23 +124,23 @@ public class BitmapUtils {
         return bitmap;
     }
 
-    /**
-     * 从缓存的图片中拿第一张
-     * @return
-     */
     public static Bitmap getShowPic() {
-        return createTransitionBackgroundBitmap(BitmapFactory
-                .decodeFile(new StringBuilder(AppStorageUtils.getPicCachePath())
-                .append("/").append(Constants.PIC_CACHE_NAME)
-                .append("0").append(".jpg").toString()),new int[]{0x99000000,0x0000000,0x00000000,0x99000000},
+        return getShowPic(new int[]{0x99000000,0x0000000,0x00000000,0x99000000},
                 new float[]{0.0f,0.3f,0.6f,1.0f});
     }
 
+    /**
+     * 从缓存的图片中拿图片，图片经过修改
+     * @return
+     */
     public static Bitmap getShowPic(int[] colors,float[] stops){
+        int picIndex = ScheduledTaskService.mPicIndex;
+        picIndex = (picIndex<0)?0:picIndex;
+        picIndex = picIndex % Constants.PIC_CACHE_COUNT;
         return createTransitionBackgroundBitmap(BitmapFactory
                         .decodeFile(new StringBuilder(AppStorageUtils.getPicCachePath())
                                 .append("/").append(Constants.PIC_CACHE_NAME)
-                                .append("0").append(".jpg").toString()),colors,stops);
+                                .append(picIndex).append(".jpg").toString()),colors,stops);
     }
 
     /**

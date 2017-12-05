@@ -1,19 +1,25 @@
 package com.hudson.loveweather.service;
 
-import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.widget.RemoteViews;
 
+import com.hudson.loveweather.R;
+import com.hudson.loveweather.bean.Weather;
 import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.global.Constants;
+import com.hudson.loveweather.ui.activity.WeatherActivity;
 import com.hudson.loveweather.utils.DataBaseLoader;
 import com.hudson.loveweather.utils.DeviceUtils;
 import com.hudson.loveweather.utils.HttpUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
+import com.hudson.loveweather.utils.UIUtils;
 import com.hudson.loveweather.utils.WeatherChooseUtils;
 import com.hudson.loveweather.utils.location.LocationUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
@@ -21,26 +27,37 @@ import com.hudson.loveweather.utils.update.UpdateUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
+import static com.hudson.loveweather.utils.AlarmClockUtils.scheduleTask;
+
 /**
  * Created by Hudson on 2017/11/26.
  * 长期后台运行的定时任务，包括更新天气，更新背景
  */
 
 public class ScheduledTaskService extends Service {
-    public static final int DEFAULT_WEATHER_TRIGGER_TIME = 5*60*60*1000;//5个小时更新一次天气
-    public static final int DEFAULT_BACKGROUND_PIC_TRIG_TIME = 5*60*1000;//5分钟更新背景
+    public static final int DEFAULT_WEATHER_TRIGGER_TIME = 5;//5个小时更新一次天气
+    public static final int DEFAULT_BACKGROUND_PIC_TRIG_TIME = 5;//5分钟更新背景
     private static final int DATABASE_SYNCHRONIZED_TIME = 20*1000;//20s更新完数据库
     private SharedPreferenceUtils mSharedPreferenceUtils;
     public static final int TYPE_UPDATE_WEATHER = 0;
     public static final int TYPE_UPDATE_PIC = 1;
     public static final int TYPE_ACQUIRE_WEATHER_ID = 2;
     public static final int TYPE_CHECK_DATABASE_SYNCHRONIZED = 3;//数据库是否同步成功
+    public static final int TYPE_SHOW_NOTIFICATION = 4;
+    public static final int TYPE_CANCEL_NOTIFICATION = 5;
     private int mAcquireCount = 0;
     private static final int ACQUIRE_MAX_COUNT = 4;//最多请求三次
-    private int mPicIndex = -1;//请求图片的index
+    public static int mPicIndex = -1;//请求图片的index
     private String mPicCategory;
     private String mPicUrl;
     private UpdateUtils mUpdateUtils;
+
+
+    //通知栏
+    public static final int NOTIFICATION_ID = 0x01;
+    private boolean mIsNotificationShow = false;
 
     @Override
     public void onCreate() {
@@ -79,11 +96,17 @@ public class ScheduledTaskService extends Service {
                     intent.getStringExtra("city"),intent.getStringExtra("country"));
         }else if(type == TYPE_CHECK_DATABASE_SYNCHRONIZED){
             checkDatabaseSynchronizedStatus();
+        }else if(type == TYPE_SHOW_NOTIFICATION){
+            initNotification();
+        }else if(type == TYPE_CANCEL_NOTIFICATION){
+            cancelNotification();
         }else{
             //更新每日一句
             updateDailyWords();
             //更新天气
             startLocation();
+            //通知栏
+            initNotification();
             scheduleUpdateWeather();
             scheduleUpdatePic();
             scheduleCheckDatabaseSynchronizedStatus();
@@ -136,18 +159,18 @@ public class ScheduledTaskService extends Service {
                 acquireWeatherIntent.putExtra("city",city);
                 acquireWeatherIntent.putExtra("country",district);
                 acquireWeatherIntent.putExtra("type",TYPE_ACQUIRE_WEATHER_ID);
-                scheduleTask(DATABASE_SYNCHRONIZED_TIME,acquireWeatherIntent);
+                scheduleTask(this,DATABASE_SYNCHRONIZED_TIME,acquireWeatherIntent);
             }
         }
     }
 
 
     private void scheduleUpdateWeather(){
-        scheduleTask(TYPE_UPDATE_WEATHER,mSharedPreferenceUtils.getUpdateWeatherTriggerTime());
+        scheduleTask(TYPE_UPDATE_WEATHER,mSharedPreferenceUtils.getUpdateWeatherTriggerTime()*60*60*1000);
     }
 
     private void scheduleUpdatePic(){
-        scheduleTask(TYPE_UPDATE_PIC,mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime());
+        scheduleTask(TYPE_UPDATE_PIC,mSharedPreferenceUtils.getUpdateBackgroundPicTriggerTime()*60*1000);
     }
 
     private void updateWeather(String weatherId){
@@ -186,18 +209,55 @@ public class ScheduledTaskService extends Service {
         }
     }
 
-    private void scheduleTask(int taskType,long triggerOffset){
-        Intent intent = new Intent(this,ScheduledTaskService.class);
-        intent.putExtra("type",taskType);
-        scheduleTask(triggerOffset,intent);
+
+
+    //通知栏(一旦播放，我们只显示一个通知（在init中new通知），如果需要每首歌曲都显示，可以在update中new通知)
+    private void initNotification(){
+        if(mSharedPreferenceUtils.isShowNotification()){
+            Notification notification = new Notification();
+            notification.icon = R.drawable.icon_round;
+            notification.tickerText = getString(R.string.app_name);
+            // 指定通知栏转到的activity是HomeActivity
+            Intent intent = new Intent(UIUtils.getContext(), WeatherActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            notification.contentIntent = PendingIntent.getActivity(UIUtils.getContext(), 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);// 第二次操作会把第一次的覆盖掉
+            //解析自定义的通知栏布局
+            RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notification);
+            notification.contentView = remoteViews;
+            Weather weatherCache = UpdateUtils.getInstance().getWeatherCache(mSharedPreferenceUtils.getLastLocationWeatherId());
+            if(weatherCache!=null){
+                remoteViews.setTextViewText(R.id.tv_location,
+                        WeatherChooseUtils.clipLocationInfo(
+                                mSharedPreferenceUtils.getLastLocationInfo()));
+                List<Weather.HeWeatherBean> heWeather = weatherCache.getHeWeather();
+                if(heWeather!=null){
+                    Weather.HeWeatherBean heWeatherBean = heWeather.get(0);
+                    if(heWeatherBean!=null){
+                        Weather.HeWeatherBean.NowBean now = heWeatherBean.getNow();
+                        if(now!=null){
+                            remoteViews.setTextViewText(R.id.tv_temp, now.getTmp()+"℃");
+                            remoteViews.setTextViewText(R.id.tv_desc,now.getCond().getTxt());
+                        }
+                        Weather.HeWeatherBean.BasicBean basic = heWeatherBean.getBasic();
+                        if(basic!=null){
+                            remoteViews.setTextViewText(R.id.tv_update_time,basic.getUpdate().getLoc());
+                        }
+                    }
+                }
+            }
+            //必须执行这个后才会更新到通知栏
+            startForeground(NOTIFICATION_ID, notification);
+            mIsNotificationShow = true;
+        }
     }
 
-    private void scheduleTask(long triggerOffset,Intent intent){
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long triggerAtTime = System.currentTimeMillis() + triggerOffset;
-        PendingIntent pendingIntent = PendingIntent.getService(this,0,intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
+    private void cancelNotification(){
+        if(mIsNotificationShow){
+            LogUtils.e("取消通知了");
+            stopForeground(true);
+            ((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).cancel(NOTIFICATION_ID);
+        }
     }
-
 }

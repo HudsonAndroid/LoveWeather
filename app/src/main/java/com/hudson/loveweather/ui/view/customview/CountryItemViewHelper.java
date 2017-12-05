@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.db.SelectedCountry;
 import com.hudson.loveweather.ui.activity.CountryManagerActivity;
+import com.hudson.loveweather.utils.SharedPreferenceUtils;
+import com.hudson.loveweather.utils.UIUtils;
 import com.hudson.loveweather.utils.WeatherChooseUtils;
 import com.hudson.loveweather.utils.update.UpdateUtils;
 
@@ -28,6 +31,8 @@ public class CountryItemViewHelper {
     private View mDeleteView;
     private ObjectAnimator mAnimator;
     public View mRoot;
+    private boolean mCanDelete = true;//是否可以删除
+    private SelectedCountry mSelectedCountry;
 
     public CountryItemViewHelper(Context context, SelectedCountry country, CountryManagerActivity.OnItemEventListener listener) {
         initSubView(context,country,listener);
@@ -39,6 +44,14 @@ public class CountryItemViewHelper {
         mCountry.setText(WeatherChooseUtils.clipLocationInfo(country.getCityName(),country.getCountryName()));
         mTemp = (TextView) mRoot.findViewById(R.id.tv_temp);
         mDesc = (TextView) mRoot.findViewById(R.id.tv_desc);
+        mSelectedCountry = country;
+        //如果是定位的城市，那么不允许删除
+        mCanDelete = !SharedPreferenceUtils.getInstance().getLastLocationWeatherId().equals(country.getWeatherId());
+        if(!mCanDelete){//是定位的城市
+            //注意：给textView设置drawable时，需要指定bounds，这里使用的方法会自动使用drawable内部的bounds
+            mCountry.setCompoundDrawablesWithIntrinsicBounds(UIUtils.getDrawable(R.drawable.location),
+                    null,null,null);
+        }
         Weather weather = UpdateUtils.getInstance().getWeatherInstance(country.getWeatherJson());
         if(weather!=null){
             List<Weather.HeWeatherBean> heWeather = weather.getHeWeather();
@@ -65,15 +78,19 @@ public class CountryItemViewHelper {
             @Override
             public void onClick(View v){
                 if(listener!=null){
-                    listener.onItemDelete(mRoot,country);
+                    listener.onItemDelete(CountryItemViewHelper.this,mRoot,country);
                 }
             }
         });
         mContentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener!=null&&!mCaught){
-                    listener.onItemClick(country);
+                if(mCheckBox.getVisibility() == View.VISIBLE&&!mCaught){//如果是选择时，那么应该由checkBox接管
+                    mCheckBox.setChecked(!mCheckBox.isChecked());
+                }else{
+                    if(listener!=null&&!mCaught){
+                        listener.onItemClick(country);
+                    }
                 }
             }
         });
@@ -93,6 +110,7 @@ public class CountryItemViewHelper {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         mCaught = false;
+                        mLastX = (int) event.getX();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         mCaught = true;
@@ -100,10 +118,17 @@ public class CountryItemViewHelper {
                         int scrollX = mLastX - (int) event.getX();
                         if(scrolledX <mMaxScroll){//向左滑动最大限制
                             scrollX = ((scrollX+scrolledX)>mMaxScroll)?(mMaxScroll-scrolledX):scrollX;
-                            mContentContainer.scrollTo(scrollX + scrolledX,0);
+                            if(scrolledX == 0&&scrollX>0&&!mCanDelete){
+                                //如果当前Item不可以被delete,而当前scroll是0，同时又向左拉（即打开delete）
+                                //我们是不允许的
+                            }else{
+                                mContentContainer.scrollTo(scrollX + scrolledX,0);
+                            }
                         }else if(scrolledX == mMaxScroll&&scrollX<0){
+                            //delete被拉出来了
                             mContentContainer.scrollBy(scrollX,0);
                         }
+                        mLastX = (int) event.getX();
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
@@ -115,18 +140,20 @@ public class CountryItemViewHelper {
                             end = 0;
                         }
                         animateEnd(mContentContainer,start,end);
+                        mLastX = 0;
                         break;
                     default:
                         break;
                 }
-                mLastX = (int) event.getX();
                 return false;
             }
         });
     }
 
     public void showCheckBox(){
-        mCheckBox.setVisibility(View.VISIBLE);
+        if(mCanDelete){
+            mCheckBox.setVisibility(View.VISIBLE);
+        }
     }
 
     public void hideCheckBox(){
@@ -134,7 +161,7 @@ public class CountryItemViewHelper {
     }
 
     public boolean isSelected(){
-        return mCheckBox.isSelected();
+        return mCheckBox.isChecked();//注意，不要弄成mCheckBox.isSelected了
     }
 
 
@@ -142,6 +169,14 @@ public class CountryItemViewHelper {
         mAnimator = ObjectAnimator.ofInt(view,"scrollX",startX,endX);
         mAnimator.setDuration(300);
         mAnimator.start();
+    }
+
+    /**
+     * 从数据库中删除本记录
+     * @return
+     */
+    public int deleteFromDataBase(){
+        return DatabaseUtils.removeSelectedCountry(mSelectedCountry);
     }
 
 
