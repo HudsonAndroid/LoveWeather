@@ -1,6 +1,7 @@
 package com.hudson.loveweather.ui.activity;
 
 import android.Manifest;
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -279,7 +280,8 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_city:
-                startActivity(new Intent(this,CountryManagerActivity.class));
+                startActivity(new Intent(this,CountryManagerActivity.class),
+                        ActivityOptions.makeSceneTransitionAnimation(this,mCity,"location").toBundle());
                 break;
             case R.id.rl_calendar:
                 startActivity(new Intent(this,DailyWordActivity.class));
@@ -358,6 +360,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         }
         if(weather != null){
             mFirstViewHelper.refreshView(weather);
+            mSecondPageViewHelper.refreshView(weather);
         }else{//天气数据为空
             mFirstViewHelper.cleanViewData();
         }

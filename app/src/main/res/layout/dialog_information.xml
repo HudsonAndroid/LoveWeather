@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_information"
+        android:text="@string/logo_words"
+        android:textColor="@color/black"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginTop="@dimen/daily_close_vertical_margin"
+        android:layout_marginBottom="@dimen/daily_close_vertical_margin"
+        android:textSize="@dimen/edit_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_sure"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:text="@string/sure"
+            android:textColor="@color/black"
+            android:layout_marginRight="@dimen/small_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:textSize="@dimen/edit_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:text="@string/cancel"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:textColor="@color/black"
+            android:layout_marginRight="@dimen/sub_line_margin"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:textSize="@dimen/edit_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

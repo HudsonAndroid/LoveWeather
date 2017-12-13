@@ -13,9 +13,11 @@ import android.widget.TextView;
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.BitmapUtils;
+import com.hudson.loveweather.utils.ShareUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
-import com.hudson.loveweather.utils.ToastUtils;
+import com.hudson.loveweather.utils.UIUtils;
+import com.hudson.loveweather.utils.storage.AppStorageUtils;
 
 import static com.hudson.loveweather.utils.BitmapUtils.gaussianBlur;
 import static com.hudson.loveweather.utils.BitmapUtils.getShowPic;
@@ -57,9 +59,12 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
             mImage.post(new Runnable() {
                 @Override
                 public void run() {
+                    //很奇葩的问题，由于z轴的存在，所以父view背景必须不能是透明的，
+                    //但是如果有透明色存在，通过xfermode方式来完成的圆角顶部会
+                    //存在一个很细的父view的背景色的像素，难以消除
                     mImage.setBackground(new BitmapDrawable(
-                            BitmapUtils.clipBitmap(background,mImage.getWidth()
-                                    ,mImage.getHeight())));
+                            BitmapUtils.createTopRoundBitmap(BitmapUtils.clipBitmap(background,mImage.getWidth()
+                                    ,mImage.getHeight()),(int) UIUtils.getDimension(R.dimen.round_rect_radius))));
                 }
             });
         }
@@ -83,7 +88,20 @@ public class DailyWordActivity extends BaseActivity implements View.OnClickListe
                 startOutAnimation();
                 break;
             case R.id.iv_share:
-                ToastUtils.showToast("分享了");
+                new Thread(){
+                    @Override
+                    public void run(){
+                        Bitmap bitmap = BitmapUtils.captureScreen(DailyWordActivity.this);
+                        if(bitmap!=null){
+                            String imagePath = AppStorageUtils.getPicCachePath() + "/capture.jpg";
+                            if(!AppStorageUtils.writeFile(imagePath,
+                                    BitmapUtils.bitmap2InputStream(bitmap))){
+                                imagePath = null;
+                            }
+                            ShareUtils.shareMsg(DailyWordActivity.this,"分享一句","我看到一句很有意思的话，分享给大家！",SharedPreferenceUtils.getInstance().getDailyWords(),imagePath);
+                        }
+                    }
+                }.start();
                 break;
 //            case :
 //

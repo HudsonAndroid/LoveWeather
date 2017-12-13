@@ -16,7 +16,7 @@ public class DeviceUtils {
     }
 
     /**
-     * 获取通知栏高度
+     * 获取状态栏高度
      * @return
      */
     public static int getStatusBarHeight() {

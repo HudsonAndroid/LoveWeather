@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:padding="@dimen/view_internal_margin"
+              android:background="@drawable/shape_settings_item"
+              android:layout_marginTop="@dimen/small_margin"
+              android:layout_marginLeft="@dimen/small_margin"
+              android:layout_width="250dp"
+              android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_sunrise"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/sunrise"
+            android:text="23:30"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_sunset"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/sunset"
+            android:text="10:00"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_moonrise"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/moonrise"
+            android:text="23:30"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_moonset"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/moonset"
+            android:text="10:00"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_day_weather"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/sun"
+            android:text="晴"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_night_weather"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/moon"
+            android:text="多云"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_max_min"
+            android:textColor="@color/white"
+            android:text="0~9℃"
+            android:textSize="@dimen/small_text_size"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_hum"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="相对湿度88%"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_press"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="气压1029"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_pop"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="降水概率 0%"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_pcpn"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="降水量 0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_uv"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="紫外线强度 3"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_vis"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="能见度 16"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/wind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+                      android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_dir"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无持续风向"
+                android:textColor="@color/white"
+                android:textSize="@dimen/small_text_size"/>
+
+            <TextView
+                android:id="@+id/tv_sc"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="微风"
+                android:textColor="@color/white"
+                android:textSize="@dimen/small_text_size"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12-10"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/big_text_size"/>
+    </LinearLayout>
+
+
+</LinearLayout>

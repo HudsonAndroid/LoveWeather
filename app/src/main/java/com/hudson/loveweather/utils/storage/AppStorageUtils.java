@@ -1,5 +1,14 @@
 package com.hudson.loveweather.utils.storage;
 
+import android.content.Intent;
+
+import com.hudson.loveweather.global.Constants;
+import com.hudson.loveweather.service.ScheduledTaskService;
+import com.hudson.loveweather.utils.SharedPreferenceUtils;
+import com.hudson.loveweather.utils.ToastUtils;
+import com.hudson.loveweather.utils.UIUtils;
+
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -32,6 +41,47 @@ public class AppStorageUtils  {
      */
     public static String getPicCachePath(){
         return sAppStorage.getCustomPath(getCachePath() + "/pictures");
+    }
+
+    /**
+     * 获取用户自定义背景缓存目录
+     * @return
+     */
+    public static String getCustomPicCachePath(){
+        return sAppStorage.getCustomPath(getPicCachePath() + "/customBg");
+    }
+
+    public static String getAppBackgroundPicFilePath(int picIndex){
+        SharedPreferenceUtils instance = SharedPreferenceUtils.getInstance();
+        String backgroundPicCategory = instance.getBackgroundPicCategory();
+        StringBuilder sb = new StringBuilder();
+        int referCount = Constants.PIC_CACHE_COUNT;
+        if(backgroundPicCategory.equals(Constants.CUSTOM_CATEGORY)){
+            String customPicCachePath = getCustomPicCachePath();
+            referCount = new File(customPicCachePath).listFiles().length;
+            if(referCount>0){
+                sb.append(customPicCachePath);
+            }else{//文件夹中没有图片
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showToast("错误，自定义图片不存在！");
+                    }
+                });
+                //还原原始使用
+                instance.saveBackgroundPicCategory(Constants.PIC_CATEGORY[0]);
+                Intent intent = new Intent(UIUtils.getContext(), ScheduledTaskService.class);
+                intent.putExtra("type",ScheduledTaskService.TYPE_CHANGE_BACKGROUND_CATEGORY);
+                UIUtils.getContext().startService(intent);
+                sb.append(getPicCachePath());
+                referCount = Constants.PIC_CACHE_COUNT;
+            }
+        }else{
+            sb.append(getPicCachePath());
+        }
+        return sb.append("/").append(Constants.PIC_CACHE_NAME)
+                .append((picIndex % referCount))
+                .append(".jpg").toString();
     }
 
     /**

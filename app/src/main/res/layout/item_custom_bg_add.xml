@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@drawable/shape_add_bg"
+              android:layout_marginTop="@dimen/small_margin"
+              android:layout_marginLeft="@dimen/small_margin"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/card_height">
+
+    <TextView
+        android:id="@+id/tv_add"
+        android:textColor="@color/white"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:text="＋"
+        android:gravity="center"
+        android:textSize="80sp"
+        android:layout_width="match_parent"
+              android:layout_height="match_parent"/>
+
+</LinearLayout>

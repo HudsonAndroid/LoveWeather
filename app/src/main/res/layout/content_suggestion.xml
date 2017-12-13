@@ -3,19 +3,30 @@
               android:id="@+id/ll_suggestions"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="250dp">
 
     <TextView
         android:text="生活建议"
         android:textColor="@color/white"
         android:textSize="@dimen/edit_text_size"
-        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginTop="@dimen/text_content_vertical_margin"
         android:layout_marginLeft="@dimen/small_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <include layout="@layout/line_main"/>
 
+    <com.hudson.loveweather.ui.view.customview.InnerScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:id="@+id/ll_suggestions_container"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </com.hudson.loveweather.ui.view.customview.InnerScrollView>
 
 </LinearLayout>

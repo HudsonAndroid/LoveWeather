@@ -38,6 +38,7 @@
             android:id="@+id/tv_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:transitionName="location"
             android:layout_centerInParent="true"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="8dp"

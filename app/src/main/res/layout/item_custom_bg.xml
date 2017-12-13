@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_container"
+    android:background="@color/white"
+    android:layout_marginTop="@dimen/small_margin"
+    android:layout_marginLeft="@dimen/small_margin"
+    android:layout_marginRight="@dimen/small_margin"
+    app:cardCornerRadius="@dimen/round_rect_radius"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/card_height"
+    android:elevation="@dimen/fab_margin"
+    android:padding="@dimen/view_internal_margin">
+
+
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
+
+    <CheckBox
+        android:id="@+id/cb_delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"/>
+
+
+</android.support.v7.widget.CardView>

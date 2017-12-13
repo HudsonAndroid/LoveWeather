@@ -47,10 +47,10 @@ public class ScheduledTaskService extends Service {
     public static final int TYPE_CHECK_DATABASE_SYNCHRONIZED = 3;//数据库是否同步成功
     public static final int TYPE_SHOW_NOTIFICATION = 4;
     public static final int TYPE_CANCEL_NOTIFICATION = 5;
+    public static final int TYPE_CHANGE_BACKGROUND_CATEGORY = 6;
     private int mAcquireCount = 0;
     private static final int ACQUIRE_MAX_COUNT = 4;//最多请求三次
-    public static int mPicIndex = -1;//请求图片的index
-    private String mPicCategory;
+    public static int mPicIndex = 0;//请求图片的index
     private String mPicUrl;
     private UpdateUtils mUpdateUtils;
 
@@ -63,12 +63,6 @@ public class ScheduledTaskService extends Service {
     public void onCreate() {
         LogUtils.e("服务启动了");
         mSharedPreferenceUtils = SharedPreferenceUtils.getInstance();
-        mPicCategory = mSharedPreferenceUtils.getBackgroundPicCategory();
-        int[] pixels = new int[2];
-        DeviceUtils.getScreen(pixels);
-        mPicUrl = new StringBuilder(Constants.NET_PIC_URL).append("/")
-                .append(pixels[0]).append("/").append(pixels[1]).append("/")
-                .append(mPicCategory).append("/").toString();
         mUpdateUtils = UpdateUtils.getInstance();
         super.onCreate();
     }
@@ -100,6 +94,8 @@ public class ScheduledTaskService extends Service {
             initNotification();
         }else if(type == TYPE_CANCEL_NOTIFICATION){
             cancelNotification();
+        }else if(type == TYPE_CHANGE_BACKGROUND_CATEGORY){
+            changeBackgroundCategory();
         }else{
             //更新每日一句
             updateDailyWords();
@@ -259,5 +255,20 @@ public class ScheduledTaskService extends Service {
             stopForeground(true);
             ((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).cancel(NOTIFICATION_ID);
         }
+    }
+
+    private void changeBackgroundCategory(){
+        String picCategory = mSharedPreferenceUtils.getBackgroundPicCategory();
+        if(!picCategory.equals(Constants.CUSTOM_CATEGORY)){
+            int[] pixels = new int[2];
+            DeviceUtils.getScreen(pixels);
+            mPicUrl = new StringBuilder(Constants.NET_PIC_URL).append("/")
+                    .append(pixels[0]).append("/").append(pixels[1]).append("/")
+                    .append(picCategory).append("/").toString();
+        }else{//使用的是自定义的图片，所以不用
+            mPicUrl = "";
+        }
+        updateBackgroundPic();//立刻生效
+        scheduleUpdatePic();//覆盖，避免两者重合
     }
 }

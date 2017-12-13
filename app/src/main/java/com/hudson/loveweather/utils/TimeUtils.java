@@ -25,7 +25,7 @@ public class TimeUtils {
      */
     public static String getDayNumberStringOfDate(){
         int date = getDayNumberOfDate();
-        if(date>0&&date<9){
+        if(date>0&&date<=9){
             return "0"+date;
         }
         return date+"";

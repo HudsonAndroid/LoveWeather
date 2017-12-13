@@ -67,7 +67,7 @@ public class SelectProgressBar extends View {
     public void setWarningValue(int warningValueStart, int warningValueEnd) {
         mWarningValueStart = warningValueStart;
         mWarningValueEnd = warningValueEnd;
-        if(mWarningValueStart<mSelectedValue&&mWarningValueEnd>mSelectedValue){
+        if(mWarningValueStart<=mSelectedValue&&mWarningValueEnd>=mSelectedValue){
             mIsWarningState = true;
         }
         invalidate();

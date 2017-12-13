@@ -17,4 +17,9 @@
     </style>
 
 
+    <style name="transition_activity_theme" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+
 </resources>

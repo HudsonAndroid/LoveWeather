@@ -18,6 +18,7 @@ public class Constants {
             "people",
             "tech"
     };
+    public static final String CUSTOM_CATEGORY = "自定义";
     public static final String PIC_CACHE_NAME = "loveWeather";//图片结果是loveWeatherx.jpg
     public static final int PIC_CACHE_COUNT = 10;//图片缓存个数
 

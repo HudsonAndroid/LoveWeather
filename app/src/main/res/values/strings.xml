@@ -7,4 +7,7 @@
     <string name="locate_failed">定位失败</string>
     <string name="server_not_support">服务不支持</string>
     <string name="logo_words">爱天气，爱生活</string>
+
+    <string name="cancel">取消</string>
+    <string name="sure">确定</string>
 </resources>

@@ -25,11 +25,15 @@ public abstract class PageViewHelperImpl implements WeatherPageViewHelper<Weathe
         DeviceUtils.getScreen(pixels);
         layoutParams.width = pixels[0];
         //由于scrollbar高度由子view确定，所以只能动态添加高度为屏幕高的页面
-        layoutParams.height = pixels[1] - (int)objects[0]
-                - DeviceUtils.getStatusBarHeight();
+        layoutParams.height = getViewHeight(pixels[1],(int)objects[0]);
         parent.addView(v,layoutParams);
         initView(v);
         return v;
+    }
+
+    int getViewHeight(int screenHeight,int actionbarHeight){
+        return screenHeight - actionbarHeight
+                - DeviceUtils.getStatusBarHeight();
     }
 
     abstract View inflate(Context context,ViewGroup parent);
