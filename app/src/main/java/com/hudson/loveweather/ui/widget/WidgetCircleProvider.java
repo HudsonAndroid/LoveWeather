@@ -10,7 +10,7 @@ import com.hudson.loveweather.service.WidgetUpdateService;
  * Created by Hudson on 2017/12/6.
  */
 
-public class WidgetDefaultProvider extends AppWidgetProvider {
+public class WidgetCircleProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {

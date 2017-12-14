@@ -51,6 +51,14 @@ public class AppStorageUtils  {
         return sAppStorage.getCustomPath(getPicCachePath() + "/customBg");
     }
 
+    /**
+     * 获取应用奔溃日志信息
+     * @return
+     */
+    public static String getCaughtLogPath(){
+        return sAppStorage.getCustomPath(getAppRootPath()+"/log");
+    }
+
     public static String getAppBackgroundPicFilePath(int picIndex){
         SharedPreferenceUtils instance = SharedPreferenceUtils.getInstance();
         String backgroundPicCategory = instance.getBackgroundPicCategory();

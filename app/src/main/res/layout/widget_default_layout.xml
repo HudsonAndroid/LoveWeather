@@ -1,7 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:padding="@dimen/view_internal_margin"
+              android:id="@+id/ll_widget_container"
+              android:background="@drawable/shape_widget_bg"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_list_height">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:text="18:17"
+            android:layout_marginLeft="@dimen/view_internal_margin"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/widget_time_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_weather_desc"
+            android:layout_marginRight="@dimen/view_internal_margin"
+            android:text="晴"
+            android:textColor="@color/white"
+            android:textSize="@dimen/widget_desc_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:text="dec. wednsday"
+            android:layout_marginLeft="@dimen/view_internal_margin"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/edit_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:drawableLeft="@drawable/location"
+            android:text="太原"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/edit_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:id="@+id/tv_temp"
+            android:text="-10℃"
+            android:layout_marginRight="@dimen/view_internal_margin"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/edit_text_size"
+            android:gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </LinearLayout>

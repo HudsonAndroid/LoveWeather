@@ -72,16 +72,6 @@
             android:theme="@style/transition_activity_theme">
         </activity>
 
-        <receiver android:name=".ui.widget.WidgetDefaultProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/default_widget_config"/>
-        </receiver>
-
         <service android:name=".service.WidgetUpdateService"/>
 
         <activity android:name=".ui.activity.AddCustomPicBgActivity">
@@ -100,6 +90,32 @@
 
         <activity android:name=".ui.activity.CustomPicBgListActivity">
         </activity>
+        <activity android:name=".ui.activity.AboutActivity">
+        </activity>
+
+        <receiver
+            android:name=".ui.widget.WidgetDefaultProvider"
+            android:label="简便工具">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/default_widget_config"/>
+        </receiver>
+        <receiver
+            android:name=".ui.widget.WidgetCircleProvider"
+            android:label="简单圆形">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/circle_widget_config"/>
+        </receiver>
+
     </application>
 
 </manifest>

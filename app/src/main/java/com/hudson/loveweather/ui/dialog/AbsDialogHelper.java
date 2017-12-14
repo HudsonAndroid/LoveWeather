@@ -28,6 +28,10 @@ public abstract class AbsDialogHelper<T> {
         mDialog.setView(root,0,0,0,0);
     }
 
+    public void setCancelable(boolean cancelable){
+        mDialog.setCancelable(cancelable);
+    }
+
     /**
      * 初始化对话框的内容
      * 注意：在子类实现本方法时，不要使用true的方式添加到parent中

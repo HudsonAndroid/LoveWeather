@@ -108,6 +108,9 @@ public class WeatherChooseUtils {
     }
 
     private static String[] parseLocationInfo(String locationInfo){
+        if(TextUtils.isEmpty(locationInfo)){
+            return null;
+        }
         if(!locationInfo.contains(" ")){
             return null;
         }

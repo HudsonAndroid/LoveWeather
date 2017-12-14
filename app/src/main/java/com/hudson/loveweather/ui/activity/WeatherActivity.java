@@ -288,7 +288,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 overridePendingTransition(-1,-1);
                 break;
             case R.id.iv_settings:
-                startActivity(new Intent(this,SettingsActivity.class));
+                startActivity(new Intent(WeatherActivity.this,SettingsActivity.class));
                 break;
             default:
                 break;

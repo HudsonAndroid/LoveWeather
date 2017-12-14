@@ -50,7 +50,7 @@ public class ScheduledTaskService extends Service {
     public static final int TYPE_CHANGE_BACKGROUND_CATEGORY = 6;
     private int mAcquireCount = 0;
     private static final int ACQUIRE_MAX_COUNT = 4;//最多请求三次
-    public static int mPicIndex = 0;//请求图片的index
+    public static int mPicIndex = -1;//请求图片的index
     private String mPicUrl;
     private UpdateUtils mUpdateUtils;
 
@@ -75,39 +75,48 @@ public class ScheduledTaskService extends Service {
 
     @Override
     public int onStartCommand(Intent intent,  int flags, int startId) {
-        int type = intent.getIntExtra("type",-1);
-        if(type == TYPE_UPDATE_WEATHER){
-            String lastSelectedWeatherId = mSharedPreferenceUtils.getSelectedLocationWeatherId();
-            if(!TextUtils.isEmpty(lastSelectedWeatherId)){
-                updateWeather(lastSelectedWeatherId);
-                scheduleUpdateWeather();
+        if(intent!=null){
+            int type = intent.getIntExtra("type",-1);
+            if(type == TYPE_UPDATE_WEATHER){
+                String lastSelectedWeatherId = mSharedPreferenceUtils.getSelectedLocationWeatherId();
+                if(!TextUtils.isEmpty(lastSelectedWeatherId)){
+                    updateWeather(lastSelectedWeatherId);
+                    scheduleUpdateWeather();
+                }
+            }else if(type == TYPE_UPDATE_PIC){
+                updateBackgroundPic();
+                scheduleUpdatePic();
+            }else if(type == TYPE_ACQUIRE_WEATHER_ID){
+                acquireWeatherIdAndUpdateWeather(intent.getStringExtra("province"),
+                        intent.getStringExtra("city"),intent.getStringExtra("country"));
+            }else if(type == TYPE_CHECK_DATABASE_SYNCHRONIZED){
+                checkDatabaseSynchronizedStatus();
+            }else if(type == TYPE_SHOW_NOTIFICATION){
+                initNotification();
+            }else if(type == TYPE_CANCEL_NOTIFICATION){
+                cancelNotification();
+            }else if(type == TYPE_CHANGE_BACKGROUND_CATEGORY){
+                changeBackgroundCategory();
+            }else{
+                initData();
             }
-        }else if(type == TYPE_UPDATE_PIC){
-            updateBackgroundPic();
-            scheduleUpdatePic();
-        }else if(type == TYPE_ACQUIRE_WEATHER_ID){
-            acquireWeatherIdAndUpdateWeather(intent.getStringExtra("province"),
-                    intent.getStringExtra("city"),intent.getStringExtra("country"));
-        }else if(type == TYPE_CHECK_DATABASE_SYNCHRONIZED){
-            checkDatabaseSynchronizedStatus();
-        }else if(type == TYPE_SHOW_NOTIFICATION){
-            initNotification();
-        }else if(type == TYPE_CANCEL_NOTIFICATION){
-            cancelNotification();
-        }else if(type == TYPE_CHANGE_BACKGROUND_CATEGORY){
-            changeBackgroundCategory();
         }else{
-            //更新每日一句
-            updateDailyWords();
-            //更新天气
-            startLocation();
-            //通知栏
-            initNotification();
-            scheduleUpdateWeather();
-            scheduleUpdatePic();
-            scheduleCheckDatabaseSynchronizedStatus();
+            initData();
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void initData(){
+        //更新每日一句
+        updateDailyWords();
+        //更新天气
+        startLocation();
+        //通知栏
+        initNotification();
+        initBackgroundPicUrl();
+        scheduleUpdateWeather();
+        scheduleUpdatePic();
+        scheduleCheckDatabaseSynchronizedStatus();
     }
 
     private void startLocation(){
@@ -257,7 +266,8 @@ public class ScheduledTaskService extends Service {
         }
     }
 
-    private void changeBackgroundCategory(){
+
+    private void initBackgroundPicUrl(){
         String picCategory = mSharedPreferenceUtils.getBackgroundPicCategory();
         if(!picCategory.equals(Constants.CUSTOM_CATEGORY)){
             int[] pixels = new int[2];
@@ -268,6 +278,10 @@ public class ScheduledTaskService extends Service {
         }else{//使用的是自定义的图片，所以不用
             mPicUrl = "";
         }
+    }
+
+    private void changeBackgroundCategory(){
+        initBackgroundPicUrl();
         updateBackgroundPic();//立刻生效
         scheduleUpdatePic();//覆盖，避免两者重合
     }

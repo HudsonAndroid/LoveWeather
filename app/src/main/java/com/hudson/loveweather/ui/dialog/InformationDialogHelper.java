@@ -24,6 +24,7 @@ public class InformationDialogHelper extends AbsDialogHelper<InformationParams> 
         super(context, params);
     }
 
+
     @Override
     protected View initContentView(Context context, ViewGroup parent, final InformationParams params) {
         View root = LayoutInflater.from(context).inflate(R.layout.dialog_information, parent, false);
@@ -36,13 +37,13 @@ public class InformationDialogHelper extends AbsDialogHelper<InformationParams> 
                 params.sureRunnable.run(null);
             }
         });
-        root.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                params.cancelRunnable.run(null);
-            }
-        });
+//        root.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dismiss();
+//                params.cancelRunnable.run(null);
+//            }
+//        });
         return root;
     }
 }

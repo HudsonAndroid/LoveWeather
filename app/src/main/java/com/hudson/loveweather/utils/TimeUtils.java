@@ -31,12 +31,36 @@ public class TimeUtils {
         return date+"";
     }
 
-    public static int getHourOfDay(){
+    public static int getIntegerHourOfDay(){
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     }
 
-    public static int getMinuteOfHour(){
+    public static String getHourOfDay(){
+        int res = getIntegerHourOfDay();
+        if(res>0&&res<=9){
+            return "0"+res;
+        }
+        return res+"";
+    }
+
+    public static int getIntegerMinuteOfHour(){
         return Calendar.getInstance().get(Calendar.MINUTE);
+    }
+
+    public static String getMinuteOfHour(){
+        int res = getIntegerMinuteOfHour();
+        if(res>0&&res<=9){
+            return "0"+res;
+        }
+        return res+"";
+    }
+
+    public static int getSecondOfMinute(){
+        return Calendar.getInstance().get(Calendar.SECOND);
+    }
+
+    public static String getCurTime(){
+        return getHourOfDay()+":"+getMinuteOfHour();
     }
 
     public static String getDayWeekOfDate(){
@@ -118,7 +142,7 @@ public class TimeUtils {
     }
 
     public static int parseCurrentMinuteTime(){
-        return getHourOfDay()*60 + getMinuteOfHour();
+        return getIntegerHourOfDay()*60 + getIntegerMinuteOfHour();
     }
 
 }

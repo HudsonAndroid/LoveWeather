@@ -98,6 +98,12 @@ public class SettingsActivity extends BaseSubActivity {
                 selectDialogHelper.show();
             }
         });
+        root.findViewById(R.id.ll_about).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this,AboutActivity.class));
+            }
+        });
         return root;
     }
 

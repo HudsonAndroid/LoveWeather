@@ -32,6 +32,7 @@ public class LoveWeatherApplication extends Application {
         LitePal.initialize(sContext);//初始化litepal
         sHandler = new Handler();
         sMainThreadId = android.os.Process.myTid();
+        ConstantCaughtException.getInstance().init(this);
     }
 
     public static Context getContext() {
@@ -82,6 +83,15 @@ public class LoveWeatherApplication extends Application {
                 finishActivity(activity);
             }
         }
+    }
+
+    public static Activity getActivity(Class<?> cls){
+        for (Activity activity : sActivityStack) {
+            if(activity.getClass().equals(cls)){
+                return activity;
+            }
+        }
+        return null;
     }
 
     public static void finishAll(){

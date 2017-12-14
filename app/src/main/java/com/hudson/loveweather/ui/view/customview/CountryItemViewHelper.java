@@ -158,6 +158,7 @@ public class CountryItemViewHelper {
 
     public void hideCheckBox(){
         mCheckBox.setVisibility(View.GONE);
+        mCheckBox.setChecked(false);
     }
 
     public boolean isSelected(){
