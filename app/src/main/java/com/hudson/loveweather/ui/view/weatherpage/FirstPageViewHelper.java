@@ -76,7 +76,10 @@ public class FirstPageViewHelper extends PageViewHelperImpl {
                         mWeatherDesc.setText(now.getCond().getTxt().trim());
                         mBodyTemp.setText("体感温度"+now.getFl()+"℃");
                         mHum.setText("空气湿度"+now.getHum()+"%");
-                        mWind.setText(now.getWind().getSc());
+                        Weather.HeWeatherBean.NowBean.WindBean wind = now.getWind();
+                        if(wind!=null){
+                            mWind.setText(wind.getSc());
+                        }
                         //air图片
                     }
                 }else{//可能是url错误，导致json格式不正确，或者访问次数达到限制

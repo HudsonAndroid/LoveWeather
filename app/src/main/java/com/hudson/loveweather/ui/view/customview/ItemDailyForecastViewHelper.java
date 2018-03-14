@@ -41,10 +41,12 @@ public class ItemDailyForecastViewHelper {
 
     public void refreshView(Weather.HeWeatherBean.DailyForecastBean bean){
         Weather.HeWeatherBean.DailyForecastBean.AstroBean astro = bean.getAstro();
-        mSunrise.setText(astro.getSr());
-        mSunset.setText(astro.getSs());
-        mMoonrise.setText(astro.getMr());
-        mMoonSet.setText(astro.getMs());
+        if(astro!=null){
+            mSunrise.setText(astro.getSr());
+            mSunset.setText(astro.getSs());
+            mMoonrise.setText(astro.getMr());
+            mMoonSet.setText(astro.getMs());
+        }
         Weather.HeWeatherBean.DailyForecastBean.TmpBean tmp = bean.getTmp();
         mMaxMin.setText(tmp.getMin()+"~"+tmp.getMax()+"℃");
         Weather.HeWeatherBean.DailyForecastBean.CondBeanX cond = bean.getCond();
@@ -58,8 +60,10 @@ public class ItemDailyForecastViewHelper {
         mVu.setText("紫外线强度 "+bean.getUv());
         mDate.setText(bean.getDate());
         Weather.HeWeatherBean.DailyForecastBean.WindBeanX wind = bean.getWind();
-        mWindSc.setText(wind.getSc());
-        mWindDir.setText(wind.getDir());
+        if(wind!=null){
+            mWindSc.setText(wind.getSc());
+            mWindDir.setText(wind.getDir());
+        }
     }
 
 }

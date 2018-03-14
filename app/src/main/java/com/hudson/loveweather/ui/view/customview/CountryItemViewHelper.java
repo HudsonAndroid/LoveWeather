@@ -2,6 +2,7 @@ package com.hudson.loveweather.ui.view.customview;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -46,7 +47,12 @@ public class CountryItemViewHelper {
         mDesc = (TextView) mRoot.findViewById(R.id.tv_desc);
         mSelectedCountry = country;
         //如果是定位的城市，那么不允许删除
-        mCanDelete = !SharedPreferenceUtils.getInstance().getLastLocationWeatherId().equals(country.getWeatherId());
+        String lastLocationWeatherId = SharedPreferenceUtils.getInstance().getLastLocationWeatherId();
+        if(!TextUtils.isEmpty(lastLocationWeatherId)){
+            mCanDelete = !lastLocationWeatherId.equals(country.getWeatherId());
+        }else{
+            mCanDelete = true;
+        }
         if(!mCanDelete){//是定位的城市
             //注意：给textView设置drawable时，需要指定bounds，这里使用的方法会自动使用drawable内部的bounds
             mCountry.setCompoundDrawablesWithIntrinsicBounds(UIUtils.getDrawable(R.drawable.location),

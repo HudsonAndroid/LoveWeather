@@ -2,6 +2,8 @@ package com.hudson.loveweather.db;
 
 import android.text.TextUtils;
 
+import com.hudson.loveweather.utils.log.LogUtils;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class DatabaseUtils {
         if(TextUtils.isEmpty(countryName)){
             return null;
         }
+        LogUtils.e("查询数据库");
         List<Country> results = DataSupport.where("countryName = ?"
                 ,countryName).find(Country.class);
         if(results.size() == 0){

@@ -17,9 +17,7 @@ import com.hudson.loveweather.ui.view.customview.AutoAdapterLayout;
 import com.hudson.loveweather.utils.ArrayIteratorHelper;
 import com.hudson.loveweather.utils.SearchHistoryUtils;
 import com.hudson.loveweather.utils.SharedPreferenceUtils;
-import com.hudson.loveweather.utils.ToastUtils;
 import com.hudson.loveweather.utils.UIUtils;
-import com.hudson.loveweather.utils.log.Constants;
 import com.hudson.loveweather.utils.log.LogUtils;
 
 import java.util.Iterator;
@@ -127,7 +125,9 @@ public class SearchDefaultFragment extends BaseFragment implements View.OnClickL
 
     private void toggleSelectedCountry(String countryName){
         Country country = DatabaseUtils.queryWeatherId(countryName);
+        LogUtils.e("选择"+countryName);
         if(country!=null){
+            LogUtils.e("选择成功");
             mActivity.toggleSelectedCountry(country);
         }
     }

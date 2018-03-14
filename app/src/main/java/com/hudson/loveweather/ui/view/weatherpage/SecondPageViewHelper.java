@@ -67,11 +67,15 @@ public class SecondPageViewHelper extends PageViewHelperImpl {
                 if (heWeatherBean != null && heWeatherBean.getStatus().equals("ok")) {
                     List<Weather.HeWeatherBean.HourlyForecastBean> hourlyForecast = heWeatherBean.getHourly_forecast();
                     mHour.removeAllViews();
-                    inflateHourForecast(hourlyForecast);
+                    if(hourlyForecast!=null&&hourlyForecast.size()>0){
+                        inflateHourForecast(hourlyForecast);
+                    }
 
                     List<Weather.HeWeatherBean.DailyForecastBean> daily_forecast = heWeatherBean.getDaily_forecast();
                     mDaily.removeAllViews();
-                    inflateDailyForecast(daily_forecast);
+                    if(daily_forecast!=null&&daily_forecast.size()>0){
+                        inflateDailyForecast(daily_forecast);
+                    }
 
                     mSuggestions.removeAllViews();
                     itemSuggestionInflate(heWeatherBean.getSuggestion());

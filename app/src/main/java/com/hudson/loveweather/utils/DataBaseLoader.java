@@ -43,6 +43,7 @@ public class DataBaseLoader {
             @Override
             public void onFailure(Call call, IOException e) {
                 loadStatus = false;
+                LogUtils.e("数据解析失败1");
             }
 
             @Override
@@ -71,6 +72,7 @@ public class DataBaseLoader {
             @Override
             public void onFailure(Call call, IOException e) {
                 loadStatus = false;
+                LogUtils.e("数据解析失败2");
             }
 
             @Override
@@ -85,6 +87,8 @@ public class DataBaseLoader {
                         city = dest.get(i);
                         loadCountryData(url + "/" +city.getCityCode(),provinceName,city.getCityName());
                     }
+                }else{
+                    LogUtils.e("城市数据解析失败");
                 }
             }
         });
@@ -95,6 +99,7 @@ public class DataBaseLoader {
             @Override
             public void onFailure(Call call, IOException e) {
                 loadStatus = false;
+                LogUtils.e("数据解析失败3");
             }
 
             @Override
@@ -104,6 +109,8 @@ public class DataBaseLoader {
                 loadStatus = loadStatus&&parser.parseJson(response.body().string(), dest, provinceName, cityName);
                 if(loadStatus){
                     DataSupport.saveAll(dest);
+                }else{
+                    LogUtils.e("乡镇数据解析失败");
                 }
             }
         });

@@ -125,6 +125,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initializeDatabase() {
+        LogUtils.e("开始初始化数据库");
         if(HttpUtils.isNetworkAvailable()){
             mIsDatabaseInit = mInstance.isLocalDatabaseLoaded();
             if(!mIsDatabaseInit){

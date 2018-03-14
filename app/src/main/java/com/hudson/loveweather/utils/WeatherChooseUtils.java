@@ -93,6 +93,7 @@ public class WeatherChooseUtils {
         String weatherId = country.getWeatherId();
         UpdateUtils.getInstance().updateWeather(UpdateUtils.generateWeatherUrl(weatherId),
                 weatherId);//其次更新天气
+        LogUtils.e("跳转页面");
         activity.startActivity(new Intent(activity, WeatherActivity.class));//跳转天气页面
         activity.finish();
     }
