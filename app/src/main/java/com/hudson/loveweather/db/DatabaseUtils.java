@@ -21,7 +21,12 @@ public class DatabaseUtils {
         List<Country> results = DataSupport.where("provinceName = ? and cityName = ? and countryName = ?"
         ,provinceName,cityName,countryName).find(Country.class);
         if(results.size() == 0){
-            return null;
+            results = DataSupport.where("provinceName = ? and cityName = ?"
+                    ,provinceName,cityName).find(Country.class);
+            if(results.size()==0){
+                return null;
+            }
+            return results.get(0).getWeatherId();
         }
         return results.get(0).getWeatherId();
     }

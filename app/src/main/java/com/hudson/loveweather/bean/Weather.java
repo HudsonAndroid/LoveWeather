@@ -4,21 +4,22 @@ import java.util.List;
 
 /**
  * Created by Hudson on 2017/12/4.
+ * 旧版本，即将被和风淘汰
  */
 
 public class Weather {
 
-    private List<HeWeatherBean> HeWeather;
+    private List<HeWeather6Bean> HeWeather6;
 
-    public List<HeWeatherBean> getHeWeather() {
-        return HeWeather;
+    public List<HeWeather6Bean> getHeWeather6() {
+        return HeWeather6;
     }
 
-    public void setHeWeather(List<HeWeatherBean> HeWeather) {
-        this.HeWeather = HeWeather;
+    public void setHeWeather6(List<HeWeather6Bean> HeWeather6) {
+        this.HeWeather6 = HeWeather6;
     }
 
-    public static class HeWeatherBean {
+    public static class HeWeather6Bean {
         /**
          * aqi : {"city":{"aqi":"67","co":"1","no2":"51","o3":"40","pm10":"74","pm25":"48","qlty":"良","so2":"14"}}
          * basic : {"city":"苏州","cnty":"中国","id":"CN101190401","lat":"31.29937935","lon":"120.61958313","update":{"loc":"2017-12-04 20:52","utc":"2017-12-04 12:52"}}
@@ -26,14 +27,15 @@ public class Weather {
          * hourly_forecast : [{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-04 22:00","hum":"55","pop":"0","pres":"1029","tmp":"6","wind":{"deg":"35","dir":"东北风","sc":"微风","spd":"15"}},{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-05 01:00","hum":"54","pop":"0","pres":"1029","tmp":"5","wind":{"deg":"243","dir":"西南风","sc":"微风","spd":"13"}},{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-05 04:00","hum":"54","pop":"0","pres":"1029","tmp":"3","wind":{"deg":"347","dir":"西北风","sc":"微风","spd":"12"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 07:00","hum":"47","pop":"0","pres":"1030","tmp":"3","wind":{"deg":"333","dir":"西北风","sc":"微风","spd":"12"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 10:00","hum":"36","pop":"0","pres":"1030","tmp":"5","wind":{"deg":"322","dir":"西北风","sc":"微风","spd":"14"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 13:00","hum":"28","pop":"0","pres":"1028","tmp":"7","wind":{"deg":"311","dir":"西北风","sc":"微风","spd":"13"}},{"cond":{"code":"100","txt":"晴"},"date":"2017-12-05 16:00","hum":"30","pop":"0","pres":"1027","tmp":"7","wind":{"deg":"303","dir":"西北风","sc":"微风","spd":"10"}},{"cond":{"code":"103","txt":"晴间多云"},"date":"2017-12-05 19:00","hum":"35","pop":"0","pres":"1027","tmp":"4","wind":{"deg":"312","dir":"西北风","sc":"微风","spd":"15"}}]
          * now : {"cond":{"code":"104","txt":"阴"},"fl":"1","hum":"69","pcpn":"0","pres":"1027","tmp":"7","vis":"10","wind":{"deg":"52","dir":"东北风","sc":"微风","spd":"8"}}
          * status : ok
-         * suggestion : {"air":{"brf":"较差","txt":"气象条件较不利于空气污染物稀释、扩散和清除，请适当减少室外活动时间。"},"comf":{"brf":"较舒适","txt":"今天夜间虽然天气晴好，但会感觉偏凉，舒适、宜人。"},"cw":{"brf":"较适宜","txt":"较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。"},"drsg":{"brf":"较冷","txt":"建议着厚外套加毛衣等服装。年老体弱者宜着大衣、呢外套加羊毛衫。"},"flu":{"brf":"较易发","txt":"天气较凉，较易发生感冒，请适当增加衣服。体质较弱的朋友尤其应该注意防护。"},"sport":{"brf":"较适宜","txt":"天气较好，但考虑风力较强且气温较低，推荐您进行室内运动，若在户外运动注意防风并适当增减衣物。"},"trav":{"brf":"一般","txt":"天空状况还是比较好的，但温度稍微有点低，且风稍大，会让您感觉些许凉意。外出请注意防风。"},"uv":{"brf":"最弱","txt":"属弱紫外线辐射天气，无需特别防护。若长期在户外，建议涂擦SPF在8-12之间的防晒护肤品。"}}
+         * lifeStyle : {"air":{"brf":"较差","txt":"气象条件较不利于空气污染物稀释、扩散和清除，请适当减少室外活动时间。"},"comf":{"brf":"较舒适","txt":"今天夜间虽然天气晴好，但会感觉偏凉，舒适、宜人。"},"cw":{"brf":"较适宜","txt":"较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。"},"drsg":{"brf":"较冷","txt":"建议着厚外套加毛衣等服装。年老体弱者宜着大衣、呢外套加羊毛衫。"},"flu":{"brf":"较易发","txt":"天气较凉，较易发生感冒，请适当增加衣服。体质较弱的朋友尤其应该注意防护。"},"sport":{"brf":"较适宜","txt":"天气较好，但考虑风力较强且气温较低，推荐您进行室内运动，若在户外运动注意防风并适当增减衣物。"},"trav":{"brf":"一般","txt":"天空状况还是比较好的，但温度稍微有点低，且风稍大，会让您感觉些许凉意。外出请注意防风。"},"uv":{"brf":"最弱","txt":"属弱紫外线辐射天气，无需特别防护。若长期在户外，建议涂擦SPF在8-12之间的防晒护肤品。"}}
          */
 
         private AqiBean aqi;
         private BasicBean basic;
         private NowBean now;
         private String status;
-        private SuggestionBean suggestion;
+        //6改成了lifestyle
+        private LifeStyleBean lifeStyle;
         private List<DailyForecastBean> daily_forecast;
         private List<HourlyForecastBean> hourly_forecast;
 
@@ -69,12 +71,12 @@ public class Weather {
             this.status = status;
         }
 
-        public SuggestionBean getSuggestion() {
-            return suggestion;
+        public LifeStyleBean getLifeStyle() {
+            return lifeStyle;
         }
 
-        public void setSuggestion(SuggestionBean suggestion) {
-            this.suggestion = suggestion;
+        public void setLifeStyle(LifeStyleBean lifeStyle) {
+            this.lifeStyle = lifeStyle;
         }
 
         public List<DailyForecastBean> getDaily_forecast() {
@@ -445,7 +447,7 @@ public class Weather {
             }
         }
 
-        public static class SuggestionBean {
+        public static class LifeStyleBean {
             /**
              * air : {"brf":"较差","txt":"气象条件较不利于空气污染物稀释、扩散和清除，请适当减少室外活动时间。"}
              * comf : {"brf":"较舒适","txt":"今天夜间虽然天气晴好，但会感觉偏凉，舒适、宜人。"}

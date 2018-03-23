@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.ui.view.customview.ItemDailyForecastViewHelper;
 import com.hudson.loveweather.ui.view.customview.ItemHourForecastViewHelper;
 import com.hudson.loveweather.ui.view.customview.ItemSuggestionViewHelper;
@@ -23,7 +23,7 @@ import java.util.List;
 public class SecondPageViewHelper extends PageViewHelperImpl {
     private View mContainer;
     private Context mContext;
-    private View mHourForecastContainer, mDailyForecastContainer, mSuggestionContainer;
+    private View mHourForecastContainer, mDailyForecastContainer, mLifeStyleContainer;
     private LinearLayout mHour, mDaily, mSuggestions;
 
     @Override
@@ -42,7 +42,7 @@ public class SecondPageViewHelper extends PageViewHelperImpl {
         mContainer = root.findViewById(R.id.ll_second);
         mHourForecastContainer = root.findViewById(R.id.ll_hour_forecast);
         mDailyForecastContainer = root.findViewById(R.id.ll_daily_forecast);
-        mSuggestionContainer = root.findViewById(R.id.ll_suggestions);
+        mLifeStyleContainer = root.findViewById(R.id.ll_suggestions);
         mDaily = (LinearLayout) root.findViewById(R.id.ll_daily);
         mHour = (LinearLayout) root.findViewById(R.id.ll_hour);
         mSuggestions = (LinearLayout) root.findViewById(R.id.ll_suggestions_container);
@@ -59,26 +59,26 @@ public class SecondPageViewHelper extends PageViewHelperImpl {
     }
 
     @Override
-    public void refreshView(Weather object, Object... objects) {
+    public void refreshView(Weather6 object, Object... objects) {
         if (object != null) {
-            List<Weather.HeWeatherBean> heWeather = object.getHeWeather();
+            List<Weather6.HeWeather6Bean> heWeather = object.getHeWeather6();
             if (heWeather != null && heWeather.size() > 0) {
-                Weather.HeWeatherBean heWeatherBean = heWeather.get(0);
-                if (heWeatherBean != null && heWeatherBean.getStatus().equals("ok")) {
-                    List<Weather.HeWeatherBean.HourlyForecastBean> hourlyForecast = heWeatherBean.getHourly_forecast();
+                Weather6.HeWeather6Bean heWeather6Bean = heWeather.get(0);
+                if (heWeather6Bean != null && heWeather6Bean.getStatus().equals("ok")) {
+                    List<Weather6.HeWeather6Bean.HourlyBean> hourlyForecast = heWeather6Bean.getHourly();
                     mHour.removeAllViews();
                     if(hourlyForecast!=null&&hourlyForecast.size()>0){
                         inflateHourForecast(hourlyForecast);
                     }
 
-                    List<Weather.HeWeatherBean.DailyForecastBean> daily_forecast = heWeatherBean.getDaily_forecast();
+                    List<Weather6.HeWeather6Bean.DailyForecastBean> daily_forecast = heWeather6Bean.getDaily_forecast();
                     mDaily.removeAllViews();
                     if(daily_forecast!=null&&daily_forecast.size()>0){
                         inflateDailyForecast(daily_forecast);
                     }
 
                     mSuggestions.removeAllViews();
-                    itemSuggestionInflate(heWeatherBean.getSuggestion());
+                    itemSuggestionInflate(heWeather6Bean.getLifestyle());
                 }
             }
         }
@@ -87,65 +87,52 @@ public class SecondPageViewHelper extends PageViewHelperImpl {
 
     /**
      * 很奇怪，如果使用inflate的自动加入功能，会发现结果不正确，某一个元素多次添加
-     * @param suggestion
+     * @param lifeStyleList
      */
-    private void itemSuggestionInflate(Weather.HeWeatherBean.SuggestionBean suggestion){
-        if(suggestion==null){
-            mSuggestionContainer.setVisibility(View.GONE);
+    private void itemSuggestionInflate(List<Weather6.HeWeather6Bean.LifestyleBean> lifeStyleList){
+        if(lifeStyleList == null|(lifeStyleList != null && lifeStyleList.size() == 0)){
+            mLifeStyleContainer.setVisibility(View.GONE);
             return ;
         }else{
-            mSuggestionContainer.setVisibility(View.VISIBLE);
+            mLifeStyleContainer.setVisibility(View.VISIBLE);
         }
-        ItemSuggestionViewHelper helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.AirBean air = suggestion.getAir();
-        helper.refreshView("空气",air.getBrf(),air.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
-
-        helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.ComfBean comf = suggestion.getComf();
-        helper.refreshView("舒适",comf.getBrf(),comf.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
-
-        helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.CwBean cw = suggestion.getCw();
-        helper.refreshView("洗车",cw.getBrf(),cw.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
-
-        helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.DrsgBean drsg = suggestion.getDrsg();
-        helper.refreshView("穿衣",drsg.getBrf(),drsg.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
-
-        helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.FluBean flu = suggestion.getFlu();
-        helper.refreshView("感冒",flu.getBrf(),flu.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
-
-        helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.SportBean sport = suggestion.getSport();
-        helper.refreshView("运动",sport.getBrf(),sport.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
-
-        helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.TravBean trav = suggestion.getTrav();
-        helper.refreshView("旅游",trav.getBrf(),trav.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
-
-        helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
-        Weather.HeWeatherBean.SuggestionBean.UvBean uv = suggestion.getUv();
-        helper.refreshView("紫外",uv.getBrf(),uv.getTxt());
-        mSuggestions.addView(helper.mRoot);
-        View.inflate(mContext,R.layout.line_sub,mSuggestions);
+        ItemSuggestionViewHelper helper;
+        Weather6.HeWeather6Bean.LifestyleBean lifestyleBean;
+        for (int i = 0; i < lifeStyleList.size(); i++) {
+            lifestyleBean = lifeStyleList.get(i);
+            helper = new ItemSuggestionViewHelper(mContext,mSuggestions);
+            String type = generateTypeStr(lifestyleBean.getType());
+            if(lifestyleBean!=null){
+                helper.refreshView(type,lifestyleBean.getBrf(),lifestyleBean.getTxt());
+                mSuggestions.addView(helper.mRoot);
+                View.inflate(mContext,R.layout.line_sub,mSuggestions);
+            }
+        }
     }
 
-    private void inflateDailyForecast(List<Weather.HeWeatherBean.DailyForecastBean> daily_forecast){
+    private String generateTypeStr(String type){
+        if(type.equals("comf")){
+            return "舒适";
+        }else if(type.equals("drsg")){
+            return "穿衣";
+        }else if(type.equals("flu")){
+            return "感冒";
+        }else if(type.equals("sport")){
+            return "运动";
+        }else if(type.equals("trav")){
+            return "旅行";
+        }else if(type.equals("uv")){
+            return "紫外";
+        }else if(type.equals("cw")){
+            return "洗车";
+        }else if(type.equals("air")){
+            return "空气";
+        }else{
+            return "没有了";
+        }
+    }
+
+    private void inflateDailyForecast(List<Weather6.HeWeather6Bean.DailyForecastBean> daily_forecast){
         if(daily_forecast == null|(daily_forecast != null && daily_forecast.size() == 0)){
             mDailyForecastContainer.setVisibility(View.GONE);
             return;
@@ -153,7 +140,7 @@ public class SecondPageViewHelper extends PageViewHelperImpl {
             mDailyForecastContainer.setVisibility(View.VISIBLE);
         }
         ItemDailyForecastViewHelper helper;
-        Weather.HeWeatherBean.DailyForecastBean bean;
+        Weather6.HeWeather6Bean.DailyForecastBean bean;
         for (int i = 0; i < daily_forecast.size(); i++) {
             bean = daily_forecast.get(i);
             helper = new ItemDailyForecastViewHelper(mContext,mDaily);
@@ -163,25 +150,24 @@ public class SecondPageViewHelper extends PageViewHelperImpl {
     }
 
 
-    private void inflateHourForecast(List<Weather.HeWeatherBean.HourlyForecastBean> hourlyForecast){
+    private void inflateHourForecast(List<Weather6.HeWeather6Bean.HourlyBean> hourlyForecast){
         if(hourlyForecast == null|(hourlyForecast != null && hourlyForecast.size() == 0)){
             mHourForecastContainer.setVisibility(View.GONE);
         }else{
             mHourForecastContainer.setVisibility(View.VISIBLE);
         }
         ItemHourForecastViewHelper hourForecastViewHelper;
-        Weather.HeWeatherBean.HourlyForecastBean hourlyForecastBean;
+        Weather6.HeWeather6Bean.HourlyBean hourlyForecastBean;
         for (int i = 0; i < hourlyForecast.size(); i++) {
             hourlyForecastBean = hourlyForecast.get(i);
             hourForecastViewHelper = new ItemHourForecastViewHelper(mContext,mHour);
-            Weather.HeWeatherBean.HourlyForecastBean.WindBeanXX wind = hourlyForecastBean.getWind();
             hourForecastViewHelper.refreshView(i==0,hourlyForecastBean.getTmp(),
-                    hourlyForecastBean.getCond().getTxt(),
+                    hourlyForecastBean.getCond_txt(),
                     "相对湿度"+hourlyForecastBean.getHum()+"%",
                     "降水概率"+hourlyForecastBean.getPop()+"%",
                     "气压 "+hourlyForecastBean.getPres(),
-                    wind.getDir()+"-"+wind.getSc(),
-                    hourlyForecastBean.getDate());
+                    hourlyForecastBean.getWind_dir()+"-"+hourlyForecastBean.getWind_sc(),
+                    hourlyForecastBean.getTime());
             mHour.addView(hourForecastViewHelper.mRoot);
         }
     }

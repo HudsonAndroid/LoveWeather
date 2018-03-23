@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 
 /**
  * Created by Hudson on 2017/12/9.
@@ -39,30 +39,25 @@ public class ItemDailyForecastViewHelper {
     }
 
 
-    public void refreshView(Weather.HeWeatherBean.DailyForecastBean bean){
-        Weather.HeWeatherBean.DailyForecastBean.AstroBean astro = bean.getAstro();
-        if(astro!=null){
-            mSunrise.setText(astro.getSr());
-            mSunset.setText(astro.getSs());
-            mMoonrise.setText(astro.getMr());
-            mMoonSet.setText(astro.getMs());
-        }
-        Weather.HeWeatherBean.DailyForecastBean.TmpBean tmp = bean.getTmp();
-        mMaxMin.setText(tmp.getMin()+"~"+tmp.getMax()+"℃");
-        Weather.HeWeatherBean.DailyForecastBean.CondBeanX cond = bean.getCond();
-        mDayWeather.setText(cond.getTxt_d());
-        mNightWeather.setText(cond.getTxt_n());
-        mHum.setText("相对湿度"+bean.getHum()+"%");
-        mPop.setText("降水概率 "+bean.getPop()+"%");
-        mPcpn.setText("降水量 "+bean.getPcpn());
-        mPress.setText("气压 "+bean.getPres());
-        mVis.setText("能见度 "+bean.getVis());
-        mVu.setText("紫外线强度 "+bean.getUv());
-        mDate.setText(bean.getDate());
-        Weather.HeWeatherBean.DailyForecastBean.WindBeanX wind = bean.getWind();
-        if(wind!=null){
-            mWindSc.setText(wind.getSc());
-            mWindDir.setText(wind.getDir());
+    public void refreshView(Weather6.HeWeather6Bean.DailyForecastBean bean){
+        if(bean!=null){
+            mSunrise.setText(bean.getSr());
+            mSunset.setText(bean.getSs());
+            mMoonrise.setText(bean.getMr());
+            mMoonSet.setText(bean.getMs());
+            mMaxMin.setText(bean.getTmp_min()+"~"+bean.getTmp_max()+"℃");
+            mDayWeather.setText(bean.getCond_txt_d());
+            mNightWeather.setText(bean.getCond_txt_n());
+            mHum.setText("相对湿度"+bean.getHum()+"%");
+            mPop.setText("降水概率 "+bean.getPop()+"%");
+            mPcpn.setText("降水量 "+bean.getPcpn());
+            mPress.setText("气压 "+bean.getPres());
+            mVis.setText("能见度 "+bean.getVis());
+            mVu.setText("紫外线强度 "+bean.getUv_index());
+            mDate.setText(bean.getDate());
+            mWindSc.setText(bean.getWind_sc());
+            mWindDir.setText(bean.getWind_dir());
+
         }
     }
 

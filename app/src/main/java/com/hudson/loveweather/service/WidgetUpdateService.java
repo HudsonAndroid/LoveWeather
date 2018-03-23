@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import android.widget.RemoteViews;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.ui.activity.WeatherActivity;
 import com.hudson.loveweather.ui.widget.WidgetCircleProvider;
 import com.hudson.loveweather.ui.widget.WidgetDefaultProvider;
@@ -91,24 +91,24 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
         mCircleRemoteViews.setOnClickPendingIntent(R.id.ll_widget_container,pendingIntent);
     }
 
-    private void updateWeather(Weather weather){
+    private void updateWeather(Weather6 weather){
         if(weather!=null){
             String curTime = TimeUtils.getCurTime();
             mDefaultRemoteViews.setTextViewText(R.id.tv_time, curTime);
             mCircleRemoteViews.setTextViewText(R.id.tv_time, curTime);
 
-            Weather.HeWeatherBean heWeatherBean = weather.getHeWeather().get(0);
-            Weather.HeWeatherBean.NowBean now = heWeatherBean.getNow();
-            mDefaultRemoteViews.setTextViewText(R.id.tv_weather_desc, now.getCond().getTxt());
+            Weather6.HeWeather6Bean heWeather6Bean = weather.getHeWeather6().get(0);
+            Weather6.HeWeather6Bean.NowBean now = heWeather6Bean.getNow();
+            mDefaultRemoteViews.setTextViewText(R.id.tv_weather_desc, now.getCond_txt());
             mDefaultRemoteViews.setTextViewText(R.id.tv_date, TimeUtils.getDayWeekOfDate()+"  "+TimeUtils.getDayNumberStringOfDate()+" "+TimeUtils.getMonthOfYear() );
             mDefaultRemoteViews.setTextViewText(R.id.tv_location,mSharedPreferenceUtils.getLastLocationInfo());
             mDefaultRemoteViews.setTextViewText(R.id.tv_temp,now.getTmp()+"℃");
             mAppWidgetManager.updateAppWidget(mDefault, mDefaultRemoteViews);
 
-            mCircleRemoteViews.setTextViewText(R.id.tv_weather_desc, now.getCond().getTxt());
+            mCircleRemoteViews.setTextViewText(R.id.tv_weather_desc, now.getCond_txt());
             mCircleRemoteViews.setTextViewText(R.id.tv_location,mSharedPreferenceUtils.getLastLocationInfo());
             mCircleRemoteViews.setTextViewText(R.id.tv_temp,now.getTmp()+"℃");
-            mCircleRemoteViews.setTextViewText(R.id.tv_air,heWeatherBean.getAqi().getCity().getQlty());
+//            mCircleRemoteViews.setTextViewText(R.id.tv_air, heWeather6Bean.getAqi().getCity().getQlty());
             mAppWidgetManager.updateAppWidget(mCircle, mCircleRemoteViews);
         }
     }
@@ -129,7 +129,7 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
 
 
     @Override
-    public void onWeatherUpdateSuccess(final Weather weather) {
+    public void onWeatherUpdateSuccess(final Weather6 weather) {
         UIUtils.runOnUIThread(new Runnable() {
             @Override
             public void run() {

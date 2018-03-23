@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.hudson.loveweather.utils.DataBaseLoader;
+
 import org.litepal.LitePal;
 
 import java.util.Stack;
@@ -104,6 +106,7 @@ public class LoveWeatherApplication extends Application {
     }
 
     public static void exitApp(){
+        DataBaseLoader.saveLoadFailedBeanIntoFile();
         finishAll();
         android.os.Process.killProcess(android.os.Process.myPid());
     }

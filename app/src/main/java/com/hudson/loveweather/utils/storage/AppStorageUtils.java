@@ -59,6 +59,14 @@ public class AppStorageUtils  {
         return sAppStorage.getCustomPath(getAppRootPath()+"/log");
     }
 
+    /**
+     * 获取应用城市数据库加载失败的列表文件
+     * @return 列表文件的路径
+     */
+    public static String getCityDataLoadFailedFilePath(){
+        return sAppStorage.getCustomPath(getCachePath()+"/load")+"/loadFailedList.txt";
+    }
+
     public static String getAppBackgroundPicFilePath(int picIndex){
         SharedPreferenceUtils instance = SharedPreferenceUtils.getInstance();
         String backgroundPicCategory = instance.getBackgroundPicCategory();

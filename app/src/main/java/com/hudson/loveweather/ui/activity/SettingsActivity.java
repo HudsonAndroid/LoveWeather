@@ -41,12 +41,19 @@ public class SettingsActivity extends BaseSubActivity {
         mPicUpdateSelector = (SelectProgressBar) root.findViewById(R.id.spb_pic_update);
         mUpdatePicWifiOnly = (ToggleButton) root.findViewById(R.id.tb_wifi_only);
         mUpdatePicWifiOnly.setChecked(mSharedPreferenceUtils.getOnlyWifiAccessNetUpdatePic());
+        //注意：这里ToggleButton在响应点击事件之前就会把checked状态切换，所以这个时候是不一样的
         root.findViewById(R.id.ll_wifi_only).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean checked = !mUpdatePicWifiOnly.isChecked();
                 mSharedPreferenceUtils.saveOnlyWifiAccessNetUpdatePic(checked);
                 mUpdatePicWifiOnly.setChecked(checked);
+            }
+        });
+        mUpdatePicWifiOnly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSharedPreferenceUtils.saveOnlyWifiAccessNetUpdatePic(mUpdatePicWifiOnly.isChecked());
             }
         });
         mShowNotification = (ToggleButton) root.findViewById(R.id.tb_show_notification);
@@ -56,7 +63,21 @@ public class SettingsActivity extends BaseSubActivity {
             public void onClick(View v) {
                 boolean checked = !mShowNotification.isChecked();
                 mSharedPreferenceUtils.saveShowNotification(checked);
+                Intent intent = new Intent(SettingsActivity.this, ScheduledTaskService.class);
+                if(checked){
+                    intent.putExtra("type",ScheduledTaskService.TYPE_SHOW_NOTIFICATION);
+                }else{
+                    intent.putExtra("type",ScheduledTaskService.TYPE_CANCEL_NOTIFICATION);
+                }
+                startService(intent);
                 mShowNotification.setChecked(checked);
+            }
+        });
+        mShowNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean checked = mShowNotification.isChecked();//在响应点击事件之前，已经切换好了
+                mSharedPreferenceUtils.saveShowNotification(checked);
                 Intent intent = new Intent(SettingsActivity.this, ScheduledTaskService.class);
                 if(checked){
                     intent.putExtra("type",ScheduledTaskService.TYPE_SHOW_NOTIFICATION);

@@ -2,12 +2,14 @@ package com.hudson.loveweather.utils.update;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.HttpUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.WeatherChooseUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,10 +44,10 @@ import okhttp3.Response;
     @Override
     public void update(String url,Object... objects) {
         String weatherId = (String) objects[0];
-        Weather weatherCache = getWeatherCache(weatherId);
+        Weather6 weatherCache = getWeatherCache(weatherId);
         if(weatherCache!=null){
-            int lastUpdateTime = TimeUtils.parseMinuteTime(weatherCache.getHeWeather()
-                    .get(0).getBasic().getUpdate().getLoc(),0);
+            int lastUpdateTime = TimeUtils.parseMinuteTime(weatherCache.getHeWeather6()
+                    .get(0).getUpdate().getLoc(),0);
             if(lastUpdateTime!=-1&&(TimeUtils.parseCurrentMinuteTime() +24*60 - lastUpdateTime)%(24*60)
                     > Constants.SERVER_WEATHER_UPDATE_OFFSET){
                 LogUtils.e("时间长度超出服务器更新范围，所以请求网络");
@@ -55,6 +57,7 @@ import okhttp3.Response;
                 notifyUpdateSuccess(weatherCache);
             }
         }else{
+            LogUtils.e("没有缓冲数据，使用网络");
             updateWeather(url,weatherId);
         }
     }
@@ -64,20 +67,20 @@ import okhttp3.Response;
      * @param weatherId
      * @return
      */
-    public Weather getWeatherCache(String weatherId){
+    public Weather6 getWeatherCache(String weatherId){
         try{
             return new Gson().fromJson(
                     WeatherChooseUtils.getInstance().getWeatherJsonByWeatherId(weatherId),
-                    Weather.class);
+                    Weather6.class);
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
 
-    public Weather getWeatherInstance(String json){
+    public Weather6 getWeatherInstance(String json){
         try{
-            return new Gson().fromJson(json, Weather.class);
+            return new Gson().fromJson(json, Weather6.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -89,6 +92,8 @@ import okhttp3.Response;
      * @param url
      */
     void updateWeather(String url,final String weatherId){
+        LogUtils.e("访问网络更新天气");
+        EventBus.getDefault().post("正在切换...");
         HttpUtils.requestNetData(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -99,8 +104,9 @@ import okhttp3.Response;
             public void onResponse(Call call, Response response) throws IOException {
                 try{
                     String string = response.body().string();
-                    Weather weather = new Gson().fromJson(string,
-                            Weather.class);
+                    LogUtils.e("这里了==================");
+                    Weather6 weather = new Gson().fromJson(string,
+                            Weather6.class);
                     notifyUpdateSuccess(weather);
                     //将当前选中的地区的天气信息保存到数据库
                     WeatherChooseUtils.getInstance().updateChooseCountryWeatherCache(string);
@@ -118,7 +124,8 @@ import okhttp3.Response;
         }
     }
 
-    private void notifyUpdateSuccess(Weather weather){
+    private void notifyUpdateSuccess(Weather6 weather){
+        LogUtils.e("通知观察者们====================");
         for (int i = 0; i < mObservers.size(); i++) {
             mObservers.get(i).onWeatherUpdateSuccess(weather);
         }

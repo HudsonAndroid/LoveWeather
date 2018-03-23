@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.db.SelectedCountry;
 import com.hudson.loveweather.ui.activity.CountryManagerActivity;
@@ -58,15 +58,15 @@ public class CountryItemViewHelper {
             mCountry.setCompoundDrawablesWithIntrinsicBounds(UIUtils.getDrawable(R.drawable.location),
                     null,null,null);
         }
-        Weather weather = UpdateUtils.getInstance().getWeatherInstance(country.getWeatherJson());
+        Weather6 weather = UpdateUtils.getInstance().getWeatherInstance(country.getWeatherJson());
         if(weather!=null){
-            List<Weather.HeWeatherBean> heWeather = weather.getHeWeather();
+            List<Weather6.HeWeather6Bean> heWeather = weather.getHeWeather6();
             if(heWeather!=null&&heWeather.size()>0){
-                Weather.HeWeatherBean heWeatherBean = heWeather.get(0);
-                Weather.HeWeatherBean.NowBean now = heWeatherBean.getNow();
+                Weather6.HeWeather6Bean heWeather6Bean = heWeather.get(0);
+                Weather6.HeWeather6Bean.NowBean now = heWeather6Bean.getNow();
                 if(now!=null){
                     mTemp.setText(now.getTmp()+"℃");
-                    mDesc.setText(now.getCond().getTxt());
+                    mDesc.setText(now.getCond_txt());
                 }
             }
         }

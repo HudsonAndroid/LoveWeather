@@ -3,6 +3,7 @@ package com.hudson.loveweather.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.hudson.loveweather.R;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.service.ScheduledTaskService;
 
@@ -187,7 +188,7 @@ public class SharedPreferenceUtils {
      * @return
      */
     public String getDailyWords(){
-        return mSp.getString("daily_words_content","爱在左，同情在右，走在生命的两旁，随时播种，随时开花，将这一径长途，点缀得香花弥漫，使穿枝拂叶的行人，踏着荆棘，不觉得痛苦，有泪可落，却不是悲凉");
+        return mSp.getString("daily_words_content",UIUtils.getString(R.string.logo_words));
     }
 
     /**

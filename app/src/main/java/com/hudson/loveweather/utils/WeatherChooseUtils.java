@@ -91,7 +91,7 @@ public class WeatherChooseUtils {
         }
         chooseCountry(country);//首先选择区县
         String weatherId = country.getWeatherId();
-        UpdateUtils.getInstance().updateWeather(UpdateUtils.generateWeatherUrl(weatherId),
+        UpdateUtils.getInstance().updateWeather(UpdateUtils.generateWeatherForecastUrl(weatherId),
                 weatherId);//其次更新天气
         LogUtils.e("跳转页面");
         activity.startActivity(new Intent(activity, WeatherActivity.class));//跳转天气页面

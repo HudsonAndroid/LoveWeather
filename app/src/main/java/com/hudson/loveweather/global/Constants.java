@@ -25,7 +25,7 @@ public class Constants {
 
     public static final String DAILY_WORD_URL = "https://api.xiaolin.in/hitokoto";//每日一句api
 
-    public static final String HE_WEATHER_BASE_URL = "http://guolin.tech/api/weather?cityid=";
+    public static final String HE_WEATHER_FORECAST_URL = "https://free-api.heweather.com/s6/weather?parameters&location=";
     public static final String APP_KEY = "&key=e4927826553043d09e216e1d38c910a5";
 
 
@@ -46,5 +46,6 @@ public class Constants {
     public static final String EVENT_WEATHER_ID_NOT_FOUND = "weather_id_not_found";
     public static final String BROADCAST_UPDATE_PIC = "com.hudson.loveweather.update_pic";
 //    public static final String BROADCAST_UPDATE_WEATHER = "com.hudson.loveweather.update_weather";
+
 
 }

@@ -4,14 +4,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.utils.DeviceUtils;
 
 /**
  * Created by Hudson on 2017/11/28.
  */
 
-public abstract class PageViewHelperImpl implements WeatherPageViewHelper<Weather> {
+public abstract class PageViewHelperImpl implements WeatherPageViewHelper<Weather6> {
 
 
     /**
@@ -42,5 +42,5 @@ public abstract class PageViewHelperImpl implements WeatherPageViewHelper<Weathe
 
 
     @Override
-    public abstract void refreshView(Weather object,Object... objects);
+    public abstract void refreshView(Weather6 object,Object... objects);
 }

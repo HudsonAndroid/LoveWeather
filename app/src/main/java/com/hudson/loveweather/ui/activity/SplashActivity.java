@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,6 +26,11 @@ public class SplashActivity extends BaseActivity {
         if(showPic!=null){
             container.setBackground(new BitmapDrawable(showPic));
         }
+        SharedPreferenceUtils instance = SharedPreferenceUtils.getInstance();
+        ((TextView) findViewById(R.id.tv_words)).setText(instance.getDailyWords());
+//        if(!TextUtils.isEmpty(instance.getLastLocationInfo())){//如果不是首次启动
+//
+//        }
         AnimationUtils.scaleAnimation(4000,container, new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -49,10 +53,6 @@ public class SplashActivity extends BaseActivity {
 
             }
         });
-        SharedPreferenceUtils instance = SharedPreferenceUtils.getInstance();
-        if(!TextUtils.isEmpty(instance.getLastLocationInfo())){//如果不是首次启动
-            ((TextView) findViewById(R.id.tv_words)).setText(instance.getDailyWords());
-        }
     }
 
 

@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.global.LoveWeatherApplication;
 import com.hudson.loveweather.service.DataInitializeService;
@@ -129,8 +129,10 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         if(HttpUtils.isNetworkAvailable()){
             mIsDatabaseInit = mInstance.isLocalDatabaseLoaded();
             if(!mIsDatabaseInit){
-                LogUtils.log("没有初始化过，所以开始启动服务加载");
-                startService(new Intent(this, DataInitializeService.class));
+                if(!DataBaseLoader.readLoadFailedBeanFromFile()){
+                    LogUtils.log("没有初始化过，所以开始启动服务加载");
+                    startService(new Intent(this, DataInitializeService.class));
+                }
             }else{
                 LogUtils.log("已经初始化过了");
             }
@@ -150,7 +152,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 //更新天气（我们更新的是选中的地点的天气，即当前页面显示的城市的天气）
                 String selectedLocationWeatherId = mInstance.getSelectedLocationWeatherId();
                 mUpdateUtils.updateWeather(
-                        UpdateUtils.generateWeatherUrl(selectedLocationWeatherId),
+                        UpdateUtils.generateWeatherForecastUrl(selectedLocationWeatherId),
                         selectedLocationWeatherId);
             }
         }else{
@@ -340,10 +342,12 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onWeatherUpdateSuccess(final Weather weather) {
+    public void onWeatherUpdateSuccess(final Weather6 weather) {
+        LogUtils.e("进来了哦");
         UIUtils.runOnUIThread(new Runnable() {
             @Override
             public void run() {
+                LogUtils.e("天气更新成功了");
                 updateWeather(weather);
                 if(HttpUtils.isNetworkAvailable()){
                     //因为有可能是从本地缓存读取的，所以造点假数据，哈哈哈哈，迷之微笑
@@ -353,7 +357,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void updateWeather(Weather weather) {
+    private void updateWeather(Weather6 weather) {
         String locationInfo = WeatherChooseUtils.clipLocationInfo(
                 mInstance.getLastSelectedLocationInfo());
         if(!TextUtils.isEmpty(locationInfo)){
@@ -415,6 +419,8 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 mCity.setText(UIUtils.getString(R.string.server_not_support));
             }
             ToastUtils.showToast("您所在的区域好像无法获取天气信息！");
+        }else{
+            mCity.setText(event);
         }
         if(mSwipeRefreshLayout.isRefreshing()){
             mSwipeRefreshLayout.setRefreshing(false);

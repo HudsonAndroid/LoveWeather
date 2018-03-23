@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.ui.activity.WeatherActivity;
@@ -39,7 +39,8 @@ import static com.hudson.loveweather.utils.AlarmClockUtils.scheduleTask;
 public class ScheduledTaskService extends Service {
     public static final int DEFAULT_WEATHER_TRIGGER_TIME = 5;//5个小时更新一次天气
     public static final int DEFAULT_BACKGROUND_PIC_TRIG_TIME = 5;//5分钟更新背景
-    private static final int DATABASE_SYNCHRONIZED_TIME = 20*1000;//20s更新完数据库
+    private static final int DATABASE_SYNCHRONIZED_TIME = 120*1000;//120s检查数据库更新状态
+    private static final int ACQUIRE_WEATHER_DATA_TIME = 10*1000;//在weatherId获取失败的情况下，10s重新获取weatherId
     private SharedPreferenceUtils mSharedPreferenceUtils;
     public static final int TYPE_UPDATE_WEATHER = 0;
     public static final int TYPE_UPDATE_PIC = 1;
@@ -49,7 +50,7 @@ public class ScheduledTaskService extends Service {
     public static final int TYPE_CANCEL_NOTIFICATION = 5;
     public static final int TYPE_CHANGE_BACKGROUND_CATEGORY = 6;
     private int mAcquireCount = 0;
-    private static final int ACQUIRE_MAX_COUNT = 4;//最多请求三次
+    private static final int ACQUIRE_MAX_COUNT = 10;//最多请求十次
     public static int mPicIndex = -1;//请求图片的index
     private String mPicUrl;
     private UpdateUtils mUpdateUtils;
@@ -90,6 +91,7 @@ public class ScheduledTaskService extends Service {
                 acquireWeatherIdAndUpdateWeather(intent.getStringExtra("province"),
                         intent.getStringExtra("city"),intent.getStringExtra("country"));
             }else if(type == TYPE_CHECK_DATABASE_SYNCHRONIZED){
+                LogUtils.e("检查状态啦了阿里阿里啊");
                 checkDatabaseSynchronizedStatus();
             }else if(type == TYPE_SHOW_NOTIFICATION){
                 initNotification();
@@ -143,6 +145,7 @@ public class ScheduledTaskService extends Service {
     }
 
     private void acquireWeatherIdAndUpdateWeather(String province, String city, String district) {
+        LogUtils.e("定位的信息是"+province+" "+city+district);
         mAcquireCount ++;
         LogUtils.e("尝试获取天气id"+mAcquireCount);
         province = province.replace("省","");
@@ -150,6 +153,7 @@ public class ScheduledTaskService extends Service {
         String weatherId = DatabaseUtils.queryWeatherId(province,city,district);
         LogUtils.e("地址是"+weatherId);
         if(!TextUtils.isEmpty(weatherId)){
+            LogUtils.e("没问题哦==============");
             mAcquireCount =0;
             mSharedPreferenceUtils.saveLastLocationWeatherId(weatherId);
             mSharedPreferenceUtils.saveLastLocationInfo(WeatherChooseUtils.buildLocationInfo(city,district));
@@ -164,7 +168,7 @@ public class ScheduledTaskService extends Service {
                 acquireWeatherIntent.putExtra("city",city);
                 acquireWeatherIntent.putExtra("country",district);
                 acquireWeatherIntent.putExtra("type",TYPE_ACQUIRE_WEATHER_ID);
-                scheduleTask(this,DATABASE_SYNCHRONIZED_TIME,acquireWeatherIntent);
+                scheduleTask(this,ACQUIRE_WEATHER_DATA_TIME,acquireWeatherIntent);
             }
         }
     }
@@ -179,7 +183,8 @@ public class ScheduledTaskService extends Service {
     }
 
     private void updateWeather(String weatherId){
-        mUpdateUtils.updateWeather(UpdateUtils.generateWeatherUrl(weatherId),weatherId);
+        LogUtils.e("更新数据了天气===============");
+        mUpdateUtils.updateWeather(UpdateUtils.generateWeatherForecastUrl(weatherId),weatherId);
     }
 
     /**
@@ -187,6 +192,9 @@ public class ScheduledTaskService extends Service {
      * 这里通过广播的方式通知界面更新
      */
     private void updateBackgroundPic(){
+        if(TextUtils.isEmpty(mPicUrl)){
+            initBackgroundPicUrl();
+        }
         mPicUrl += (++ mPicIndex);
         LogUtils.e("服务请求更新图片了"+mPicIndex);
         mUpdateUtils.updateBackgroundPic(mPicUrl,mPicIndex);
@@ -197,11 +205,11 @@ public class ScheduledTaskService extends Service {
     }
 
     private void checkDatabaseSynchronizedStatus(){
-        LogUtils.e("检查数据库同步状态");
+        LogUtils.e("这边检查数据库同步状态====================================");
         if(!DataBaseLoader.checkDataLoadStatus()){
             LogUtils.e("数据库同步失败");
             //数据库同步失败，尝试再次同步
-            startService(new Intent(this, DataInitializeService.class));
+//            startService(new Intent(this, DataInitializeService.class));
             //过会再次检查数据库是否同步成功
             scheduleCheckDatabaseSynchronizedStatus();
         }
@@ -231,24 +239,21 @@ public class ScheduledTaskService extends Service {
             //解析自定义的通知栏布局
             RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notification);
             notification.contentView = remoteViews;
-            Weather weatherCache = UpdateUtils.getInstance().getWeatherCache(mSharedPreferenceUtils.getLastLocationWeatherId());
+            Weather6 weatherCache = UpdateUtils.getInstance().getWeatherCache(mSharedPreferenceUtils.getLastLocationWeatherId());
             if(weatherCache!=null){
                 remoteViews.setTextViewText(R.id.tv_location,
                         WeatherChooseUtils.clipLocationInfo(
                                 mSharedPreferenceUtils.getLastLocationInfo()));
-                List<Weather.HeWeatherBean> heWeather = weatherCache.getHeWeather();
+                List<Weather6.HeWeather6Bean> heWeather = weatherCache.getHeWeather6();
                 if(heWeather!=null){
-                    Weather.HeWeatherBean heWeatherBean = heWeather.get(0);
-                    if(heWeatherBean!=null){
-                        Weather.HeWeatherBean.NowBean now = heWeatherBean.getNow();
+                    Weather6.HeWeather6Bean heWeather6Bean = heWeather.get(0);
+                    if(heWeather6Bean !=null){
+                        Weather6.HeWeather6Bean.NowBean now = heWeather6Bean.getNow();
                         if(now!=null){
                             remoteViews.setTextViewText(R.id.tv_temp, now.getTmp()+"℃");
-                            remoteViews.setTextViewText(R.id.tv_desc,now.getCond().getTxt());
+                            remoteViews.setTextViewText(R.id.tv_desc,now.getCond_txt());
                         }
-                        Weather.HeWeatherBean.BasicBean basic = heWeatherBean.getBasic();
-                        if(basic!=null){
-                            remoteViews.setTextViewText(R.id.tv_update_time,basic.getUpdate().getLoc());
-                        }
+                        remoteViews.setTextViewText(R.id.tv_update_time,heWeather6Bean.getUpdate().getLoc());
                     }
                 }
             }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="version_code">版本：1.0</string>
+    <string name="version_code">版本：1.01</string>
     <string name="app_name">爱天气</string>
     <string name="app_english_name">LoveWeather</string>
     <string name="loading">正在加载</string>

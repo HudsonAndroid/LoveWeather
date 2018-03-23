@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
-import com.hudson.loveweather.bean.Weather;
+import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.utils.ToastUtils;
 
 import java.util.List;
@@ -56,30 +56,24 @@ public class FirstPageViewHelper extends PageViewHelperImpl {
     }
 
     @Override
-    public void refreshView(Weather object, Object... objects) {
+    public void refreshView(Weather6 object, Object... objects) {
         if(object!=null){
-            List<Weather.HeWeatherBean> heWeather = object.getHeWeather();
+            List<Weather6.HeWeather6Bean> heWeather = object.getHeWeather6();
             if(heWeather!=null&&heWeather.size()>0){
-                Weather.HeWeatherBean heWeatherBean = heWeather.get(0);
-                if(heWeatherBean!=null&&heWeatherBean.getStatus().equals("ok")){
-                    Weather.HeWeatherBean.BasicBean basic = heWeatherBean.getBasic();
-                    if(basic!=null){
-                        mUpdateTime.setText(basic.getUpdate().getLoc());
-                    }
-                    Weather.HeWeatherBean.AqiBean aqi = heWeatherBean.getAqi();
-                    if(aqi!=null) {
-                        mAirDesc.setText("空气  " + aqi.getCity().getQlty());
-                    }
-                    Weather.HeWeatherBean.NowBean now = heWeatherBean.getNow();
+                Weather6.HeWeather6Bean heWeather6Bean = heWeather.get(0);
+                if(heWeather6Bean !=null&& heWeather6Bean.getStatus().equals("ok")){
+                    mUpdateTime.setText(heWeather6Bean.getUpdate().getLoc());
+//                    Weather.HeWeather6Bean.AqiBean aqi = heWeather6Bean.getAqi();
+//                    if(aqi!=null) {
+//                        mAirDesc.setText("空气  " + aqi.getCity().getQlty());
+//                    }
+                    Weather6.HeWeather6Bean.NowBean now = heWeather6Bean.getNow();
                     if(now!=null){
                         mTemp.setText(now.getTmp());
-                        mWeatherDesc.setText(now.getCond().getTxt().trim());
+                        mWeatherDesc.setText(now.getCond_txt());
                         mBodyTemp.setText("体感温度"+now.getFl()+"℃");
                         mHum.setText("空气湿度"+now.getHum()+"%");
-                        Weather.HeWeatherBean.NowBean.WindBean wind = now.getWind();
-                        if(wind!=null){
-                            mWind.setText(wind.getSc());
-                        }
+                        mWind.setText(now.getWind_dir());
                         //air图片
                     }
                 }else{//可能是url错误，导致json格式不正确，或者访问次数达到限制
