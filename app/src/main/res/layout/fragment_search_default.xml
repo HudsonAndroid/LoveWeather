@@ -20,7 +20,7 @@
             android:drawableLeft="@drawable/location"
             android:textColor="@android:color/white"
             android:textSize="@dimen/edit_text_size"
-            android:text="当前位置:太原"
+            android:text="位置不可知"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

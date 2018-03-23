@@ -93,7 +93,7 @@ import okhttp3.Response;
      */
     void updateWeather(String url,final String weatherId){
         LogUtils.e("访问网络更新天气");
-        EventBus.getDefault().post("正在切换...");
+        EventBus.getDefault().post("正在刷新...");
         HttpUtils.requestNetData(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

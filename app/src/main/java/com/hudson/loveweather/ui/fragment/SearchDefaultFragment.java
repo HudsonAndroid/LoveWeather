@@ -1,6 +1,7 @@
 package com.hudson.loveweather.ui.fragment;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,9 @@ public class SearchDefaultFragment extends BaseFragment implements View.OnClickL
     public View initView(LayoutInflater inflater) {
         View root = inflater.inflate(R.layout.fragment_search_default, null);
         mLocationText = (TextView) root.findViewById(R.id.tv_current_location);
-        mLocationText.setText(SharedPreferenceUtils.getInstance().getLastLocationInfo());
+        String lastLocationInfo = SharedPreferenceUtils.getInstance().getLastLocationInfo();
+        lastLocationInfo = TextUtils.isEmpty(lastLocationInfo)?"位置获取失败":lastLocationInfo;
+        mLocationText.setText(lastLocationInfo);
         root.findViewById(R.id.ll_current_locate).setOnClickListener(this);
         mHotCityContainer = (AutoAdapterLayout) root.findViewById(R.id.aal_hot_city_container);
         mHistory = (ViewStub) root.findViewById(R.id.vs_history);
