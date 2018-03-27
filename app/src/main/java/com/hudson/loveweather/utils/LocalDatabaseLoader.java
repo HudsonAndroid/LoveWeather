@@ -11,6 +11,8 @@ import java.io.InputStream;
  * Created by Hudson on 2018/3/23 0023.
  * 由于网络城市数据库需要大量的访问网络去请求数据，所以提供一个本地数据库进行操作
  *  将本地数据库（assets目录下）复制到应用的databases目录中使用即可
+ *
+ *  注意：外界的数据库文件在创建的时候，使用的bean实例必须与我们访问的时候所使用的bean实例一样
  */
 
 public class LocalDatabaseLoader {

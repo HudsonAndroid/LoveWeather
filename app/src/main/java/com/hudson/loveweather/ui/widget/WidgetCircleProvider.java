@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.hudson.loveweather.service.WidgetUpdateService;
+import com.hudson.loveweather.utils.SharedPreferenceUtils;
 
 /**
  * Created by Hudson on 2017/12/6.
@@ -28,12 +29,14 @@ public class WidgetCircleProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         context.startService(new Intent(context, WidgetUpdateService.class));
+        SharedPreferenceUtils.getInstance().saveCircleWidgetExist(true);
         super.onEnabled(context);
     }
 
     @Override
     public void onDisabled(Context context) {
         context.stopService(new Intent(context, WidgetUpdateService.class));
+        SharedPreferenceUtils.getInstance().saveCircleWidgetExist(false);
         super.onDisabled(context);
     }
 }

@@ -93,6 +93,12 @@
         <activity android:name=".ui.activity.AboutActivity">
         </activity>
 
+        <receiver android:name=".receiver.WidgetUpdateReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".ui.widget.WidgetDefaultProvider"
             android:label="简便工具">

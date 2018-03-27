@@ -128,11 +128,19 @@ public class SharedPreferenceUtils {
         return mSp.getString("selected_weather_id",null);
     }
 
+    /**
+     * 保存设备当前的位置信息
+     * @param locationInfo
+     */
     public void saveLastLocationInfo(String locationInfo){
         mEditor.putString("default_location_info",locationInfo);
         mEditor.commit();
     }
 
+    /**
+     * 获取设备当前的位置信息
+     * @return
+     */
     public String getLastLocationInfo(){
         return mSp.getString("default_location_info",null);
     }
@@ -223,5 +231,43 @@ public class SharedPreferenceUtils {
         return mSp.getBoolean("show_notification",false);
     }
 
+    public void saveDefaultWidgetExist(boolean exist){
+        mEditor.putBoolean("default_widget_exist",exist);
+        mEditor.commit();
+    }
 
+    public boolean isDefaultWidgetExist(){
+        return mSp.getBoolean("default_widget_exist",false);
+    }
+
+    public void saveCircleWidgetExist(boolean exist){
+        mEditor.putBoolean("circle_widget_exist",exist);
+        mEditor.commit();
+    }
+
+    public boolean isCircleWidgetExist(){
+        return mSp.getBoolean("circle_widget_exist",false);
+    }
+
+    /**
+     * 用户是否在本应用上操作
+     * @param active
+     */
+    public void saveUserIsActive(boolean active){
+        mEditor.putBoolean("user_is_active",active);
+        mEditor.commit();
+    }
+
+    public boolean isUserActive(){
+        return mSp.getBoolean("user_is_active",false);
+    }
+
+    public void saveHasShownWidgetTipDialog(boolean hasShown){
+        mEditor.putBoolean("has_shown_widget_tip",hasShown);
+        mEditor.commit();
+    }
+
+    public boolean hasShownWidgetTipDialog(){
+        return mSp.getBoolean("has_shown_widget_tip",false);
+    }
 }

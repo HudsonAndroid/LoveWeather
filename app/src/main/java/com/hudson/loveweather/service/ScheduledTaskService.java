@@ -76,6 +76,7 @@ public class ScheduledTaskService extends Service {
 
     @Override
     public int onStartCommand(Intent intent,  int flags, int startId) {
+        LogUtils.e("intent为空吗"+(intent == null));
         if(intent!=null){
             int type = intent.getIntExtra("type",-1);
             if(type == TYPE_UPDATE_WEATHER){
@@ -91,7 +92,6 @@ public class ScheduledTaskService extends Service {
                 acquireWeatherIdAndUpdateWeather(intent.getStringExtra("province"),
                         intent.getStringExtra("city"),intent.getStringExtra("country"));
             }else if(type == TYPE_CHECK_DATABASE_SYNCHRONIZED){
-                LogUtils.e("检查状态啦了阿里阿里啊");
                 checkDatabaseSynchronizedStatus();
             }else if(type == TYPE_SHOW_NOTIFICATION){
                 initNotification();
@@ -119,6 +119,10 @@ public class ScheduledTaskService extends Service {
         scheduleUpdateWeather();
         scheduleUpdatePic();
         scheduleCheckDatabaseSynchronizedStatus();
+        //如果桌面存在widget，那么需要把widgetUpdateService开启
+        if(mSharedPreferenceUtils.isCircleWidgetExist()||mSharedPreferenceUtils.isDefaultWidgetExist()){
+            startService(new Intent(this,WidgetUpdateService.class));
+        }
     }
 
     private void startLocation(){
@@ -153,7 +157,6 @@ public class ScheduledTaskService extends Service {
         String weatherId = DatabaseUtils.queryWeatherId(province,city,district);
         LogUtils.e("地址是"+weatherId);
         if(!TextUtils.isEmpty(weatherId)){
-            LogUtils.e("没问题哦==============");
             mAcquireCount =0;
             mSharedPreferenceUtils.saveLastLocationWeatherId(weatherId);
             mSharedPreferenceUtils.saveLastLocationInfo(WeatherChooseUtils.buildLocationInfo(city,district));

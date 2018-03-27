@@ -22,19 +22,25 @@ import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.update.UpdateUtils;
 import com.hudson.loveweather.utils.update.WeatherObserver;
 
-import static com.hudson.loveweather.service.ScheduledTaskService.TYPE_UPDATE_PIC;
+import static com.hudson.loveweather.service.ScheduledTaskService.TYPE_UPDATE_WEATHER;
 
 /**
  * Created by Hudson on 2017/12/6.
+ * 说明：在android后续版本中，使用静态注册广播的方式已经无法保证应用在关闭状态下接受到了，所以
+ * 如果应用被关闭，那么该服务也会被关闭。为了确保本服务能够正常显示数据，我们只能在主页面跳出对话框提示
+ * 用户把我们的应用加入白名单中，否则桌面控件很可能在屏幕锁屏应用被杀之后无法实时更新，导致显示的时间是
+ * 错误的。
  */
 
 public class WidgetUpdateService extends Service implements WeatherObserver {
     public static final int TYPE_UPDATE_TIME = 1;
+    public static final String BROADCAST_SHOW_WIDGET_TIPS = "com.hudson.love_weather.widget_tips";
     private AppWidgetManager mAppWidgetManager;
     private ComponentName mDefault,mCircle;
     private RemoteViews mDefaultRemoteViews,mCircleRemoteViews;
     private SharedPreferenceUtils mSharedPreferenceUtils;
     private UpdateUtils mUpdateUtils;
+//    private ScreenOnBroadcastReceiver mReceiver;
 
     @Nullable
     @Override
@@ -49,11 +55,23 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
         init();
         mUpdateUtils = UpdateUtils.getInstance();
         mUpdateUtils.registerWeatherObserver(this);
-        //启动一下更新的服务
+        //启动一下更新的服务，并且刷新天气数据（如果服务以前是关闭的状态的）
         Intent startUpdateService = new Intent(this,ScheduledTaskService.class);
-        startUpdateService.putExtra("type",TYPE_UPDATE_PIC);
+        startUpdateService.putExtra("type",TYPE_UPDATE_WEATHER);
         startService(startUpdateService);
+        detectWidgetDialog();
         super.onCreate();
+    }
+
+    /**
+     * 检测是否显示过提示对话框（提示用户，必须将应用加入白名单，否则无法
+     * 正常更新widget)
+     * 如果需要，那么这里将会发出一个广播通知WeatherActivity显示对话框
+     */
+    private void detectWidgetDialog(){
+        if(!mSharedPreferenceUtils.hasShownWidgetTipDialog()){
+            sendBroadcast(new Intent(BROADCAST_SHOW_WIDGET_TIPS));
+        }
     }
 
     @Override
@@ -62,16 +80,21 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
             if(intent.getIntExtra("type",-1) == TYPE_UPDATE_TIME){
                 scheduleUpdateTime();
             }else{
-                scheduleUpdateTime();
-                updateWeather(mUpdateUtils.getWeatherCache(mSharedPreferenceUtils.getSelectedLocationWeatherId()));
+                update();
             }
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
+    }
+
+    private void update() {
+        scheduleUpdateTime();
+        updateWeather(mUpdateUtils.getWeatherCache(mSharedPreferenceUtils.getSelectedLocationWeatherId()));
     }
 
     @Override
     public void onDestroy() {
         mUpdateUtils.unRegisterWeatherObserver(this);
+//        unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
@@ -89,6 +112,10 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
         mCircle = new ComponentName(this, WidgetCircleProvider.class);
         mCircleRemoteViews = new RemoteViews(getPackageName(),R.layout.widget_circle);
         mCircleRemoteViews.setOnClickPendingIntent(R.id.ll_widget_container,pendingIntent);
+//        //广播
+//        mReceiver = new ScreenOnBroadcastReceiver();
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+//        registerReceiver(mReceiver, filter);
     }
 
     private void updateWeather(Weather6 weather){
@@ -128,8 +155,10 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
     }
 
 
+    //=====观察者，监听天气数据的更新======
     @Override
     public void onWeatherUpdateSuccess(final Weather6 weather) {
+        LogUtils.e("收到了新的天气数据");
         UIUtils.runOnUIThread(new Runnable() {
             @Override
             public void run() {
@@ -142,4 +171,14 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
     public void onWeatherUpdateFailed(Exception e) {
 
     }
+
+//    //======屏幕亮起广播========
+//    private class ScreenOnBroadcastReceiver extends BroadcastReceiver{
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            LogUtils.e("屏幕亮了哦");
+//            update();
+//        }
+//    }
+
 }

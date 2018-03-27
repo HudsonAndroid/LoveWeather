@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -26,6 +27,10 @@ import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.global.LoveWeatherApplication;
 import com.hudson.loveweather.service.DataInitializeService;
 import com.hudson.loveweather.service.ScheduledTaskService;
+import com.hudson.loveweather.service.WidgetUpdateService;
+import com.hudson.loveweather.ui.dialog.InformationDialogHelper;
+import com.hudson.loveweather.ui.dialog.params.InformationParams;
+import com.hudson.loveweather.ui.dialog.params.ParamsRunnable;
 import com.hudson.loveweather.ui.view.weatherpage.FirstPageViewHelper;
 import com.hudson.loveweather.ui.view.weatherpage.SecondPageViewHelper;
 import com.hudson.loveweather.utils.BitmapUtils;
@@ -68,6 +73,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         requestPermission();
         mReceiver = new WeatherBroadCastReceiver();
         IntentFilter filter = new IntentFilter(Constants.BROADCAST_UPDATE_PIC);
+        filter.addAction(WidgetUpdateService.BROADCAST_SHOW_WIDGET_TIPS);
         registerReceiver(mReceiver,filter);
         mUpdateUtils = UpdateUtils.getInstance();
         mUpdateUtils.registerWeatherObserver(this);
@@ -321,11 +327,36 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onBackPressed() {
-        moveTaskToBack(false);
+    protected void onResume() {
+        mInstance.saveUserIsActive(true);
+        if(showWidgetDialog){
+            showWidgetTipsDialog();
+            showWidgetDialog = false;
+        }
+        super.onResume();
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+        mInstance.saveUserIsActive(false);
+    }
 
+    private void showWidgetTipsDialog(){
+        InformationDialogHelper informationDialogHelper = new InformationDialogHelper(
+                this,
+                new InformationParams("为了保证应用能够正常更新桌面插件和您的使用体验，请您将本应用加入清理软件的白名单;如果您不做此操作，应用桌面插件可能会出现异常。",
+                        new ParamsRunnable() {
+                            @Override
+                            public void run(Bundle bundle) {
+                                mInstance.saveHasShownWidgetTipDialog(true);
+                            }
+                        },null));
+        informationDialogHelper.setCancelable(false);
+        informationDialogHelper.show();
+    }
+
+    boolean showWidgetDialog = false;
     class WeatherBroadCastReceiver extends BroadcastReceiver{
 
         @Override
@@ -336,6 +367,12 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 String path = intent.getStringExtra("path");
                 if(!TextUtils.isEmpty(path)){
                     toggleBackgroundPic(path);
+                }
+            }else if(action.equals(WidgetUpdateService.BROADCAST_SHOW_WIDGET_TIPS)&&!mInstance.hasShownWidgetTipDialog()){
+                if(!mInstance.isUserActive()){
+                    showWidgetDialog = true;
+                }else{
+                    showWidgetTipsDialog();
                 }
             }
         }
