@@ -6,7 +6,8 @@ package com.hudson.loveweather.global;
 
 public class Constants {
 
-    public static final int SERVER_WEATHER_UPDATE_OFFSET = 1*60;//服务器一个小时更新一次
+    public static final int SERVER_WEATHER_UPDATE_OFFSET = 1*60;//天气数据服务器一个小时更新一次
+    public static final int SERVER_AIR_QUALITY_UPDATE_OFFSET = 1*60;//空气质量服务器一小时更新一次
 
     public static final String DB_BASE_URL = "http://guolin.tech/api/china";
     public static final String NET_PIC_URL = "http://placeimg.com/";
@@ -26,6 +27,7 @@ public class Constants {
     public static final String DAILY_WORD_URL = "https://api.xiaolin.in/hitokoto";//每日一句api
 
     public static final String HE_WEATHER_FORECAST_URL = "https://free-api.heweather.com/s6/weather?parameters&location=";
+    public static final String HE_WEATHER_AIR_URL = "https://free-api.heweather.com/s6/air/now?parameters&location=";
     public static final String APP_KEY = "&key=e4927826553043d09e216e1d38c910a5";
 
 

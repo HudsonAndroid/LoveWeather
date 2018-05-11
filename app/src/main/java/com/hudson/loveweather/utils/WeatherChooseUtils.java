@@ -8,6 +8,7 @@ import android.util.AndroidRuntimeException;
 import com.hudson.loveweather.db.Country;
 import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.db.SelectedCountry;
+import com.hudson.loveweather.db.SelectedCountryAirQuality;
 import com.hudson.loveweather.ui.activity.WeatherActivity;
 import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.update.UpdateUtils;
@@ -81,6 +82,29 @@ public class WeatherChooseUtils {
     }
 
     /**
+     * 把当前选中的地区的天气质量信息写入数据库
+     * @param json
+     */
+    public void updateChooseCountryAirQualityCache(String json){
+        if(!TextUtils.isEmpty(json)){
+            String[] results = parseLocationInfo(mSharedPreferenceUtils.getLastSelectedLocationInfo());
+            if(results!=null){
+                SelectedCountryAirQuality selectedCountryAirQuality = new SelectedCountryAirQuality();
+                selectedCountryAirQuality.setCityName(results[0]);
+                selectedCountryAirQuality.setCountryName(results[1]);
+                String selectedLocationWeatherId = mSharedPreferenceUtils.getSelectedLocationWeatherId();
+                selectedCountryAirQuality.setWeatherId(selectedLocationWeatherId);
+                selectedCountryAirQuality.setAirQualityJson(json);
+                if(TextUtils.isEmpty(getWeatherJsonByWeatherId(selectedLocationWeatherId))){
+                    selectedCountryAirQuality.save();
+                }else{//update如果数据库中不存在是不会自动创建的
+                    selectedCountryAirQuality.updateAll("weatherId = ?",selectedLocationWeatherId);//刷新
+                }
+            }
+        }
+    }
+
+    /**
      * 切换城市
      * @param activity
      * @param country 目标地点
@@ -99,8 +123,13 @@ public class WeatherChooseUtils {
     }
 
     public String getWeatherJsonByWeatherId(String weatherId){
-        LogUtils.e("从数据库中获取缓存");
+        LogUtils.e("从数据库中获取天气缓存");
         return DatabaseUtils.queryWeatherJson(weatherId);
+    }
+
+    public String getAirQualityJsonByWeatherId(String weatherId){
+        LogUtils.e("从数据库中获取天气质量缓存");
+        return DatabaseUtils.queryAirQualityJson(weatherId);
     }
 
 

@@ -1,5 +1,7 @@
 package com.hudson.loveweather.utils.update;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.hudson.loveweather.bean.Weather6;
@@ -43,6 +45,7 @@ import okhttp3.Response;
 
     @Override
     public void update(String url,Object... objects) {
+        Log.e("hudson","url是"+url);
         String weatherId = (String) objects[0];
         Weather6 weatherCache = getWeatherCache(weatherId);
         if(weatherCache!=null){
@@ -92,7 +95,6 @@ import okhttp3.Response;
      * @param url
      */
     void updateWeather(String url,final String weatherId){
-        LogUtils.e("访问网络更新天气");
         EventBus.getDefault().post("正在刷新...");
         HttpUtils.requestNetData(url, new Callback() {
             @Override
@@ -104,7 +106,6 @@ import okhttp3.Response;
             public void onResponse(Call call, Response response) throws IOException {
                 try{
                     String string = response.body().string();
-                    LogUtils.e("这里了==================");
                     Weather6 weather = new Gson().fromJson(string,
                             Weather6.class);
                     notifyUpdateSuccess(weather);
@@ -119,6 +120,7 @@ import okhttp3.Response;
     }
 
     private void notifyUpdateFailed(Exception e) {
+        e.printStackTrace();
         for (int i = 0; i < mObservers.size(); i++) {
             mObservers.get(i).onWeatherUpdateFailed(e);
         }

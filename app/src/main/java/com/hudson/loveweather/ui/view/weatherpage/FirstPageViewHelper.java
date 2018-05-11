@@ -8,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
+import com.hudson.loveweather.bean.AirQualityBean;
 import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.utils.ToastUtils;
+import com.hudson.loveweather.utils.log.LogUtils;
 
 import java.util.List;
 
@@ -79,6 +81,19 @@ public class FirstPageViewHelper extends PageViewHelperImpl {
                 }else{//可能是url错误，导致json格式不正确，或者访问次数达到限制
                     ToastUtils.showToast("服务器数据异常！");
                 }
+            }
+        }
+    }
+
+    public void updateAirQuality(AirQualityBean bean){
+        if(bean!=null){
+            try{
+                LogUtils.e("在这里了");
+                mAirDesc.setText("空气 "+bean.getHeWeather6().get(0).getAir_now_city().getQlty());
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                LogUtils.e("异常了");
+                mAirDesc.setText("空气质量数据获取失败");
             }
         }
     }

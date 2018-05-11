@@ -6,5 +6,6 @@
     <list>
         <mapping class="com.hudson.loveweather.db.Country"/>
         <mapping class="com.hudson.loveweather.db.SelectedCountry"/>
+        <mapping class="com.hudson.loveweather.db.SelectedCountryAirQuality"/>
     </list>
 </litepal>

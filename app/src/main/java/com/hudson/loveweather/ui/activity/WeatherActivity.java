@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hudson.loveweather.R;
+import com.hudson.loveweather.bean.AirQualityBean;
 import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.global.LoveWeatherApplication;
@@ -42,6 +43,7 @@ import com.hudson.loveweather.utils.ToastUtils;
 import com.hudson.loveweather.utils.UIUtils;
 import com.hudson.loveweather.utils.WeatherChooseUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
+import com.hudson.loveweather.utils.update.AirQualityObserver;
 import com.hudson.loveweather.utils.update.UpdateUtils;
 import com.hudson.loveweather.utils.update.WeatherObserver;
 
@@ -51,7 +53,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-public class WeatherActivity extends BaseActivity implements View.OnClickListener, WeatherObserver, SwipeRefreshLayout.OnRefreshListener {
+public class WeatherActivity extends BaseActivity implements View.OnClickListener, WeatherObserver, SwipeRefreshLayout.OnRefreshListener, AirQualityObserver {
     private TextView mCity;
     private TextView mCalendar;
     private View mRoot;
@@ -76,7 +78,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
         filter.addAction(WidgetUpdateService.BROADCAST_SHOW_WIDGET_TIPS);
         registerReceiver(mReceiver,filter);
         mUpdateUtils = UpdateUtils.getInstance();
-        mUpdateUtils.registerWeatherObserver(this);
+        mUpdateUtils.registerWeatherObserver(this,this);
         EventBus.getDefault().register(this);
     }
 
@@ -127,7 +129,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     public void recycle() {
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
-        mUpdateUtils.unRegisterWeatherObserver(this);
+        mUpdateUtils.unRegisterWeatherObserver(this,this);
     }
 
     private void initializeDatabase() {
@@ -357,6 +359,7 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
     }
 
     boolean showWidgetDialog = false;
+
     class WeatherBroadCastReceiver extends BroadcastReceiver{
 
         @Override
@@ -422,6 +425,27 @@ public class WeatherActivity extends BaseActivity implements View.OnClickListene
                 //从缓存中读取
                 ToastUtils.showToast("天气更新失败，请检查网络设置！");
                 updateWeather(mUpdateUtils.getWeatherCache(mInstance.getSelectedLocationWeatherId()));
+            }
+        });
+    }
+
+
+    @Override
+    public void onAirQualityUpdateSuccess(final AirQualityBean airQualityBean) {
+        UIUtils.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                mFirstViewHelper.updateAirQuality(airQualityBean);
+            }
+        });
+    }
+
+    @Override
+    public void onAirQualityUpdateFailed(Exception e) {
+        UIUtils.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                mFirstViewHelper.updateAirQuality(null);
             }
         });
     }

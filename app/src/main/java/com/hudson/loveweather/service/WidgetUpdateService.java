@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.widget.RemoteViews;
 
 import com.hudson.loveweather.R;
+import com.hudson.loveweather.bean.AirQualityBean;
 import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.ui.activity.WeatherActivity;
 import com.hudson.loveweather.ui.widget.WidgetCircleProvider;
@@ -19,6 +20,7 @@ import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.UIUtils;
 import com.hudson.loveweather.utils.log.LogUtils;
+import com.hudson.loveweather.utils.update.AirQualityObserver;
 import com.hudson.loveweather.utils.update.UpdateUtils;
 import com.hudson.loveweather.utils.update.WeatherObserver;
 
@@ -32,7 +34,7 @@ import static com.hudson.loveweather.service.ScheduledTaskService.TYPE_UPDATE_WE
  * 错误的。
  */
 
-public class WidgetUpdateService extends Service implements WeatherObserver {
+public class WidgetUpdateService extends Service implements WeatherObserver, AirQualityObserver {
     public static final int TYPE_UPDATE_TIME = 1;
     public static final String BROADCAST_SHOW_WIDGET_TIPS = "com.hudson.love_weather.widget_tips";
     private AppWidgetManager mAppWidgetManager;
@@ -54,7 +56,7 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
         mSharedPreferenceUtils = SharedPreferenceUtils.getInstance();
         init();
         mUpdateUtils = UpdateUtils.getInstance();
-        mUpdateUtils.registerWeatherObserver(this);
+        mUpdateUtils.registerWeatherObserver(this,this);
         //启动一下更新的服务，并且刷新天气数据（如果服务以前是关闭的状态的）
         Intent startUpdateService = new Intent(this,ScheduledTaskService.class);
         startUpdateService.putExtra("type",TYPE_UPDATE_WEATHER);
@@ -93,7 +95,7 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
 
     @Override
     public void onDestroy() {
-        mUpdateUtils.unRegisterWeatherObserver(this);
+        mUpdateUtils.unRegisterWeatherObserver(this,this);
 //        unregisterReceiver(mReceiver);
         super.onDestroy();
     }
@@ -169,6 +171,16 @@ public class WidgetUpdateService extends Service implements WeatherObserver {
 
     @Override
     public void onWeatherUpdateFailed(Exception e) {
+
+    }
+
+    @Override
+    public void onAirQualityUpdateSuccess(AirQualityBean airQualityBean) {
+
+    }
+
+    @Override
+    public void onAirQualityUpdateFailed(Exception e) {
 
     }
 

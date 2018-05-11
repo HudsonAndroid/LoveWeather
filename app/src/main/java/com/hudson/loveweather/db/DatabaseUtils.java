@@ -32,6 +32,19 @@ public class DatabaseUtils {
         return results.get(0).getWeatherId();
     }
 
+    public static Country queryCountryByWeatherId(String weatherId){
+        if(TextUtils.isEmpty(weatherId)){
+            return null;
+        }
+        List<Country> results = DataSupport.where("weatherId = ?"
+                ,weatherId).find(Country.class);
+        if(results.size()>0){
+            return results.get(0);
+        }
+        return null;
+    }
+
+
     /**
      * 在搜索weatherId失败的情况下的解决方案
      *      1.可能是定位的地址含有“区”字，然数据库中没有，所以导致匹配失败
@@ -96,6 +109,11 @@ public class DatabaseUtils {
                 words,words,words).find(Country.class);
     }
 
+    /**
+     * 从选定的城市天气数据库缓存中获取数据
+     * @param weatherId
+     * @return
+     */
     public static String queryWeatherJson(String weatherId){
         if(TextUtils.isEmpty(weatherId)){
             return null;
@@ -120,6 +138,39 @@ public class DatabaseUtils {
 
     public static List<SelectedCountry> queryAllSelectedCountry(){
         return DataSupport.findAll(SelectedCountry.class);
+    }
+
+
+
+    /**
+     * 从选定的城市天气质量数据库缓存中获取数据
+     * @param weatherId
+     * @return
+     */
+    public static String queryAirQualityJson(String weatherId){
+        if(TextUtils.isEmpty(weatherId)){
+            return null;
+        }
+        List<SelectedCountryAirQuality> selectedCountryAirQualities = DataSupport.where("weatherId = ?",
+                weatherId).find(SelectedCountryAirQuality.class);
+        if(selectedCountryAirQualities.size() == 0){
+            return null;
+        }
+        return selectedCountryAirQualities.get(0).getAirQualityJson();
+    }
+
+    /**
+     * 删除空气质量在城市管理页面中已经选择的城市
+     * @param country
+     * @return
+     */
+    public static int removeSelectedCountryAirQuality(SelectedCountry country){
+        return DataSupport.deleteAll(SelectedCountryAirQuality.class, "weatherId = ? and cityName = ? and countryName = ?",
+                country.getWeatherId(),country.getCityName(),country.getCountryName());
+    }
+
+    public static List<SelectedCountryAirQuality> queryAllSelectedCountryAirQuality(){
+        return DataSupport.findAll(SelectedCountryAirQuality.class);
     }
 
 }
