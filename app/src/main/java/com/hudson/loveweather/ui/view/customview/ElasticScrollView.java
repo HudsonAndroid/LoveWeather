@@ -21,14 +21,14 @@ import com.hudson.loveweather.utils.log.LogUtils;
  */
 
 public class ElasticScrollView extends ScrollView {
-    private View inner;
+    private View inner;//即我们scrollView内部的控件
     private float y;
     private Rect normal = new Rect();
     private boolean animationFinish = true;
     private int mMaxScroll = -1;
 
     public ElasticScrollView(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public ElasticScrollView(Context context, AttributeSet attrs) {
@@ -40,6 +40,7 @@ public class ElasticScrollView extends ScrollView {
         super.onFinishInflate();
         if (getChildCount() > 0) {
             inner = getChildAt(0);
+//            inner.setBackgroundColor(Color.argb(108,200,200,200));
         }
     }
 
@@ -99,7 +100,7 @@ public class ElasticScrollView extends ScrollView {
                     int deltaY = (int) (preY - nowY);
                     y = nowY;
                     int scrollY = getScrollY();
-                    LogUtils.e("已经花了"+scrollY+"接下来是"+deltaY);
+//                    LogUtils.e("已经花了"+scrollY+"接下来是"+deltaY);
                     // 当滚动到最上或者最下时就不会再滚动，这时移动布局
                     if ((scrollY ==0&&deltaY<0)||(scrollY == mMaxScroll&&deltaY>0)) {
                         if (normal.isEmpty()) {
@@ -108,7 +109,9 @@ public class ElasticScrollView extends ScrollView {
                         }
                         // 移动布局
                         int bottom = inner.getBottom() - deltaY / 2;
-                        if(bottom>0){//这里有个bug，整个视图移出不可见了就会导致后面的animation不执行，所以防止移出不可见
+//                        int top = inner.getTop() - deltaY / 2;
+//                        LogUtils.e("当前控件的top"+top+",bottom是"+bottom);
+                        if(bottom>60){//这里有个bug，整个视图移出不可见了就会导致后面的animation不执行，所以防止移出不可见
                             inner.layout(inner.getLeft(), inner.getTop() - deltaY / 2, inner.getRight(), bottom);
                         }
                         return false;

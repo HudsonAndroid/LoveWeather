@@ -101,9 +101,12 @@
 
         <receiver
             android:name=".ui.widget.WidgetDefaultProvider"
-            android:label="简便工具">
+            android:label="简便工具(4×2)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_REFRESH"/>
+                <action android:name="android.appwidget.action.APPWIDGET_ADD" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
             <meta-data
@@ -112,9 +115,12 @@
         </receiver>
         <receiver
             android:name=".ui.widget.WidgetCircleProvider"
-            android:label="简单圆形">
+            android:label="简单圆形(3×3)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_REFRESH"/>
+                <action android:name="android.appwidget.action.APPWIDGET_ADD" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
             <meta-data
