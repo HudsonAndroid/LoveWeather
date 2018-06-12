@@ -24,15 +24,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-        <TextView
-            android:id="@+id/tv_air"
-            android:text="空气良好"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:textSize="@dimen/small_text_size"
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:src="@drawable/icon_sunny_d"
             android:gravity="start"
+            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="28dp"/>
 
         <TextView
             android:id="@+id/tv_weather_desc"

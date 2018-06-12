@@ -32,6 +32,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //逍遥模拟器上没有执行onAttachs方法,这个就很奇葩了
+        mActivity = (SearchActivity) getActivity();
         initData();
     }
 

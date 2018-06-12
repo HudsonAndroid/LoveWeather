@@ -6,8 +6,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 
-import com.hudson.loveweather.utils.log.LogUtils;
-
 /**
  * Created by Hudson on 2017/12/3.
  * 本来想做成能够里面外面都能响应滑动的，但是发现问题，
@@ -35,19 +33,15 @@ public class HorizontalTouchEventLinearLayout extends LinearLayout {
             mMaxScroll = getChildAt(getChildCount()-1).getWidth();
         }
         boolean intercept = true;
-        LogUtils.e("事件拦截处理");
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
-                LogUtils.e("down实践了了了");
                 mLastX = (int) ev.getX();
                 return false;//第一次不能拦截，否则后面不会再进入这个方法了
             case MotionEvent.ACTION_MOVE:
-                LogUtils.e("move事件了");
                 //如果scrollX是我们的最后一个控件（也就是mDelete控件）的宽度并且继续向左滑动，那么我们将事件交给子view执行
                 if(getScrollX()==mMaxScroll&&(ev.getX() - mLastX)<0){
                     intercept = false;
                 }
-                LogUtils.e("已经滑过了"+getScrollX() + "最大"+mMaxScroll);
                 break;
             default:
                 break;

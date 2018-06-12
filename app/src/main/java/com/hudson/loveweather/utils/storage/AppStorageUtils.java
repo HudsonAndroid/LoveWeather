@@ -51,6 +51,10 @@ public class AppStorageUtils  {
         return sAppStorage.getCustomPath(getPicCachePath() + "/customBg");
     }
 
+    public static String getCustomVoiceCachePath(){
+        return sAppStorage.getCustomPath(getCachePath()+"/voice");
+    }
+
     /**
      * 获取应用奔溃日志信息
      * @return

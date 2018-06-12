@@ -270,4 +270,31 @@ public class SharedPreferenceUtils {
     public boolean hasShownWidgetTipDialog(){
         return mSp.getBoolean("has_shown_widget_tip",false);
     }
+
+    public void saveHasShownPermissionDialog(boolean hasShown){
+        mEditor.putBoolean("has_shown_permission_dialog",hasShown);
+        mEditor.commit();
+    }
+
+    public boolean hasShownPermissionDialog(){
+        return mSp.getBoolean("has_shown_permission_dialog",false);
+    }
+
+    public void saveVoiceReader(String reader){
+        mEditor.putString("voice_reader",reader);
+        mEditor.commit();
+    }
+
+    public String getVoiceReader(){
+        return mSp.getString("voice_reader","nannan");
+    }
+
+    public void saveAirSelectLocation(String locate){
+        mEditor.putString("air_select",locate);
+        mEditor.commit();
+    }
+
+    public String getAirSelectLocation(){
+        return mSp.getString("air_select",null);
+    }
 }

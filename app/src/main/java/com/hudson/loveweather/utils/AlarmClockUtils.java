@@ -16,10 +16,17 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmClockUtils {
 
-    public static void scheduleTask(Context context,long triggerOffset, Intent intent){
+    /**
+     *
+     * @param context
+     * @param triggerOffset
+     * @param intent
+     * @param requestCode 用于区分PendingIntent，如果requestCode相同，FLAG_UPDATE_CURRENT会覆盖消息
+     */
+    public static void scheduleTask(Context context,long triggerOffset, Intent intent,int requestCode){
         AlarmManager manager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         long triggerAtTime = System.currentTimeMillis() + triggerOffset;
-        PendingIntent pendingIntent = PendingIntent.getService(context,0,intent,
+        PendingIntent pendingIntent = PendingIntent.getService(context,requestCode,intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         manager.set(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
     }
@@ -29,20 +36,20 @@ public class AlarmClockUtils {
         Context context = UIUtils.getContext();
         Intent intent = new Intent(context,ScheduledTaskService.class);
         intent.putExtra("type",taskType);
-        scheduleTask(context,triggerOffset,intent);
+        scheduleTask(context,triggerOffset,intent,taskType);
     }
 
     public static void scheduleTimeUpdateTask(long triggerOffset){
         Context context = UIUtils.getContext();
         Intent intent = new Intent(context,WidgetUpdateService.class);
         intent.putExtra("type", WidgetUpdateService.TYPE_UPDATE_TIME);
-        scheduleExactlyTask(context,triggerOffset,intent);
+        scheduleExactlyTask(context,triggerOffset,intent,WidgetUpdateService.TYPE_UPDATE_TIME);
     }
 
-    public static void scheduleExactlyTask(Context context,long triggerOffset, Intent intent){
+    public static void scheduleExactlyTask(Context context,long triggerOffset, Intent intent,int requestCode){
         AlarmManager manager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         long triggerAtTime = System.currentTimeMillis() + triggerOffset;
-        PendingIntent pendingIntent = PendingIntent.getService(context,0,intent,
+        PendingIntent pendingIntent = PendingIntent.getService(context,requestCode,intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         manager.setExact(AlarmManager.RTC_WAKEUP,triggerAtTime,pendingIntent);
     }

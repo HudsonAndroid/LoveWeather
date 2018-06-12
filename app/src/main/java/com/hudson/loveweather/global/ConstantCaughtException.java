@@ -11,7 +11,7 @@ import android.os.Looper;
 
 import com.hudson.loveweather.ui.activity.SplashActivity;
 import com.hudson.loveweather.ui.activity.WeatherActivity;
-import com.hudson.loveweather.ui.dialog.InformationDialogHelper;
+import com.hudson.loveweather.ui.dialog.InformationDialog;
 import com.hudson.loveweather.ui.dialog.params.InformationParams;
 import com.hudson.loveweather.ui.dialog.params.ParamsRunnable;
 import com.hudson.loveweather.utils.IOUtils;
@@ -87,7 +87,7 @@ public class ConstantCaughtException implements Thread.UncaughtExceptionHandler 
                 public void run() {
                     Looper.prepare();
                     Activity topActivity = LoveWeatherApplication.getActivity(WeatherActivity.class);
-                    InformationDialogHelper informationDialogHelper = new InformationDialogHelper(
+                    InformationDialog informationDialogHelper = new InformationDialog(
                             topActivity,
                             new InformationParams("应用出现异常需要重新启动，很抱歉给您带来的不便，如果您想要帮助完善本应用，您可以把应用文件目录下的log文件夹发送至开发者邮箱，非常感谢您的支持！",
                                     new ParamsRunnable() {
@@ -95,8 +95,7 @@ public class ConstantCaughtException implements Thread.UncaughtExceptionHandler 
                                         public void run(Bundle bundle) {
                                             mWaitSure = false;
                                         }
-                                    },null));
-                    LogUtils.e("显示对话框了？？？");
+                                    }));
                     informationDialogHelper.setCancelable(false);
                     informationDialogHelper.show();
                     Looper.loop();
@@ -104,7 +103,7 @@ public class ConstantCaughtException implements Thread.UncaughtExceptionHandler 
             }.start();
 
 //            Activity topActivity = LoveWeatherApplication.getActivity(WeatherActivity.class);
-//            InformationDialogHelper informationDialogHelper = new InformationDialogHelper(
+//            InformationDialog informationDialogHelper = new InformationDialog(
 //                    topActivity,
 //                    new InformationParams("应用出现异常需要重新启动，很抱歉给您带来的不便，如果您想要帮助完善本应用，您可以把应用文件目录下的log文件夹发送至开发者邮箱，非常感谢您的支持！",
 //                            new ParamsRunnable() {
@@ -188,7 +187,6 @@ public class ConstantCaughtException implements Thread.UncaughtExceptionHandler 
      * @return  返回文件名称,便于将文件传送到服务器
      */
     private String saveCrashInfo2File(Throwable ex) {
-        LogUtils.e("异常了");
 //        ex.printStackTrace();
         StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, String> entry : infos.entrySet()) {

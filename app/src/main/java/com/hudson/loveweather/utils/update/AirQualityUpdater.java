@@ -59,7 +59,6 @@ public class AirQualityUpdater implements Updater{
     public void update(String url, Object... objects) {
         String weatherId = getLastLevelCityWeatherId((String) objects[0]);
         String airUrl = Constants.HE_WEATHER_AIR_URL + weatherId + Constants.APP_KEY;
-        LogUtils.e("地址是"+airUrl);
         //获取缓存
         AirQualityBean airQualityCache = getAirQualityCache(weatherId);
         if(airQualityCache!=null){
@@ -67,24 +66,21 @@ public class AirQualityUpdater implements Updater{
                     .get(0).getUpdate().getLoc(),0);
             if(lastUpdateTime!=-1&&(TimeUtils.parseCurrentMinuteTime() +24*60 - lastUpdateTime)%(24*60)
                     > Constants.SERVER_AIR_QUALITY_UPDATE_OFFSET){
-                LogUtils.e("时间长度超出服务器更新范围，所以请求网络");
-                accessNetworkUpdateAirQuality(airUrl);
+                accessNetworkUpdateAirQuality(airUrl,airQualityCache);
             }else{//使用本地
-                LogUtils.e("使用本地缓存数据");
                 notifyAirUpdateSuccess(airQualityCache);
             }
         }else{
-            accessNetworkUpdateAirQuality(airUrl);
+            accessNetworkUpdateAirQuality(airUrl,airQualityCache);
         }
     }
 
 
-    private void accessNetworkUpdateAirQuality(String url){
+    private void accessNetworkUpdateAirQuality(String url, final AirQualityBean cache){
         HttpUtils.requestNetData(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                LogUtils.e("数据加载失败");
-                notifyAirQualityUpdateFailed(e);
+                notifyAirQualityUpdateFailed(e,cache);
             }
 
             @Override
@@ -97,7 +93,7 @@ public class AirQualityUpdater implements Updater{
                     WeatherChooseUtils.getInstance().updateChooseCountryAirQualityCache(string);
                 }catch (JsonSyntaxException e){
                     e.printStackTrace();
-                    notifyAirQualityUpdateFailed(e);
+                    notifyAirQualityUpdateFailed(e,cache);
                 }
             }
         });
@@ -111,6 +107,7 @@ public class AirQualityUpdater implements Updater{
      */
     public  AirQualityBean getAirQualityCache(String weatherId){
         try{
+            LogUtils.e("获取天气数据缓存=");
             return new Gson().fromJson(
                     WeatherChooseUtils.getInstance().getAirQualityJsonByWeatherId(weatherId),
                     AirQualityBean.class);
@@ -129,15 +126,13 @@ public class AirQualityUpdater implements Updater{
         return null;
     }
 
-    private void notifyAirQualityUpdateFailed(Exception e) {
-        LogUtils.e("失败了");
+    private void notifyAirQualityUpdateFailed(Exception e,AirQualityBean cache) {
         for (int i = 0; i < mObservers.size(); i++) {
-            mObservers.get(i).onAirQualityUpdateFailed(e);
+            mObservers.get(i).onAirQualityUpdateFailed(e,cache);
         }
     }
 
     private void notifyAirUpdateSuccess(AirQualityBean airQualityBean){
-        LogUtils.e("成功了");
         for (int i = 0; i < mObservers.size(); i++) {
             mObservers.get(i).onAirQualityUpdateSuccess(airQualityBean);
         }

@@ -128,9 +128,7 @@ public class SearchDefaultFragment extends BaseFragment implements View.OnClickL
 
     private void toggleSelectedCountry(String countryName){
         Country country = DatabaseUtils.queryWeatherId(countryName);
-        LogUtils.e("选择"+countryName);
         if(country!=null){
-            LogUtils.e("选择成功");
             mActivity.toggleSelectedCountry(country);
         }
     }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wind_level">级</string>
+    <string name="air_quality_tips">点击查看更多详细地区空气指数</string>
+    <string name="voice_stop_success">语音播报已停止！</string>
+</resources>

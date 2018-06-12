@@ -1,5 +1,9 @@
 package com.hudson.loveweather.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,7 +11,7 @@ import java.util.List;
  * 天气质量实例
  */
 
-public class AirQualityBean {
+public class AirQualityBean implements Parcelable {
 
     private List<HeWeather6Bean> HeWeather6;
 
@@ -19,7 +23,8 @@ public class AirQualityBean {
         this.HeWeather6 = HeWeather6;
     }
 
-    public static class HeWeather6Bean {
+    public static class HeWeather6Bean implements Parcelable {
+
         /**
          * basic : {"cid":"CN101010100","location":"北京","parent_city":"北京","admin_area":"北京","cnty":"中国","lat":"39.90498734","lon":"116.4052887","tz":"+8.00"}
          * update : {"loc":"2018-04-01 09:47","utc":"2018-04-01 01:47"}
@@ -74,7 +79,8 @@ public class AirQualityBean {
             this.air_now_station = air_now_station;
         }
 
-        public static class BasicBean {
+        public static class BasicBean implements Parcelable {
+
             /**
              * cid : CN101010100
              * location : 北京
@@ -158,9 +164,53 @@ public class AirQualityBean {
             public void setTz(String tz) {
                 this.tz = tz;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.cid);
+                dest.writeString(this.location);
+                dest.writeString(this.parent_city);
+                dest.writeString(this.admin_area);
+                dest.writeString(this.cnty);
+                dest.writeString(this.lat);
+                dest.writeString(this.lon);
+                dest.writeString(this.tz);
+            }
+
+            public BasicBean() {
+            }
+
+            protected BasicBean(Parcel in) {
+                this.cid = in.readString();
+                this.location = in.readString();
+                this.parent_city = in.readString();
+                this.admin_area = in.readString();
+                this.cnty = in.readString();
+                this.lat = in.readString();
+                this.lon = in.readString();
+                this.tz = in.readString();
+            }
+
+            public static final Creator<BasicBean> CREATOR = new Creator<BasicBean>() {
+                @Override
+                public BasicBean createFromParcel(Parcel source) {
+                    return new BasicBean(source);
+                }
+
+                @Override
+                public BasicBean[] newArray(int size) {
+                    return new BasicBean[size];
+                }
+            };
         }
 
-        public static class UpdateBean {
+        public static class UpdateBean implements Parcelable {
+
             /**
              * loc : 2018-04-01 09:47
              * utc : 2018-04-01 01:47
@@ -184,9 +234,41 @@ public class AirQualityBean {
             public void setUtc(String utc) {
                 this.utc = utc;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.loc);
+                dest.writeString(this.utc);
+            }
+
+            public UpdateBean() {
+            }
+
+            protected UpdateBean(Parcel in) {
+                this.loc = in.readString();
+                this.utc = in.readString();
+            }
+
+            public static final Creator<UpdateBean> CREATOR = new Creator<UpdateBean>() {
+                @Override
+                public UpdateBean createFromParcel(Parcel source) {
+                    return new UpdateBean(source);
+                }
+
+                @Override
+                public UpdateBean[] newArray(int size) {
+                    return new UpdateBean[size];
+                }
+            };
         }
 
-        public static class AirNowCityBean {
+        public static class AirNowCityBean implements Parcelable {
+
             /**
              * aqi : 243
              * qlty : 重度污染
@@ -290,9 +372,57 @@ public class AirQualityBean {
             public void setPub_time(String pub_time) {
                 this.pub_time = pub_time;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.aqi);
+                dest.writeString(this.qlty);
+                dest.writeString(this.main);
+                dest.writeString(this.pm25);
+                dest.writeString(this.pm10);
+                dest.writeString(this.no2);
+                dest.writeString(this.so2);
+                dest.writeString(this.co);
+                dest.writeString(this.o3);
+                dest.writeString(this.pub_time);
+            }
+
+            public AirNowCityBean() {
+            }
+
+            protected AirNowCityBean(Parcel in) {
+                this.aqi = in.readString();
+                this.qlty = in.readString();
+                this.main = in.readString();
+                this.pm25 = in.readString();
+                this.pm10 = in.readString();
+                this.no2 = in.readString();
+                this.so2 = in.readString();
+                this.co = in.readString();
+                this.o3 = in.readString();
+                this.pub_time = in.readString();
+            }
+
+            public static final Creator<AirNowCityBean> CREATOR = new Creator<AirNowCityBean>() {
+                @Override
+                public AirNowCityBean createFromParcel(Parcel source) {
+                    return new AirNowCityBean(source);
+                }
+
+                @Override
+                public AirNowCityBean[] newArray(int size) {
+                    return new AirNowCityBean[size];
+                }
+            };
         }
 
-        public static class AirNowStationBean {
+        public static class AirNowStationBean implements Parcelable {
+
             /**
              * air_sta : 万寿西宫
              * aqi : 261
@@ -436,6 +566,129 @@ public class AirQualityBean {
             public void setSo2(String so2) {
                 this.so2 = so2;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.air_sta);
+                dest.writeString(this.aqi);
+                dest.writeString(this.asid);
+                dest.writeString(this.co);
+                dest.writeString(this.lat);
+                dest.writeString(this.lon);
+                dest.writeString(this.main);
+                dest.writeString(this.no2);
+                dest.writeString(this.o3);
+                dest.writeString(this.pm10);
+                dest.writeString(this.pm25);
+                dest.writeString(this.pub_time);
+                dest.writeString(this.qlty);
+                dest.writeString(this.so2);
+            }
+
+            public AirNowStationBean() {
+            }
+
+            protected AirNowStationBean(Parcel in) {
+                this.air_sta = in.readString();
+                this.aqi = in.readString();
+                this.asid = in.readString();
+                this.co = in.readString();
+                this.lat = in.readString();
+                this.lon = in.readString();
+                this.main = in.readString();
+                this.no2 = in.readString();
+                this.o3 = in.readString();
+                this.pm10 = in.readString();
+                this.pm25 = in.readString();
+                this.pub_time = in.readString();
+                this.qlty = in.readString();
+                this.so2 = in.readString();
+            }
+
+            public static final Creator<AirNowStationBean> CREATOR = new Creator<AirNowStationBean>() {
+                @Override
+                public AirNowStationBean createFromParcel(Parcel source) {
+                    return new AirNowStationBean(source);
+                }
+
+                @Override
+                public AirNowStationBean[] newArray(int size) {
+                    return new AirNowStationBean[size];
+                }
+            };
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.basic, flags);
+            dest.writeParcelable(this.update, flags);
+            dest.writeString(this.status);
+            dest.writeParcelable(this.air_now_city, flags);
+            dest.writeList(this.air_now_station);
+        }
+
+        public HeWeather6Bean() {
+        }
+
+        protected HeWeather6Bean(Parcel in) {
+            this.basic = in.readParcelable(BasicBean.class.getClassLoader());
+            this.update = in.readParcelable(UpdateBean.class.getClassLoader());
+            this.status = in.readString();
+            this.air_now_city = in.readParcelable(AirNowCityBean.class.getClassLoader());
+            this.air_now_station = new ArrayList<AirNowStationBean>();
+            in.readList(this.air_now_station, AirNowStationBean.class.getClassLoader());
+        }
+
+        public static final Creator<HeWeather6Bean> CREATOR = new Creator<HeWeather6Bean>() {
+            @Override
+            public HeWeather6Bean createFromParcel(Parcel source) {
+                return new HeWeather6Bean(source);
+            }
+
+            @Override
+            public HeWeather6Bean[] newArray(int size) {
+                return new HeWeather6Bean[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.HeWeather6);
+    }
+
+    public AirQualityBean() {
+    }
+
+    protected AirQualityBean(Parcel in) {
+        this.HeWeather6 = new ArrayList<HeWeather6Bean>();
+        in.readList(this.HeWeather6, HeWeather6Bean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<AirQualityBean> CREATOR = new Parcelable.Creator<AirQualityBean>() {
+        @Override
+        public AirQualityBean createFromParcel(Parcel source) {
+            return new AirQualityBean(source);
+        }
+
+        @Override
+        public AirQualityBean[] newArray(int size) {
+            return new AirQualityBean[size];
+        }
+    };
 }

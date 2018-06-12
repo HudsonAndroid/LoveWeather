@@ -14,7 +14,6 @@ import com.hudson.loveweather.db.DatabaseUtils;
 import com.hudson.loveweather.ui.fragment.SearchDefaultFragment;
 import com.hudson.loveweather.ui.fragment.SearchListFragment;
 import com.hudson.loveweather.utils.WeatherChooseUtils;
-import com.hudson.loveweather.utils.log.LogUtils;
 
 import java.util.List;
 
@@ -100,7 +99,6 @@ public class SearchActivity extends BaseSubActivity implements View.OnClickListe
     }
 
     public void toggleSelectedCountry(Country country){
-        LogUtils.e("切换了");
         WeatherChooseUtils.getInstance().toggleSelectedCountry(this,country);
     }
 

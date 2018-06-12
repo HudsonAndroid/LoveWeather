@@ -49,6 +49,14 @@ public class UpdateUtils {
         mAirQualityUpdater.unRegisterObserver(airQualityObserver);
     }
 
+    public void registerLocateWeatherObserver(WeatherObserver observer){
+        mWeatherDataUpdater.registerLocateObserver(observer);
+    }
+
+    public void unRegisterLocateWeatherObserver(WeatherObserver observer){
+        mWeatherDataUpdater.unRegisterLocateObserver(observer);
+    }
+
     public Weather6 getWeatherCache(String weatherId){
         return mWeatherDataUpdater.getWeatherCache(weatherId);
     }

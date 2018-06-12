@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cloud_count">云量</string>
+    <string name="body_tmp">体感温度</string>
+    <string name="air_hum">相对湿度</string>
+    <string name="rain_count">降雨量</string>
+    <string name="air_press">大气压强</string>
+    <string name="visibility">能见度</string>
+    <string name="wind_degree">风向360角度</string>
+    <string name="wind_direction">风向</string>
+    <string name="wind_power">风力</string>
+    <string name="wind_speed">风速</string>
+</resources>

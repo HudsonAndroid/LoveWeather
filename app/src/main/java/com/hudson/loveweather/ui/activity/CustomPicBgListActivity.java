@@ -136,7 +136,6 @@ public class CustomPicBgListActivity extends BaseSubActivity implements CustomPi
                 for (int i = 0; i < mWaitingForDeleteFiles.size(); i++) {
                     mDatas.remove(mWaitingForDeleteFiles.get(i));
                 }
-                LogUtils.e("开始刷新列表");
                 mAdapter.notifyDataSetChanged();
                 mWaitingForDeleteFiles = null;
             }

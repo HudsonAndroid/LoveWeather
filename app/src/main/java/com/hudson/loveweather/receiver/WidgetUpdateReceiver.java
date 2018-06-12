@@ -17,7 +17,6 @@ public class WidgetUpdateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(!SharedPreferenceUtils.getInstance().isUserActive()){//用户就是在本应用上面操作的，所以不需要更新
-            LogUtils.e("不在本应用上操作,用户使用了哦");
             context.startService(new Intent(context,WidgetUpdateService.class));
         }
     }

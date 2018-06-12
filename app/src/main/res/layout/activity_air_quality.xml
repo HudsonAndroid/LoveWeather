@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/view_internal_margin"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_public_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"/>
+
+        <TextView
+            android:id="@+id/tv_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+    <com.hudson.loveweather.ui.view.customview.AirQualityView
+        android:id="@+id/aqv_progress"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/small_margin"
+        android:textColor="@color/white"
+        android:textSize="@dimen/weather_text_size"/>
+
+    <com.hudson.loveweather.ui.view.customview.AirQualityView
+        android:id="@+id/aqv_co"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:textColor="@color/white"
+        android:textSize="@dimen/small_text_size"/>
+
+
+    <com.hudson.loveweather.ui.view.customview.AirQualityView
+        android:id="@+id/aqv_no2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_above="@id/aqv_progress"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_toRightOf="@id/aqv_co"
+        android:textSize="@dimen/small_text_size"/>
+
+    <com.hudson.loveweather.ui.view.customview.AirQualityView
+        android:id="@+id/aqv_o3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_above="@id/aqv_progress"
+        android:layout_alignRight="@id/aqv_progress"
+        android:layout_marginBottom="@dimen/image_top_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:textSize="@dimen/small_text_size"/>
+
+    <com.hudson.loveweather.ui.view.customview.AirQualityView
+        android:id="@+id/aqv_pm10"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/small_margin"
+        android:textSize="@dimen/small_text_size"/>
+
+    <com.hudson.loveweather.ui.view.customview.AirQualityView
+        android:id="@+id/aqv_pm25"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignRight="@id/aqv_o3"
+        android:layout_below="@id/aqv_progress"
+        android:layout_marginTop="@dimen/image_top_margin"
+        android:textSize="@dimen/small_text_size"/>
+
+    <com.hudson.loveweather.ui.view.customview.AirQualityView
+        android:id="@+id/aqv_so2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignLeft="@id/aqv_no2"
+        android:layout_below="@id/aqv_progress"
+        android:layout_marginTop="@dimen/image_top_margin"
+        android:textSize="@dimen/small_text_size"/>
+
+
+    <TextView
+        android:id="@+id/tv_choose_district"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:textColor="@color/colorAccent"
+        android:text="@string/air_quality_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

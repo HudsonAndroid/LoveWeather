@@ -65,7 +65,6 @@ public class DataBaseLoader {
      */
     public static void loadDatabaseToLocal() {
         if (!SharedPreferenceUtils.getInstance().isLocalDatabaseLoaded()) {
-            LogUtils.e("开始同步数据库了");
             loadProvinceData();
         }
     }
@@ -74,7 +73,6 @@ public class DataBaseLoader {
         HttpUtils.requestNetData(Constants.DB_BASE_URL, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                LogUtils.e("数据解析失败1，正在重试");
                 //重新尝试
                 loadProvinceData();
             }
@@ -91,8 +89,6 @@ public class DataBaseLoader {
                         loadCityData(Constants.DB_BASE_URL + "/" + province.getProvinceCode(),
                                 province.getProvinceName());
                     }
-                } else {
-                    LogUtils.log("省数据解析失败");
                 }
             }
         });
@@ -102,7 +98,6 @@ public class DataBaseLoader {
         HttpUtils.requestNetData(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                LogUtils.e("数据解析失败2,这个省是" + provinceName);
                 //把该异常加入加载失败记录中,并尝试重试
                 if (!mLoadFlags.containsKey(provinceName)) {//两次加载失败，那么直接判定加载失败
                     LoadFailedBean bean = new LoadFailedBean(LOAD_FAILED_TYPE_PROVINCE,url,null);
@@ -111,10 +106,8 @@ public class DataBaseLoader {
                     loadCityData(url, provinceName);
                 }else{
                     LoadFailedBean bean = mLoadFlags.get(provinceName);
-                    LogUtils.e("数据加载过，但是失败了,还有次数"+bean.times);
                     bean.times --;
                     if(bean.times>0){
-                        LogUtils.e("又尝试了");
                         loadCityData(url, provinceName);
                     }
                 }
@@ -127,7 +120,6 @@ public class DataBaseLoader {
                 if (parser.parseJson(response.body().string(), dest, provinceName)) {
                     //查看加载失败的记录中是否存在，如果存在，那么移除该flag
                     if (mLoadFlags.containsKey(provinceName)) {
-                        LogUtils.e("数据加载过了，这次成功"+provinceName);
                         mLoadFlags.remove(provinceName);
                     }
                     //继续加载country数据，这是我们最终需要保存的数据库
@@ -136,8 +128,6 @@ public class DataBaseLoader {
                         city = dest.get(i);
                         loadCountryData(url + "/" + city.getCityCode(), provinceName, city.getCityName());
                     }
-                } else {
-                    LogUtils.e("城市数据解析失败");
                 }
             }
         });
@@ -147,7 +137,6 @@ public class DataBaseLoader {
         HttpUtils.requestNetData(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                LogUtils.e("数据解析失败3, 这个城市是" + cityName + " 所属的省是" + provinceName);
                 //尝试重试
                 if (!mLoadFlags.containsKey(cityName)) {
                     LoadFailedBean bean = new LoadFailedBean(LOAD_FAILED_TYPE_CITY,url,provinceName);
@@ -156,10 +145,8 @@ public class DataBaseLoader {
                     loadCountryData(url, provinceName, cityName);
                 }else{
                     LoadFailedBean bean = mLoadFlags.get(cityName);
-                    LogUtils.e("数据加载过，但是失败了,还有次数"+bean.times);
                     bean.times --;
                     if(bean.times>0){
-                        LogUtils.e("又尝试了");
                         loadCountryData(url, provinceName, cityName);
                     }
                 }
@@ -172,12 +159,9 @@ public class DataBaseLoader {
                 if (parser.parseJson(response.body().string(), dest, provinceName, cityName)) {
                     //查看加载失败的记录中是否存在，如果存在，那么移除该flag
                     if (mLoadFlags.containsKey(cityName)) {
-                        LogUtils.e("数据加载过了，这次成功"+cityName);
                         mLoadFlags.remove(cityName);
                     }
                     DataSupport.saveAll(dest);
-                } else {
-                    LogUtils.e("乡镇数据解析失败");
                 }
             }
         });
@@ -200,7 +184,6 @@ public class DataBaseLoader {
             tryLoadDataAgain();
         }
         SharedPreferenceUtils.getInstance().saveLocalDatabaseFlag(loadStatus);
-        LogUtils.e("正在检查数据库同步状态,当前加载成功吗？"+loadStatus);
         return loadStatus;
     }
 
@@ -209,7 +192,6 @@ public class DataBaseLoader {
      * 该方法仅在检查数据库状态时回调
      */
     private static void tryLoadDataAgain() {
-        LogUtils.e("尝试重新加载数据");
         //对HashMap进行遍历
         Iterator iter = mLoadFlags.entrySet().iterator();
         while (iter.hasNext()) {

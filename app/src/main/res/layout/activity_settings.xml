@@ -2,236 +2,269 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <TextView
-        android:text="更新天气周期（小时）"
-        android:textColor="@color/white"
-        android:textSize="@dimen/edit_text_size"
-        android:layout_marginBottom="@dimen/view_internal_margin"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginTop="@dimen/daily_close_vertical_margin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <include layout="@layout/line_main"/>
-
-    <com.hudson.loveweather.ui.view.customview.SelectProgressBar
-        android:id="@+id/spb_weather_update"
-        app:min_value="1"
-        app:max_value="10"
+    <com.hudson.loveweather.ui.view.customview.ElasticScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
-
-    <TextView
-        android:text="更新背景周期（分钟）"
-        android:textColor="@color/white"
-        android:textSize="@dimen/edit_text_size"
-        android:layout_marginBottom="@dimen/view_internal_margin"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <include layout="@layout/line_main"/>
-
-    <com.hudson.loveweather.ui.view.customview.SelectProgressBar
-        android:id="@+id/spb_pic_update"
-        app:min_value="1"
-        app:max_value="10"
-        android:layout_marginBottom="@dimen/view_internal_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/tv_warning_tips"
-        android:visibility="gone"
-        android:text="时间太短可能会比较耗电！"
-        android:layout_marginLeft="@dimen/view_internal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:textSize="@dimen/small_text_size"
-        android:textColor="@color/warning_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginRight="@dimen/small_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/shape_settings_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="match_parent">
         <LinearLayout
-            android:id="@+id/ll_wifi_only"
-            android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/item_list_height">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
-                android:text="仅wifi网络更新网络背景"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:textColor="@color/white"
-                android:layout_weight="1"
-                android:textSize="@dimen/edit_text_size"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <ToggleButton
-                android:id="@+id/tb_wifi_only"
-                android:checked="false"
-                android:textOn=""
-                android:textOff=""
-                android:text=""
-                android:layout_marginRight="@dimen/small_margin"
-                android:padding="@dimen/small_margin"
-                android:background="@drawable/selector_toggle"
-                android:layout_width="40dp"
-                android:layout_height="21dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginRight="@dimen/small_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/shape_settings_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/ll_background_type"
-            android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/item_list_height">
-
-            <TextView
-                android:text="网络背景主题"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:textColor="@color/white"
-                android:layout_weight="1"
-                android:textSize="@dimen/edit_text_size"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tv_background_type"
-                android:text="animals"
-                android:gravity="center_vertical"
-                android:drawableRight="@drawable/arrow_right"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:textColor="@color/white"
-                android:layout_marginRight="@dimen/small_margin"
-                android:textSize="@dimen/edit_text_size"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/view_internal_margin"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginTop="@dimen/daily_close_vertical_margin"
+                android:text="更新天气周期（小时）"
+                android:textColor="@color/white"
+                android:textSize="@dimen/edit_text_size"/>
 
-        </LinearLayout>
+            <include layout="@layout/line_main"/>
 
-    </LinearLayout>
+            <com.hudson.loveweather.ui.view.customview.SelectProgressBar
+                android:id="@+id/spb_weather_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:max_value="10"
+                app:min_value="1"/>
 
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginRight="@dimen/small_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/shape_settings_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/ll_show_notification"
-            android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/item_list_height">
 
             <TextView
-                android:text="显示通知栏"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:textColor="@color/white"
-                android:layout_weight="1"
-                android:textSize="@dimen/edit_text_size"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <ToggleButton
-                android:id="@+id/tb_show_notification"
-                android:checked="false"
-                android:textOn=""
-                android:textOff=""
-                android:text=""
-                android:layout_marginRight="@dimen/small_margin"
-                android:padding="@dimen/small_margin"
-                android:background="@drawable/selector_toggle"
-                android:layout_width="40dp"
-                android:layout_height="21dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginRight="@dimen/small_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/shape_settings_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/ll_about"
-            android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/item_list_height">
-
-            <TextView
-                android:text="关于"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:textColor="@color/white"
-                android:layout_weight="1"
-                android:textSize="@dimen/edit_text_size"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:gravity="center_vertical"
-                android:drawableRight="@drawable/arrow_right"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:textColor="@color/white"
-                android:layout_marginRight="@dimen/small_margin"
-                android:textSize="@dimen/edit_text_size"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/view_internal_margin"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="更新背景周期（分钟）"
+                android:textColor="@color/white"
+                android:textSize="@dimen/edit_text_size"/>
 
+            <include layout="@layout/line_main"/>
+
+            <com.hudson.loveweather.ui.view.customview.SelectProgressBar
+                android:id="@+id/spb_pic_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/view_internal_margin"
+                app:max_value="10"
+                app:min_value="1"/>
+
+            <TextView
+                android:id="@+id/tv_warning_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/view_internal_margin"
+                android:text="时间太短可能会比较耗电！"
+                android:textColor="@color/warning_color"
+                android:textSize="@dimen/small_text_size"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/shape_settings_item"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_wifi_only"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_list_height"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_weight="1"
+                        android:text="仅wifi网络更新网络背景"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+
+                    <ToggleButton
+                        android:id="@+id/tb_wifi_only"
+                        android:layout_width="40dp"
+                        android:layout_height="21dp"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:background="@drawable/selector_toggle"
+                        android:checked="false"
+                        android:padding="@dimen/small_margin"
+                        android:text=""
+                        android:textOff=""
+                        android:textOn=""/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/shape_settings_item"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_show_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_list_height"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_weight="1"
+                        android:text="显示通知栏"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+
+                    <ToggleButton
+                        android:id="@+id/tb_show_notification"
+                        android:layout_width="40dp"
+                        android:layout_height="21dp"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:background="@drawable/selector_toggle"
+                        android:checked="false"
+                        android:padding="@dimen/small_margin"
+                        android:text=""
+                        android:textOff=""
+                        android:textOn=""/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/shape_settings_item"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_background_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_list_height"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_weight="1"
+                        android:text="网络背景主题"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_background_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:drawableRight="@drawable/arrow_right"
+                        android:gravity="center_vertical"
+                        android:text="animals"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/shape_settings_item"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_voice_reader"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_list_height"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_weight="1"
+                        android:text="@string/voice_reader"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_voice_reader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:drawableRight="@drawable/arrow_right"
+                        android:gravity="center_vertical"
+                        android:text="animals"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/shape_settings_item"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_list_height"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_weight="1"
+                        android:text="关于"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:drawableRight="@drawable/arrow_right"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/edit_text_size"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
-
+    </com.hudson.loveweather.ui.view.customview.ElasticScrollView>
 </LinearLayout>

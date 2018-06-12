@@ -16,4 +16,9 @@ public class ToastUtils {
         sToast.show();
     }
 
+    public static void showToast(int strId){
+        sToast.setText(UIUtils.getString(strId));
+        sToast.show();
+    }
+
 }

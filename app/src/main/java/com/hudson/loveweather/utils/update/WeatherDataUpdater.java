@@ -1,15 +1,13 @@
 package com.hudson.loveweather.utils.update;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.hudson.loveweather.bean.Weather6;
 import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.HttpUtils;
+import com.hudson.loveweather.utils.SharedPreferenceUtils;
 import com.hudson.loveweather.utils.TimeUtils;
 import com.hudson.loveweather.utils.WeatherChooseUtils;
-import com.hudson.loveweather.utils.log.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,11 +26,19 @@ import okhttp3.Response;
 
  class WeatherDataUpdater implements Updater {
     private ArrayList<WeatherObserver> mObservers = new ArrayList<>();
+    //定位城市天气改变监听
+    private ArrayList<WeatherObserver> mLocationObservers = new ArrayList<>();
 
 
     void registerObserver(WeatherObserver observer){
         if(observer!=null&&!mObservers.contains(observer)){
             mObservers.add(observer);
+        }
+    }
+
+    void registerLocateObserver(WeatherObserver observer){
+        if(observer!=null&&!mLocationObservers.contains(observer)){
+            mLocationObservers.add(observer);
         }
     }
 
@@ -42,10 +48,15 @@ import okhttp3.Response;
         }
     }
 
+    void unRegisterLocateObserver(WeatherObserver observer){
+        if(mLocationObservers.contains(observer)){
+            mLocationObservers.remove(observer);
+        }
+    }
+
 
     @Override
     public void update(String url,Object... objects) {
-        Log.e("hudson","url是"+url);
         String weatherId = (String) objects[0];
         Weather6 weatherCache = getWeatherCache(weatherId);
         if(weatherCache!=null){
@@ -53,14 +64,11 @@ import okhttp3.Response;
                     .get(0).getUpdate().getLoc(),0);
             if(lastUpdateTime!=-1&&(TimeUtils.parseCurrentMinuteTime() +24*60 - lastUpdateTime)%(24*60)
                     > Constants.SERVER_WEATHER_UPDATE_OFFSET){
-                LogUtils.e("时间长度超出服务器更新范围，所以请求网络");
                 updateWeather(url,weatherId);
             }else{//使用本地
-                LogUtils.e("使用本地缓存数据");
                 notifyUpdateSuccess(weatherCache);
             }
         }else{
-            LogUtils.e("没有缓冲数据，使用网络");
             updateWeather(url,weatherId);
         }
     }
@@ -109,6 +117,7 @@ import okhttp3.Response;
                     Weather6 weather = new Gson().fromJson(string,
                             Weather6.class);
                     notifyUpdateSuccess(weather);
+                    checkIfLocate(weatherId,weather);
                     //将当前选中的地区的天气信息保存到数据库
                     WeatherChooseUtils.getInstance().updateChooseCountryWeatherCache(string);
                 }catch (JsonSyntaxException e){
@@ -119,6 +128,12 @@ import okhttp3.Response;
         });
     }
 
+    private void checkIfLocate(String weatherId,Weather6 weather){
+        if(SharedPreferenceUtils.getInstance().getLastLocationWeatherId().equals(weatherId)){
+            notifyLocateUpdate(weather);
+        }
+    }
+
     private void notifyUpdateFailed(Exception e) {
         e.printStackTrace();
         for (int i = 0; i < mObservers.size(); i++) {
@@ -127,12 +142,15 @@ import okhttp3.Response;
     }
 
     private void notifyUpdateSuccess(Weather6 weather){
-        LogUtils.e("通知观察者们====================");
         for (int i = 0; i < mObservers.size(); i++) {
             mObservers.get(i).onWeatherUpdateSuccess(weather);
         }
     }
 
-
+    private void notifyLocateUpdate(Weather6 weather){
+        for (int i = 0; i < mLocationObservers.size(); i++) {
+            mLocationObservers.get(i).onWeatherUpdateSuccess(weather);
+        }
+    }
 
 }

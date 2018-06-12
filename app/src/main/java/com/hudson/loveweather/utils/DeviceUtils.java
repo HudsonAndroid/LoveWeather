@@ -1,6 +1,9 @@
 package com.hudson.loveweather.utils;
 
+import android.app.Service;
+import android.content.Context;
 import android.content.res.Resources;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
 
 /**
@@ -22,5 +25,16 @@ public class DeviceUtils {
     public static int getStatusBarHeight() {
         return Resources.getSystem().getDimensionPixelSize(
                 Resources.getSystem().getIdentifier("status_bar_height", "dimen", "android"));
+    }
+
+    /**
+     * 手机振动
+     * @param context
+     * @param milliseconds 振动时长
+     */
+    public static void Vibrate(final Context context, long milliseconds) {
+        Vibrator vib = (Vibrator) context
+                .getSystemService(Service.VIBRATOR_SERVICE);
+        vib.vibrate(milliseconds);
     }
 }

@@ -1,6 +1,6 @@
 package com.hudson.loveweather.ui.view.weatherpage;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,7 +18,7 @@ public abstract class PageViewHelperImpl implements WeatherPageViewHelper<Weathe
      * 第三个参数必须是actionBar高度
      */
     @Override
-    public View inflateView(Context context,ViewGroup parent, Object... objects) {
+    public View inflateView(Activity context, ViewGroup parent, Object... objects) {
         View v = inflate(context,parent);
         ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
         int[] pixels = new int[2];
@@ -36,7 +36,7 @@ public abstract class PageViewHelperImpl implements WeatherPageViewHelper<Weathe
                 - DeviceUtils.getStatusBarHeight();
     }
 
-    abstract View inflate(Context context,ViewGroup parent);
+    abstract View inflate(Activity context,ViewGroup parent);
 
     abstract void initView(View root);
 

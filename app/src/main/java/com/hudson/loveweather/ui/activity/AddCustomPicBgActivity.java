@@ -19,7 +19,6 @@ import com.hudson.loveweather.global.Constants;
 import com.hudson.loveweather.utils.BitmapUtils;
 import com.hudson.loveweather.utils.StringUtils;
 import com.hudson.loveweather.utils.ToastUtils;
-import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.storage.AppStorageUtils;
 
 import java.io.File;
@@ -128,7 +127,6 @@ public class AddCustomPicBgActivity extends BaseSubActivity {
      * @return
      */
     private String getNextPicPath() {
-        LogUtils.e("下一个是"+(sNextPicIndex+1));
         return new StringBuilder(AppStorageUtils.getCustomPicCachePath()).append("/").append(Constants.PIC_CACHE_NAME)
                 .append((++sNextPicIndex))
                 .append(".jpg").toString();

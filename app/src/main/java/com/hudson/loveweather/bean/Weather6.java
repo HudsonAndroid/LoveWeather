@@ -1,9 +1,12 @@
 package com.hudson.loveweather.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
- * Created by Hudson on 2018/3/22 0022.
+ * Created by Hudson on 2018/3/22.
  */
 
 public class Weather6 {
@@ -205,7 +208,7 @@ public class Weather6 {
             }
         }
 
-        public static class NowBean {
+        public static class NowBean implements Parcelable {
             /**
              * cloud : 0
              * cond_code : 101
@@ -339,6 +342,60 @@ public class Weather6 {
             public void setWind_spd(String wind_spd) {
                 this.wind_spd = wind_spd;
             }
+
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.cloud);
+                dest.writeString(this.cond_code);
+                dest.writeString(this.cond_txt);
+                dest.writeString(this.fl);
+                dest.writeString(this.hum);
+                dest.writeString(this.pcpn);
+                dest.writeString(this.pres);
+                dest.writeString(this.tmp);
+                dest.writeString(this.vis);
+                dest.writeString(this.wind_deg);
+                dest.writeString(this.wind_dir);
+                dest.writeString(this.wind_sc);
+                dest.writeString(this.wind_spd);
+            }
+
+            public NowBean() {
+            }
+
+            protected NowBean(Parcel in) {
+                this.cloud = in.readString();
+                this.cond_code = in.readString();
+                this.cond_txt = in.readString();
+                this.fl = in.readString();
+                this.hum = in.readString();
+                this.pcpn = in.readString();
+                this.pres = in.readString();
+                this.tmp = in.readString();
+                this.vis = in.readString();
+                this.wind_deg = in.readString();
+                this.wind_dir = in.readString();
+                this.wind_sc = in.readString();
+                this.wind_spd = in.readString();
+            }
+
+            public static final Parcelable.Creator<NowBean> CREATOR = new Parcelable.Creator<NowBean>() {
+                @Override
+                public NowBean createFromParcel(Parcel source) {
+                    return new NowBean(source);
+                }
+
+                @Override
+                public NowBean[] newArray(int size) {
+                    return new NowBean[size];
+                }
+            };
         }
 
         public static class DailyForecastBean {

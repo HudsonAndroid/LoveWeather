@@ -7,11 +7,10 @@ package com.hudson.loveweather.ui.dialog.params;
 public class InformationParams implements Params {
 
     public String msg;
-    public ParamsRunnable sureRunnable,cancelRunnable;
+    public ParamsRunnable sureRunnable;
 
-    public InformationParams(String msg, ParamsRunnable sureRunnable, ParamsRunnable cancelRunnable) {
+    public InformationParams(String msg, ParamsRunnable sureRunnable) {
         this.msg = msg;
         this.sureRunnable = sureRunnable;
-        this.cancelRunnable = cancelRunnable;
     }
 }

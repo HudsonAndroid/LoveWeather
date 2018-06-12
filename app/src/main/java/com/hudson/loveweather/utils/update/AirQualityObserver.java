@@ -8,5 +8,5 @@ import com.hudson.loveweather.bean.AirQualityBean;
 
 public interface AirQualityObserver {
     void onAirQualityUpdateSuccess(AirQualityBean airQualityBean);
-    void onAirQualityUpdateFailed(Exception e);
+    void onAirQualityUpdateFailed(Exception e,AirQualityBean cache);
 }

@@ -1,12 +1,11 @@
 <resources>
     <string name="version_code">版本：1.01</string>
-    <string name="app_name">爱天气</string>
+    <string name="app_name">天气达人</string>
     <string name="app_english_name">LoveWeather</string>
     <string name="loading">正在加载</string>
     <string name="search_empty_tips">抱歉,没有匹配到任何结果</string>
     <string name="locating">正在定位...</string>
-    <string name="locate_failed">定位失败</string>
-    <string name="server_not_support">服务不支持</string>
+    <string name="loading_voice">正在加载音频，请稍后...</string>
     <string name="logo_words">爱天气，爱生活</string>
 
     <string name="cancel">取消</string>
@@ -17,4 +16,6 @@
     </string>
     <string name="contact">联系作者: 2216274479@qq.com</string>
     <string name="open_source">开源地址:https://github.com/HudsonAndroid/LoveWeather</string>
+    <string name="permission_tips">您使用本应用需要开启如下权限：\n1.定位权限\n2.文件写入与读取权限\n3.录音权限\n请同意后继续使用</string>
+
 </resources>

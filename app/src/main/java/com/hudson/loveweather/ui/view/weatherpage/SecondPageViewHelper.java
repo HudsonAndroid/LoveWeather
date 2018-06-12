@@ -1,6 +1,6 @@
 package com.hudson.loveweather.ui.view.weatherpage;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +22,12 @@ import java.util.List;
 
 public class SecondPageViewHelper extends PageViewHelperImpl {
     private View mContainer;
-    private Context mContext;
+    private Activity mContext;
     private View mHourForecastContainer, mDailyForecastContainer, mLifeStyleContainer;
     private LinearLayout mHour, mDaily, mSuggestions;
 
     @Override
-    View inflate(Context context, ViewGroup parent) {
+    View inflate(Activity context, ViewGroup parent) {
         mContext = context;
         return LayoutInflater.from(context).inflate(R.layout.weather_second_page, parent, false);
     }

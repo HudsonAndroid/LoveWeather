@@ -133,7 +133,6 @@ public class CustomPicBgAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             String tag = data.getAbsolutePath();
             Object tag1 = mCheckBox.getTag();
             if(tag1 ==null||!tag.equals(tag1)){
-                LogUtils.e("显示的图片路径是"+tag);
                 // 禁用glide缓存策略，否则glide会自动使用缓存的图片显示
                 Glide.with(mContext).load(data).skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)

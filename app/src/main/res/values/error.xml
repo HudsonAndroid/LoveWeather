@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_load_failed">加载失败，请检查您的网络设置！</string>
+    <string name="error_locate_failed">定位失败</string>
+    <string name="error_server_not_support">服务不支持</string>
+    <string name="error_data_not_exist">当前天气数据尚未获取成功！</string>
+    <string name="error_air_data_not_exist">当前空气质量数据获取失败！</string>
+</resources>

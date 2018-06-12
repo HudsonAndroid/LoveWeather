@@ -17,6 +17,7 @@
     <dimen name="image_top_margin">20dp</dimen>
     <dimen name="image_bottom_margin">16dp</dimen>
     <dimen name="small_margin">10dp</dimen>
+    <dimen name="big_margin">40dp</dimen>
     <dimen name="view_internal_margin">5dp</dimen>
     <dimen name="little_margin">2dp</dimen>
     <dimen name="main_line_margin">10dp</dimen>
@@ -24,6 +25,7 @@
     <dimen name="edit_text_radius">15dp</dimen>
     <dimen name="city_text_radius">5dp</dimen>
     <dimen name="edit_text_height">30dp</dimen>
+    <dimen name="gridview_space_margin">20dp</dimen>
 
     <dimen name="weather_text_size">16sp</dimen>
     <dimen name="big_text_size">25sp</dimen>

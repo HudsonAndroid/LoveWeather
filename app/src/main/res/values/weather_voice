@@ -1,0 +1,57 @@
+<resources>
+    <string name="voice_reader">语音播报人</string>
+    <!--参考地址http://doc.xfyun.cn/msc_android/%E5%90%88%E6%88%90%E5%8F%91%E9%9F%B3%E4%BA%BA%E5%88%97%E8%A1%A8.html-->
+    <string name="xiaoyan">小燕 中英文（普通话）</string>
+    <string name="xiaoyu">小宇 中英文（普通话）</string>
+    <string name="catherine">凯瑟琳 英文</string>
+    <string name="henry">亨利 英文</string>
+    <string name="vimary">玛丽 英文</string>
+    <string name="vixy">小研 中英文（普通话）</string>
+    <string name="xiaoqi">小琪 中英文（普通话）</string>
+    <string name="vixf">小峰 中英文（普通话）</string>
+    <string name="xiaomei">小梅 中英文（粤语）</string>
+    <string name="vixl">小莉 中英文（台湾普通话）</string>
+    <string name="xiaolin">晓琳 中英文（台湾普通话）</string>
+    <string name="xiaorong">小蓉 汉语（四川话）</string>
+    <string name="vixyun">小芸 汉语（东北话）</string>
+    <string name="xiaoqian">小倩 汉语（东北话）</string>
+    <string name="xiaokun">小坤 汉语（河南话）</string>
+    <string name="xiaoqiang">小强 汉语（湖南话）</string>
+    <string name="vixying">小莹 汉语（陕西话）</string>
+    <string name="xiaoxin">小新 汉语（普通话）</string>
+    <string name="nannan">楠楠 汉语（普通话）</string>
+    <string name="vils">老孙 汉语（普通话）</string>
+    <string name="mariane">Mariane 法语</string>
+    <string name="allabent">Allabent 俄语</string>
+    <string name="gabriela">Gabriela 西班牙语</string>
+    <string name="abha">Abha 印地语</string>
+    <string name="xiaoyun">XiaoYun 越南语</string>
+
+    <string-array name="voice_list">
+        <item >xiaoyan</item>
+        <item >xiaoyu</item>
+        <!--<item >catherine</item>
+        <item >henry</item>
+        <item >vimary</item>-->
+        <item >vixy</item>
+        <item >xiaoqi</item>
+        <item >vixf</item>
+        <item >xiaomei</item>
+        <item >vixl</item>
+        <item >xiaolin</item>
+        <item >xiaorong</item>
+        <item >vixyun</item>
+        <item >xiaoqian</item>
+        <item >xiaokun</item>
+        <item >xiaoqiang</item>
+        <item >vixying</item>
+        <item >xiaoxin</item>
+        <item >nannan</item>
+        <item >vils</item>
+    <!-- 非中文，去除   <item >mariane</item>
+        <item >allabent</item>
+        <item >gabriela</item>
+        <item >abha</item>
+        <item >xiaoyun</item>-->
+    </string-array>
+</resources>

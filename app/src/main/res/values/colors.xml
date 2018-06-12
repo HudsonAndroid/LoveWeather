@@ -17,4 +17,11 @@
 
     <color name="half_transparent">#33000000</color>
     <color name="half_transparent_gray">#33999999</color>
+
+    <color name="air_perfect">#FF05A731</color>
+    <color name="air_good">#FFEDC444</color>
+    <color name="air_slight">#FFF29E2F</color>
+    <color name="air_middle">#FFE95E5E</color>
+    <color name="air_bad">#FF9959BA</color>
+    <color name="air_serious">#FF8B2D47</color>
 </resources>

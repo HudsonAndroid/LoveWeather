@@ -65,7 +65,6 @@ public class WeatherChooseUtils {
         if(!TextUtils.isEmpty(json)){
             String[] results = parseLocationInfo(mSharedPreferenceUtils.getLastSelectedLocationInfo());
             if(results!=null){
-                LogUtils.e("往数据库中写入缓存");
                 SelectedCountry selectedCountry = new SelectedCountry();
                 selectedCountry.setCityName(results[0]);
                 selectedCountry.setCountryName(results[1]);
@@ -87,6 +86,7 @@ public class WeatherChooseUtils {
      */
     public void updateChooseCountryAirQualityCache(String json){
         if(!TextUtils.isEmpty(json)){
+            LogUtils.e("天气数据写入缓存");
             String[] results = parseLocationInfo(mSharedPreferenceUtils.getLastSelectedLocationInfo());
             if(results!=null){
                 SelectedCountryAirQuality selectedCountryAirQuality = new SelectedCountryAirQuality();
@@ -117,18 +117,15 @@ public class WeatherChooseUtils {
         String weatherId = country.getWeatherId();
         UpdateUtils.getInstance().updateWeather(UpdateUtils.generateWeatherForecastUrl(weatherId),
                 weatherId);//其次更新天气
-        LogUtils.e("跳转页面");
         activity.startActivity(new Intent(activity, WeatherActivity.class));//跳转天气页面
         activity.finish();
     }
 
     public String getWeatherJsonByWeatherId(String weatherId){
-        LogUtils.e("从数据库中获取天气缓存");
         return DatabaseUtils.queryWeatherJson(weatherId);
     }
 
     public String getAirQualityJsonByWeatherId(String weatherId){
-        LogUtils.e("从数据库中获取天气质量缓存");
         return DatabaseUtils.queryAirQualityJson(weatherId);
     }
 

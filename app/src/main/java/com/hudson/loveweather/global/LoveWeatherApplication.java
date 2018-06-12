@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.hudson.loveweather.utils.DataBaseLoader;
+import com.hudson.loveweather.utils.voice.VoiceSpeechUtils;
 
 import org.litepal.LitePal;
 
@@ -35,6 +36,8 @@ public class LoveWeatherApplication extends Application {
         sHandler = new Handler();
         sMainThreadId = android.os.Process.myTid();
         ConstantCaughtException.getInstance().init(this);
+        //讯飞
+        VoiceSpeechUtils.getInstance().initEngine(this);
     }
 
     public static Context getContext() {

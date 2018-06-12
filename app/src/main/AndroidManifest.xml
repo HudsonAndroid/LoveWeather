@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- 这个权限用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -20,6 +21,15 @@
     <!-- SD卡读取权限，用户写入离线定位数据 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 
+    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!--允许程序改变网络连接状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <!--读取联系人权限，上传联系人需要用到此权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <!--配置权限，用来记录应用配置信息 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+
     <application
         android:name=".global.LoveWeatherApplication"
         android:allowBackup="true"
@@ -30,11 +40,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.WeatherActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:launchMode="singleTask">
         </activity>
         <activity
             android:name=".ui.activity.SplashActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -48,6 +60,7 @@
 
         <activity
             android:name=".ui.activity.DailyWordActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/DailyPageTheme">
         </activity>
 
@@ -62,19 +75,23 @@
             android:value="i9bIebcj1ugbfVyVGwe5bv1gzLtwBUG9">
         </meta-data>
 
-        <activity android:name=".ui.activity.SettingsActivity">
+        <activity android:name=".ui.activity.SettingsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.SearchActivity">
+        <activity android:name=".ui.activity.SearchActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.activity.CountryManagerActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:theme="@style/transition_activity_theme">
         </activity>
 
         <service android:name=".service.WidgetUpdateService"/>
 
-        <activity android:name=".ui.activity.AddCustomPicBgActivity">
+        <activity android:name=".ui.activity.AddCustomPicBgActivity"
+                  android:screenOrientation="portrait">
         </activity>
 
         <!-- android 7.0 不能使用本地真实路径 -->
@@ -88,9 +105,19 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name=".ui.activity.CustomPicBgListActivity">
+        <activity android:name=".ui.activity.CustomPicBgListActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.AboutActivity">
+        <activity android:name=".ui.activity.AboutActivity"
+                  android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".ui.activity.CurWeatherDetailActivity"
+                  android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".ui.activity.AirQualityActivity"
+                  android:screenOrientation="portrait">
         </activity>
 
         <receiver android:name=".receiver.WidgetUpdateReceiver">

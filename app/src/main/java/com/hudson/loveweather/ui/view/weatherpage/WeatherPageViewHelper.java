@@ -1,6 +1,6 @@
 package com.hudson.loveweather.ui.view.weatherpage;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 public interface WeatherPageViewHelper<T> {
 
-    View inflateView(Context context,ViewGroup parent,Object... objects);
+    View inflateView(Activity context, ViewGroup parent, Object... objects);
 
     void refreshView(T object,Object... objects);
 }

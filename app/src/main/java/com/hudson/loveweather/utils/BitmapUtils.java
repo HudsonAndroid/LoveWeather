@@ -24,13 +24,13 @@ import android.view.View;
 
 import com.hudson.loveweather.R;
 import com.hudson.loveweather.service.ScheduledTaskService;
-import com.hudson.loveweather.utils.log.LogUtils;
 import com.hudson.loveweather.utils.storage.AppStorageUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
+import static com.baidu.location.h.k.R;
 import static com.hudson.loveweather.utils.BitmapUtils.BitmapUtilsHelper.renderScript;
 
 
@@ -104,7 +104,6 @@ public class BitmapUtils {
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    LogUtils.e("当前的值" + animation.getAnimatedValue());
                     view.setBackground(new BitmapDrawable(gaussianBlur((int) animation.getAnimatedValue(), original)));
                 }
             });
@@ -170,15 +169,13 @@ public class BitmapUtils {
             int height = source.getHeight();
             Bitmap bitmap;
             if(width<destWidth||height<destHeight){//如果原始图片小于我们目标大小，我们进行放大
-                //先裁剪后放大
+                //先裁剪后放大(裁剪原始图片宽或高其中大于目标的一个)
                 if(width>destWidth){
                     int xOffset = (width - destWidth) >> 2;
-                    LogUtils.e("裁剪宽度"+xOffset);
                     source = Bitmap.createBitmap(source, xOffset, 0, destWidth, height);
                 }
                 if(height>destHeight){
                     int yOffset = (height - destHeight) >> 2;
-                    LogUtils.e("裁剪高度"+yOffset);
                     source = Bitmap.createBitmap(source, 0, yOffset, width, destHeight);
                 }
                 bitmap = zoomImage(source, destWidth, destHeight);
@@ -314,28 +311,28 @@ public class BitmapUtils {
     /**
      * 压缩图片
      *
-     * @param bitMap  要压缩的bitmap对象
-     * @param maxSize 压缩的大小(kb)，压缩结果不是很准确大约比你设置的maxSize大于100k是因为比例决定的
+     * @param bitmap  要压缩的bitmap对象
+     * @param expectSize 压缩的大小(kb)，压缩结果不是很准确大约比你设置的expectSize大于100k是因为比例决定的
      * @return
      */
-    public static Bitmap imageZoom(Bitmap bitMap, double maxSize) {
-        if (bitMap != null) {
+    public static Bitmap imageZoom(Bitmap bitmap, double expectSize) {
+        if (bitmap != null) {
             //将bitmap放至数组中，意在bitmap的大小（与实际读取的原文件要大）
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitMap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] b = baos.toByteArray();
             //将字节换成KB
-            double mid = b.length / 1024;
+            double resultSize = b.length / 1024;
             //判断bitmap占用空间是否大于允许最大空间  如果大于则压缩 小于则不压缩
-            if (mid > maxSize) {
+            if (resultSize > expectSize) {
                 //获取bitmap大小 是允许最大大小的多少倍
-                double i = mid / maxSize;
+                double i = resultSize / expectSize;
                 //开始压缩  此处用到平方根 将宽带和高度压缩掉对应的平方根倍 （1.保持刻度和高度和原bitmap比率一致，压缩后也达到了最大大小占用空间的大小）
-                bitMap = zoomImage(bitMap, bitMap.getWidth() / Math.sqrt(i),
-                        bitMap.getHeight() / Math.sqrt(i));
+                bitmap = zoomImage(bitmap, bitmap.getWidth() / Math.sqrt(i),
+                        bitmap.getHeight() / Math.sqrt(i));
             }
         }
-        return bitMap;
+        return bitmap;
     }
 
 
